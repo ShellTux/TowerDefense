@@ -8,7 +8,6 @@ namespace Primitives3D {
 namespace Unit {
 
 void Cube();
-void Grid(const uint32_t rows, const uint32_t cols);
 
 } // namespace Unit
 

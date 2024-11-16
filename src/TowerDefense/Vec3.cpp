@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <random>
+#include <stdexcept>
 #include <tuple>
 
 constexpr double PI = 3.14159265358979323846;
@@ -55,28 +56,38 @@ double Vec3::Dot(const Vec3 &a, const Vec3 &b)
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
+Vec3 Vec3::Cross(const Vec3 &a, const Vec3 &b)
+{
+	return a.cross(b);
+}
+
+Vec3 Vec3::Normalize(const Vec3 &a)
+{
+	return a / a.magnitude();
+}
+
 Vec3 Vec3::operator+(const Vec3 &other) const
 {
-	return Vec3(x + other.x, y + other.y, z + other.z);
+	return {x + other.x, y + other.y, z + other.z};
 }
 
 Vec3 Vec3::operator-(const Vec3 &other) const
 {
-	return Vec3(x - other.x, y - other.y, z - other.z);
+	return {x - other.x, y - other.y, z - other.z};
 }
 
 Vec3 Vec3::operator*(double scalar) const
 {
-	return Vec3(x * scalar, y * scalar, z * scalar);
+	return {x * scalar, y * scalar, z * scalar};
 }
 
 Vec3 Vec3::operator/(double scalar) const
 {
-	if (scalar != 0) {
-		return Vec3(x / scalar, y / scalar, z / scalar);
-	} else {
+	if (scalar == 0) {
 		throw std::runtime_error("Division by zero");
 	}
+
+	return {x / scalar, y / scalar, z / scalar};
 }
 
 double Vec3::operator*(const Vec3 &other) const
@@ -86,9 +97,9 @@ double Vec3::operator*(const Vec3 &other) const
 
 Vec3 Vec3::operator^(const Vec3 &other) const
 {
-	return Vec3(y * other.z - z * other.y,
-	            z * other.x - x * other.z,
-	            x * other.y - y * other.x);
+	return {y * other.z - z * other.y,
+	        z * other.x - x * other.z,
+	        x * other.y - y * other.x};
 }
 
 bool Vec3::operator==(const Vec3 &other) const
@@ -143,6 +154,18 @@ double Vec3::magnitudeSq() const
 std::tuple<double, double, double> Vec3::getCoordinates() const
 {
 	return {x, y, z};
+}
+
+Vec3 Vec3::cross(const Vec3 &other) const
+{
+	return {y * other.z - z * other.y,
+	        z * other.x - x * other.z,
+	        x * other.y - y * other.x};
+}
+
+Vec3 Vec3::normalize() const
+{
+	return Normalize(*this);
 }
 
 } // namespace TowerDefense

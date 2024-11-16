@@ -1,11 +1,14 @@
 #include "TowerDefense/Cannon/Base.hpp"
 
 #include "Math.hpp"
+#include "Primitives/3D/core.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
 #include "TowerDefense/Vec3.hpp"
 
 #include <GL/gl.h>
+#include <array>
 #include <cmath>
+#include <cstdint>
 #include <limits>
 #include <openGGL/3D/primitives/unit.hpp>
 #include <optional>
@@ -13,10 +16,33 @@
 
 #ifdef DEBUG
 	#include <iostream>
-	#include <cstdint>
 #endif
 
 namespace TowerDefense {
+
+void Cannon::draw() const
+{
+	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
+	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
+	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	                                     | GL_VIEWPORT_BIT;
+
+	static constexpr std::array<uint8_t, 4> color = {0, 255, 0, 255};
+
+	const auto [posX, posY, _] = position.getCoordinates();
+
+	glPushMatrix();
+	glPushAttrib(glMask);
+	{
+		glColor3ubv(color.data());
+
+		glTranslated(posX, posY, 0);
+		glScalef(.9, .9, 2);
+		Primitives3D::Unit::Cube();
+	}
+	glPopAttrib();
+	glPopMatrix();
+}
 
 void Cannon::update(const std::vector<Enemy> &enemies)
 {
@@ -39,7 +65,7 @@ void Cannon::shot(Enemy &target) const
 	target.loseHP(shotDamage);
 
 #ifdef DEBUG
-	std::cout << "Cannon shooting at " << enemy << std::endl;
+	std::cout << "Cannon shooting at " << target << std::endl;
 #endif
 }
 
@@ -59,7 +85,7 @@ void Cannon::upgrade()
 void Cannon::updateAngle(const Enemy &target)
 {
 	const auto [deltaX, deltaY, _]
-	    = (target.getRealPosition() - position).getCoordinates();
+	    = (target.getGridPosition() - position).getCoordinates();
 
 	angle = Math::radiansToDegrees(std::atan2(deltaY, deltaX));
 }
@@ -73,7 +99,7 @@ Cannon::targetEnemy(const std::vector<Enemy> &enemies) const
 	const double rangeSq = range * range;
 	for (const auto &enemy : enemies) {
 		const double distanceSq
-		    = (enemy.getRealPosition() - position).magnitudeSq();
+		    = (enemy.getGridPosition() - position).magnitudeSq();
 		if (distanceSq >= rangeSq || distanceSq >= closestDistanceSq) {
 			continue;
 		}

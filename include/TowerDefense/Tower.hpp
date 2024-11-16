@@ -97,11 +97,8 @@ class Tower {
 
 	/**
 	 * @brief Draws the tower representation on a grid defined by rows and columns.
-	 *
-	 * @param rows The number of rows in the grid.
-	 * @param cols The number of columns in the grid.
 	 */
-	void draw(const uint8_t rows, const uint8_t cols) const;
+	void draw() const;
 
       private:
 	Vec3 position;  ///< The position of the tower in the grid.

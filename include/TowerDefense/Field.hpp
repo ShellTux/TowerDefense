@@ -8,6 +8,8 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <filesystem>
+#include <optional>
 #include <ostream>
 #include <vector>
 
@@ -29,9 +31,10 @@ class Field {
 	 * @brief Represents the possible types of cells in the field.
 	 */
 	using Cell = enum : uint32_t {
-		Wall = 500, ///< Represents a wall in the field.
-		Floor,      ///< Represents a floor in the field.
-		Slot        ///< Represents a slot in the field.
+		CWall = 500, ///< Represents a wall in the field.
+		CFloor,      ///< Represents a floor in the field.
+		CSlot,       ///< Represents a slot in the field.
+		CCannon,     ///< Represents a cannon in the field.
 	};
 
 	/**
@@ -51,6 +54,9 @@ class Field {
 	Field &operator=(const Field &) = default;
 	~Field()                        = default;
 
+	static std::optional<Field>
+	FromFile(const std::filesystem::path &filepath);
+
 	friend std::ostream &operator<<(std::ostream &os, const Field &field)
 	{
 		os << "Field {" << std::endl;
@@ -65,20 +71,23 @@ class Field {
 					os << " ";
 				}
 
-				if (c < Wall) {
+				if (c < CWall) {
 					os << static_cast<int>(c);
 					continue;
 				}
 
 				switch (c) {
-				case Field::Wall: {
+				case Field::CWall: {
 					os << "\033[31mW\033[0m";
 				} break;
-				case Field::Floor: {
+				case Field::CFloor: {
 					os << "\033[32mF\033[0m";
 				} break;
-				case Field::Slot: {
+				case Field::CSlot: {
 					os << "\033[33mS\033[0m";
+				} break;
+				case Field::CCannon: {
+					os << "\033[33mC\033[0m";
 				} break;
 				}
 			}
@@ -170,9 +179,14 @@ class Field {
 	void drawHUD() const;
 
 	/**
-	 * @brief Draws the map of the game field.
+	 * @brief Draws the floor of the game field.
 	 */
-	void drawMap() const;
+	void drawFloor() const;
+
+	/**
+	 * @brief Draws the enemy path.
+	 */
+	void drawEnemyPath() const;
 
 	/**
 	 * @brief Updates the state of the field.
@@ -196,6 +210,42 @@ class Field {
 	 */
 	void moveSelectedPosition(const Vec3 &movement);
 
+	/**
+	 * @brief Toggle drawing of cannons
+	 *
+	 * @param enable A bool to set drawing of cannons
+	 */
+	Field &setDrawCannons(const bool enable);
+
+	/**
+	 * @brief Toggle drawing of Enemies
+	 *
+	 * @param enable A bool to set drawing of enemies
+	 */
+	Field &setDrawEnemies(const bool enable);
+
+	/**
+	 * @brief Toggle drawing of Floor
+	 *
+	 * @param enable A bool to set drawing of floor
+	 */
+	Field &setDrawFloor(const bool enable);
+
+	/**
+	 * @brief Toggle drawing of Tower
+	 *
+	 * @param enable A bool to set drawing of tower
+	 */
+	Field &setDrawTower(const bool enable);
+
+	/**
+	 * @brief Toggle drawing of Enemy path
+	 *
+	 * @param enable A bool to set drawing of enemy path
+	 */
+	Field &setDrawEnemyPath(const bool enable);
+
+
       private:
 	double points; ///< The current points scored.
 	Map map;       ///< The 2D map of the field.
@@ -209,6 +259,11 @@ class Field {
 	uint8_t rows, cols;      ///< The number of rows and columns in the map.
 	Vec3 enemyStartPosition; ///< The starting position of the enemies.
 	Vec3 selectedPosition;   ///< The currently selected position.
+	bool bDrawCannons;       ///< Whether to draw the cannons
+	bool bDrawEnemies;       ///< Whether to draw the enemies
+	bool bDrawTower;         ///< Whether to draw the tower
+	bool bDrawFloor;         ///< Whether to draw the floor
+	bool bDrawEnemyPath;     ///< Whether to draw the enemy path
 };
 
 } // namespace TowerDefense

@@ -1,9 +1,12 @@
 #include "TowerDefense/Enemy/Base.hpp"
 
+#include "Primitives/3D/core.hpp"
 #include "TowerDefense/Vec3.hpp"
 
 #include <GL/gl.h>
 #include <algorithm>
+#include <array>
+#include <cstddef>
 #include <cstdint>
 #include <openGGL/3D/primitives/unit.hpp>
 #include <vector>
@@ -30,14 +33,33 @@ uint8_t Enemy::getPoints() const
 	return points;
 }
 
-Vec3 Enemy::getRealPosition() const
+void Enemy::draw() const
 {
-	return realPosition;
+	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
+	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
+	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	                                     | GL_VIEWPORT_BIT;
+
+	static constexpr std::array<uint8_t, 4> color = {255, 0, 0, 255};
+
+	const auto [posX, posY, _] = getGridPosition().getCoordinates();
+
+	glPushMatrix();
+	glPushAttrib(glMask);
+	{
+		glColor3ubv(color.data());
+
+		glTranslated(posX, posY, 0);
+		glScalef(.9, .9, 2);
+		Primitives3D::Unit::Cube();
+	}
+	glPopAttrib();
+	glPopMatrix();
 }
 
-void Enemy::update(const std::vector<Vec3> &enemyPath)
+void Enemy::update()
 {
-	updatePosition(enemyPath);
+	position += speed;
 }
 
 uint8_t Enemy::loseHP(const uint8_t healthPoints)
@@ -46,34 +68,26 @@ uint8_t Enemy::loseHP(const uint8_t healthPoints)
 	return health;
 }
 
-Vec3 Enemy::map2path(const std::vector<Vec3> &enemyPath) const
+Vec3 Enemy::getGridPosition() const
 {
-	if (enemyPath.empty()) {
-		return {0, 0, 0};
+	if (path.empty()) {
+		return {};
 	}
 
-	const auto constrain = [](auto var, auto minimum, auto maximum) {
-		using std::min, std::max;
+	const double clampedPosition = std::clamp(position, 0.0, 1.0);
 
-		return min(max(var, minimum), maximum);
-	};
+	const size_t totalPoints       = path.size();
+	const double distanceAlongPath = clampedPosition * (totalPoints - 1);
 
-	const double total = static_cast<double>(enemyPath.size() - 1);
-	const int index    = constrain(static_cast<int>(position * total),
-                                    0,
-                                    (int) enemyPath.size() - 1);
+	const size_t startIdx = static_cast<size_t>(distanceAlongPath);
+	const size_t endIdx   = std::min(startIdx + 1, totalPoints - 1);
 
-	const Vec3 &currentPoint = enemyPath[index];
-	const Vec3 &nextPoint    = enemyPath[index + 1];
+	const Vec3 &startPoint = path.at(startIdx);
+	const Vec3 &endPoint   = path.at(endIdx);
 
-	const double t = position * total - index;
+	const double segmentProgress = distanceAlongPath - startIdx;
 
-	return currentPoint + (nextPoint - currentPoint) * t;
-}
-
-void Enemy::updatePosition(const std::vector<Vec3> &enemyPath)
-{
-	realPosition = map2path(enemyPath);
+	return startPoint * (1 - segmentProgress) + endPoint * segmentProgress;
 }
 
 } // namespace TowerDefense

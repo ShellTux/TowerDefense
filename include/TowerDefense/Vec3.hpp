@@ -18,6 +18,7 @@ class Vec3 {
 	~Vec3()                       = default;
 
 	static double Dot(const Vec3 &a, const Vec3 &b);
+	static Vec3 Cross(const Vec3 &a, const Vec3 &b);
 	static Vec3 Normalize(const Vec3 &a);
 	static Vec3 RandomUnitVec3();
 
@@ -44,6 +45,8 @@ class Vec3 {
 	[[nodiscard]] double magnitude() const;
 	[[nodiscard]] double magnitudeSq() const;
 	[[nodiscard]] std::tuple<double, double, double> getCoordinates() const;
+	[[nodiscard]] Vec3 cross(const Vec3 &other) const;
+	[[nodiscard]] Vec3 normalize() const;
 
       private:
 	double x;

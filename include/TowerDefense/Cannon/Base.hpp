@@ -39,6 +39,12 @@ class Cannon {
 	    , position(0, 0, 0)
 	{}
 
+	Cannon(const Vec3 &position)
+	    : Cannon()
+	{
+		this->position = position;
+	}
+
 	/**
 	 * @brief Parameterized constructor that initializes the cannon with specified values.
 	 *
@@ -84,11 +90,8 @@ class Cannon {
 
 	/**
 	 * @brief Draws the cannon at its position in a grid.
-	 *
-	 * @param rows The number of rows in the grid.
-	 * @param cols The number of columns in the grid.
 	 */
-	void draw(const uint8_t rows, const uint8_t cols) const;
+	void draw() const;
 
 	/**
 	 * @brief Updates the state of the cannon (e.g., cooldown, targeting, etc.).

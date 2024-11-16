@@ -8,6 +8,7 @@ namespace Unit {
 
 void Circle(const uint32_t resolution);
 void Square();
+void Grid(const uint32_t rows, const uint32_t cols);
 
 } // namespace Unit
 

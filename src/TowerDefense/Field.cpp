@@ -1,14 +1,24 @@
 #include "TowerDefense/Field.hpp"
 
 #include "Primitives/2D/core.hpp"
-#include "Primitives/3D/core.hpp"
+#include "TowerDefense/Cannon/Base.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
 #include "TowerDefense/Tower.hpp"
 #include "TowerDefense/Vec3.hpp"
 
 #include <GL/gl.h>
+#include <algorithm>
+#include <array>
 #include <cstddef>
 #include <cstdint>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <optional>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace TowerDefense {
@@ -24,7 +34,9 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map)
     , enemyStartPosition({0, 0})
     , selectedPosition({0, 0})
 {
-	this->map = Map(rows, std::vector<Cell>(cols, Wall));
+	this->map = Map(rows, std::vector<Cell>(cols, CWall));
+
+	std::map<uint32_t, Vec3> enemyPathMap;
 
 	Vec3 towerPos;
 	uint32_t highestPos = 0;
@@ -32,17 +44,104 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map)
 		for (size_t x = 0; x < this->map.at(0).size(); ++x) {
 			const uint32_t c = map.at(y).at(x);
 
-			if (c < Wall && c > highestPos) {
-				highestPos = c;
-				towerPos   = Vec3{static_cast<double>(x),
-                                                static_cast<double>(y)};
+			if (c < CWall) {
+				enemyPathMap[c] = Vec3(x, y);
+
+				if (c > highestPos) {
+					highestPos = c;
+					towerPos = Vec3{static_cast<double>(x),
+					                static_cast<double>(y)};
+				}
+			} else if (c == CCannon) {
+				cannons.emplace_back(0, 2, 10, 10, Vec3(x, y));
 			}
 
 			this->map[x][y] = static_cast<Cell>(c);
 		}
 	}
 
+	for (const auto &[index, pos] : enemyPathMap) {
+		enemyPath.push_back(pos);
+	}
+
+	enemies.emplace_back(enemyPath);
+
 	this->tower = Tower(towerPos);
+}
+
+std::optional<Field> Field::FromFile(const std::filesystem::path &filepath)
+{
+	using std::vector, std::ifstream, std::string, std::stringstream;
+
+	vector<vector<string>> array;
+	ifstream file(filepath);
+
+	if (!file) {
+		std::cerr << "Could not open the file: " << filepath
+		          << std::endl;
+		return std::nullopt;
+	}
+
+	string line;
+	while (std::getline(file, line)) {
+		if (line.empty()) {
+			continue;
+		}
+
+		vector<string> row;
+		stringstream ss(line);
+		string cell;
+
+		while (std::getline(ss, cell, '|')) {
+			cell.erase(0, cell.find_first_not_of(" \t"));
+			cell.erase(cell.find_last_not_of(" \t") + 1);
+
+			if (cell.empty()) {
+				continue;
+			}
+
+			row.push_back(cell);
+		}
+
+		array.push_back(row);
+	}
+
+	const size_t rows = array.size();
+	const size_t cols = array.at(0).size();
+
+	vector<vector<uint32_t>> field(rows, vector<uint32_t>(cols, CWall));
+	for (size_t i = 0; i < rows; i++) {
+		for (size_t j = 0; j < cols; j++) {
+			const string &c = array.at(i).at(j);
+
+			try {
+				const uint32_t number = std::stoi(c);
+				field[i][j] = static_cast<uint32_t>(number);
+			} catch (const std::invalid_argument &e) {
+				if (c == "W") {
+					field[i][j] = Field::CWall;
+				} else if (c == "F") {
+					field[i][j] = Field::CFloor;
+				} else if (c == "S") {
+					field[i][j] = Field::CSlot;
+				} else if (c == "C") {
+					field[i][j] = Field::CCannon;
+				} else {
+					std::cerr
+					    << "Unrecognized cell type: " << c
+					    << " at " << Vec3(i, j)
+					    << ", setting to Wall."
+					    << std::endl;
+				}
+			} catch (const std::out_of_range &e) {
+				std::cerr << "Number out of range: " << c
+				          << " at " << Vec3(i, j)
+				          << ", setting to Wall." << std::endl;
+			}
+		}
+	}
+
+	return field;
 }
 
 double Field::getPoints() const
@@ -97,17 +196,32 @@ void Field::setGameSpeed(const uint8_t gameSpeed)
 
 void Field::draw() const
 {
-	Primitives3D::Unit::Grid(rows, cols);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-.7, cols - .2, rows - .2, -.7, -1000, 1000);
 
-	for (const auto &enemy : enemies) {
-		enemy.draw(rows, cols);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	drawFloor();
+
+	if (bDrawEnemies) {
+		for (const auto &enemy : enemies) {
+			enemy.draw();
+		}
 	}
 
-	for (const auto &cannon : cannons) {
-		cannon.draw(rows, cols);
+	if (bDrawCannons) {
+		for (const auto &cannon : cannons) {
+			cannon.draw();
+		}
 	}
 
-	tower.draw(rows, cols);
+	if (bDrawTower) {
+		tower.draw();
+	}
+
+	drawEnemyPath();
 }
 
 void Field::drawHUD() const
@@ -124,9 +238,101 @@ void Field::drawHUD() const
 	}
 }
 
-void Field::drawMap() const {}
+void Field::drawFloor() const
+{
+	if (!bDrawFloor) {
+		return;
+	}
 
-void Field::update() {}
+	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
+	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
+	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	                                     | GL_VIEWPORT_BIT;
+
+	const auto [selectedI, selectedJ, _]
+	    = selectedPosition.getCoordinates();
+
+	glPushAttrib(glMask);
+	{
+		for (uint8_t i = 0; i < rows; ++i) {
+			for (uint8_t j = 0; j < cols; ++j) {
+				if (i == selectedI && j == selectedJ) {
+					glColor3ub(235, 147, 23);
+				} else {
+					switch (map.at(i).at(j)) {
+					case CSlot:
+						glColor3ub(23, 235, 155);
+						break;
+					default:
+						glColor3ub(100, 100, 100);
+						break;
+					}
+				}
+
+				glPushMatrix();
+				{
+					glTranslated(j, i, 0);
+					Primitives2D::Unit::Square();
+				}
+				glPopMatrix();
+			}
+		}
+	}
+	glPopAttrib();
+}
+
+void Field::drawEnemyPath() const
+{
+	if (!bDrawEnemyPath) {
+		return;
+	}
+
+	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
+	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
+	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	                                     | GL_VIEWPORT_BIT | GL_LINE_BIT;
+
+	static constexpr std::array<uint8_t, 4> color = {255, 255, 255, 255};
+
+	glPushMatrix();
+	glPushAttrib(glMask);
+	{
+		glColor3ubv(color.data());
+		glLineWidth(10);
+		glBegin(GL_LINE_STRIP);
+		for (const Vec3 &enemyPathPos : enemyPath) {
+			const auto [posX, posY, _]
+			    = enemyPathPos.getCoordinates();
+
+			glVertex2d(posX, posY);
+		}
+		glEnd();
+	}
+	glPopAttrib();
+	glPopMatrix();
+}
+
+void Field::update()
+{
+	for (Enemy &enemy : enemies) {
+		enemy.update();
+	}
+
+	for (Cannon &cannon : cannons) {
+		cannon.update(enemies);
+	}
+
+	std::vector<Enemy> enemiesF;
+
+	using std::copy_if, std::back_inserter;
+
+	copy_if(enemies.begin(),
+	        enemies.end(),
+	        back_inserter(enemiesF),
+	        [](const Enemy &enemy) { return enemy.getPosition() < 1; });
+
+	enemies = enemiesF;
+}
 
 void Field::placeCannon() {}
 
@@ -135,6 +341,41 @@ void Field::upgradeCannon() {}
 void Field::moveSelectedPosition(const Vec3 &movement)
 {
 	this->selectedPosition += movement;
+}
+
+Field &Field::setDrawCannons(const bool enable)
+{
+	bDrawCannons = enable;
+
+	return *this;
+}
+
+Field &Field::setDrawEnemies(const bool enable)
+{
+	bDrawEnemies = enable;
+
+	return *this;
+}
+
+Field &Field::setDrawFloor(const bool enable)
+{
+	bDrawFloor = enable;
+
+	return *this;
+}
+
+Field &Field::setDrawTower(const bool enable)
+{
+	bDrawTower = enable;
+
+	return *this;
+}
+
+Field &Field::setDrawEnemyPath(const bool enable)
+{
+	bDrawEnemyPath = enable;
+
+	return *this;
 }
 
 } // namespace TowerDefense
