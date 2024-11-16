@@ -1,0 +1,216 @@
+#ifndef INCLUDE_TOWERDEFENSE_FIELD_HPP_
+#define INCLUDE_TOWERDEFENSE_FIELD_HPP_
+
+#include "TowerDefense/Cannon/Base.hpp"
+#include "TowerDefense/Enemy/Base.hpp"
+#include "TowerDefense/Tower.hpp"
+#include "TowerDefense/Vec3.hpp"
+
+#include <cstddef>
+#include <cstdint>
+#include <ostream>
+#include <vector>
+
+namespace TowerDefense {
+
+/**
+ * @class Field
+ * @brief Represents the game field containing various elements like walls, floors, and slots.
+ *
+ * The `Field` class encapsulates the structure of a game field as well as
+ * functionalities for different operations that can be performed within the field.
+ * It includes definitions for the types of cells in the field, and methods to manipulate
+ * and retrieve information about the game field.
+ */
+class Field {
+      public:
+	/**
+	 * @enum Cell
+	 * @brief Represents the possible types of cells in the field.
+	 */
+	using Cell = enum : uint32_t {
+		Wall = 500, ///< Represents a wall in the field.
+		Floor,      ///< Represents a floor in the field.
+		Slot        ///< Represents a slot in the field.
+	};
+
+	/**
+	 * @brief A 2D vector to represent the field map.
+	 */
+	using Map = std::vector<std::vector<Cell>>;
+
+	/**
+	 * @brief Constructs a Field object from a given map.
+	 *
+	 * @param map A 2D vector of uint32_t values representing the initial state of the field.
+	 */
+	Field(const std::vector<std::vector<uint32_t>> &map);
+	Field(Field &&)                 = default;
+	Field(const Field &)            = default;
+	Field &operator=(Field &&)      = default;
+	Field &operator=(const Field &) = default;
+	~Field()                        = default;
+
+	friend std::ostream &operator<<(std::ostream &os, const Field &field)
+	{
+		os << "Field {" << std::endl;
+		for (size_t y = 0; y < field.map.at(0).size(); ++y) {
+			if (y > 0) {
+				os << std::endl;
+			}
+
+			for (size_t x = 0; x < field.map.size(); ++x) {
+				const Cell c = field.map.at(x).at(y);
+				if (x > 0) {
+					os << " ";
+				}
+
+				if (c < Wall) {
+					os << static_cast<int>(c);
+					continue;
+				}
+
+				switch (c) {
+				case Field::Wall: {
+					os << "\033[31mW\033[0m";
+				} break;
+				case Field::Floor: {
+					os << "\033[32mF\033[0m";
+				} break;
+				case Field::Slot: {
+					os << "\033[33mS\033[0m";
+				} break;
+				}
+			}
+		}
+		os << std::endl << field.getTower();
+		os << std::endl << "}";
+
+		return os;
+	}
+
+	/**
+	 * @brief Gets the current points scored in the game.
+	 *
+	 * @return The current points as a double.
+	 */
+	[[nodiscard]] double getPoints() const;
+
+	/**
+	 * @brief Retrieves the map of the field.
+	 *
+	 * @return The map as a 2D vector of Cell.
+	 */
+	[[nodiscard]] Map getMap() const;
+
+	/**
+	 * @brief Retrieves the list of enemies in the field.
+	 *
+	 * @return A vector of Enemy objects.
+	 */
+	[[nodiscard]] std::vector<Enemy> getEnemies() const;
+
+	/**
+	 * @brief Retrieves the path of the enemies in the field.
+	 *
+	 * @return A vector of Vec3 representing enemy paths.
+	 */
+	[[nodiscard]] std::vector<Vec3> getEnemyPath() const;
+
+	/**
+	 * @brief Gets the tower object associated with the field.
+	 *
+	 * @return The Tower object.
+	 */
+	[[nodiscard]] Tower getTower() const;
+
+	/**
+	 * @brief Retrieves the game speed.
+	 *
+	 * @return The game speed as an 8-bit unsigned integer.
+	 */
+	[[nodiscard]] uint8_t getGameSpeed() const;
+
+	/**
+	 * @brief Retrieves the number of remaining cannons.
+	 *
+	 * @return The number of remaining cannons as an 8-bit unsigned integer.
+	 */
+	[[nodiscard]] uint8_t getRemainingCannons() const;
+
+	/**
+	 * @brief Retrieves the starting position of the enemies.
+	 *
+	 * @return A Vec3 representing the enemy start position.
+	 */
+	[[nodiscard]] Vec3 getEnemyStartPosition() const;
+
+	/**
+	 * @brief Retrieves the currently selected position.
+	 *
+	 * @return A Vec3 representing the selected position.
+	 */
+	[[nodiscard]] Vec3 getSelectedPosition() const;
+
+	/**
+	 * @brief Sets the game speed.
+	 *
+	 * @param gameSpeed The new game speed to set.
+	 */
+	void setGameSpeed(const uint8_t gameSpeed);
+
+	/**
+	 * @brief Draws the game field.
+	 */
+	void draw() const;
+
+	/**
+	 * @brief Draws the HUD (Heads-Up Display) of the game.
+	 */
+	void drawHUD() const;
+
+	/**
+	 * @brief Draws the map of the game field.
+	 */
+	void drawMap() const;
+
+	/**
+	 * @brief Updates the state of the field.
+	 */
+	void update();
+
+	/**
+	 * @brief Places a cannon in the field.
+	 */
+	void placeCannon();
+
+	/**
+	 * @brief Upgrades a cannon in the field.
+	 */
+	void upgradeCannon();
+
+	/**
+	 * @brief Moves the selected position by a specified vector.
+	 *
+	 * @param movement A Vec3 representing the movement vector.
+	 */
+	void moveSelectedPosition(const Vec3 &movement);
+
+      private:
+	double points; ///< The current points scored.
+	Map map;       ///< The 2D map of the field.
+	// TODO: use another structure for the cannons/enemies
+	std::vector<Cannon> cannons; ///< The list of cannons in the field.
+	std::vector<Enemy> enemies;  ///< The list of enemies in the field.
+	std::vector<Vec3> enemyPath; ///< The path of the enemies.
+	Tower tower;                 ///< The tower object in the field.
+	uint8_t gameSpeed;           ///< The speed of the game.
+	uint8_t remainingCannons;    ///< The number of remaining cannons.
+	uint8_t rows, cols;      ///< The number of rows and columns in the map.
+	Vec3 enemyStartPosition; ///< The starting position of the enemies.
+	Vec3 selectedPosition;   ///< The currently selected position.
+};
+
+} // namespace TowerDefense
+
+#endif // INCLUDE_TOWERDEFENSE_FIELD_HPP_
