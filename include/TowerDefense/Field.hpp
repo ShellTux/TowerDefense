@@ -47,7 +47,8 @@ class Field {
 	 *
 	 * @param map A 2D vector of uint32_t values representing the initial state of the field.
 	 */
-	Field(const std::vector<std::vector<uint32_t>> &map);
+	Field(const std::vector<std::vector<uint32_t>> &map,
+	      const Vec3 &enemyGridStartPosition);
 	Field(Field &&)                 = default;
 	Field(const Field &)            = default;
 	Field &operator=(Field &&)      = default;
@@ -55,7 +56,8 @@ class Field {
 	~Field()                        = default;
 
 	static std::optional<Field>
-	FromFile(const std::filesystem::path &filepath);
+	FromFile(const std::filesystem::path &filepath,
+	         const Vec3 &enemyGridStartPosition);
 
 	friend std::ostream &operator<<(std::ostream &os, const Field &field)
 	{
@@ -257,13 +259,12 @@ class Field {
 	uint8_t gameSpeed;           ///< The speed of the game.
 	uint8_t remainingCannons;    ///< The number of remaining cannons.
 	uint8_t rows, cols; ///< The number of rows and columns in the map.
-	Vec3 enemyGridStartPosition; ///< The starting position of the enemies.
-	Vec3 selectedGridPosition;   ///< The currently selected position.
-	bool bDrawCannons;           ///< Whether to draw the cannons
-	bool bDrawEnemies;           ///< Whether to draw the enemies
-	bool bDrawTower;             ///< Whether to draw the tower
-	bool bDrawFloor;             ///< Whether to draw the floor
-	bool bDrawEnemyPath;         ///< Whether to draw the enemy path
+	Vec3 selectedGridPosition; ///< The currently selected position.
+	bool bDrawCannons;         ///< Whether to draw the cannons
+	bool bDrawEnemies;         ///< Whether to draw the enemies
+	bool bDrawTower;           ///< Whether to draw the tower
+	bool bDrawFloor;           ///< Whether to draw the floor
+	bool bDrawEnemyPath;       ///< Whether to draw the enemy path
 };
 
 } // namespace TowerDefense

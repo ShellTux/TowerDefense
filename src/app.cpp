@@ -9,15 +9,20 @@
 #define S TowerDefense::Field::Cell::CSlot
 
 using TowerDefense::Field;
-Field field = TowerDefense::Field::FromFile("assets/example.map")
-                  .value_or(Field({
-                      {W, W, W, W, W},
-                      {6, 5, 4, 3, W},
-                      {W, W, S, 2, W},
-                      {W, W, W, 1, 0},
-                      {W, W, W, W, W},
-                      {W, W, W, W, W},
-}));
+Field field = TowerDefense::Field::FromFile("assets/example.map",
+                                            {
+                                                6, 11
+})
+                  .value_or(Field(
+                      {
+                          {W, W, W, W, W},
+                          {6, 5, 4, 3, W},
+                          {W, W, S, 2, W},
+                          {W, W, W, 1, 0},
+                          {W, W, W, W, W},
+                          {W, W, W, W, W},
+                      },
+                      {3, 5}));
 #undef F
 #undef W
 #undef S

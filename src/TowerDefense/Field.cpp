@@ -24,7 +24,8 @@
 
 namespace TowerDefense {
 
-Field::Field(const std::vector<std::vector<uint32_t>> &map)
+Field::Field(const std::vector<std::vector<uint32_t>> &map,
+             const Vec3 &enemyGridStartPosition)
     : points(10)
     , enemies({})
     , enemyPath({})
@@ -32,7 +33,6 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map)
     , remainingCannons(10)
     , rows(map.size())
     , cols(map.at(0).size())
-    , enemyGridStartPosition({0, 0})
     , selectedGridPosition({0, 0})
     , bDrawCannons(true)
     , bDrawEnemies(true)
@@ -67,16 +67,21 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map)
 		}
 	}
 
+	enemyPath.push_back(enemyGridStartPosition);
 	for (const auto &[index, pos] : enemyPathMap) {
 		enemyPath.push_back(pos);
 	}
 
-	enemies.emplace_back(enemyPath);
+	static constexpr int enemiesN = 10;
+	for (int i = 0; i < enemiesN; ++i) {
+		enemies.emplace_back(enemyPath, -.1 * i);
+	}
 
 	tower = Tower(towerPos);
 }
 
-std::optional<Field> Field::FromFile(const std::filesystem::path &filepath)
+std::optional<Field> Field::FromFile(const std::filesystem::path &filepath,
+                                     const Vec3 &enemyGridStartPosition)
 {
 	using std::vector, std::ifstream, std::string, std::stringstream;
 
@@ -151,7 +156,7 @@ std::optional<Field> Field::FromFile(const std::filesystem::path &filepath)
 		}
 	}
 
-	return Field(field);
+	return Field(field, enemyGridStartPosition);
 }
 
 double Field::getPoints() const
@@ -187,11 +192,6 @@ uint8_t Field::getGameSpeed() const
 uint8_t Field::getRemainingCannons() const
 {
 	return remainingCannons;
-}
-
-Vec3 Field::getEnemyStartPosition() const
-{
-	return enemyGridStartPosition;
 }
 
 Vec3 Field::getSelectedPosition() const
