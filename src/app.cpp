@@ -10,25 +10,40 @@
 #define S TowerDefense::Field::Cell::CSlot
 
 using TowerDefense::Field;
-static Field field = TowerDefense::Field::FromFile("assets/example.map")
-                         .value_or(Field({
-                             {W, W, W, W, W},
-                             {6, 5, 4, 3, W},
-                             {W, W, S, 2, W},
-                             {W, W, W, 1, 0},
-                             {W, W, W, W, W},
-                             {W, W, W, W, W},
+Field field = TowerDefense::Field::FromFile("assets/example.map")
+                  .value_or(Field({
+                      {W, W, W, W, W},
+                      {6, 5, 4, 3, W},
+                      {W, W, S, 2, W},
+                      {W, W, W, 1, 0},
+                      {W, W, W, W, W},
+                      {W, W, W, W, W},
 }));
 #undef F
 #undef W
 #undef S
 
-void errorCallback(const int errorCode, const char *description) {}
+static int width;
+static int height;
+
+extern GLFWwindow *window;
+
+void errorCallback(const int errorCode, const char *description)
+{
+	std::cerr << "Error(" << errorCode << "): " << description << std::endl;
+}
+
 void framebufferCallback(GLFWwindow *window, const int width, const int height)
-{}
+{
+	(void) window;
+	(void) width;
+	(void) height;
+}
 
 void setup()
 {
+	glfwGetWindowSize(window, &width, &height);
+
 	field.setDrawFloor(true);
 	field.setDrawEnemyPath(true);
 	field.setDrawTower(true);
@@ -42,6 +57,8 @@ void setup()
 
 void update()
 {
+	glfwGetWindowSize(window, &width, &height);
+
 	field.update();
 }
 
@@ -49,11 +66,23 @@ void draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	static constexpr int glMask = GL_VIEWPORT_BIT;
 
-	glPushAttrib(0);
+
+	glPushAttrib(glMask);
 	{
-		/*OpenGL::Camera::LookAt({0, -.5, .5}, {0, 0, 0}, {0, 1, 0});*/
+		const double p1 = static_cast<double>(width) / 8;
+		const double p2 = static_cast<double>(height) / 8;
+		glViewport(p1, p2, 6 * p1, 6 * p2);
 		field.draw();
+	}
+	glPopAttrib();
+
+	glPushAttrib(glMask);
+	{
+		const double p1 = static_cast<double>(width) / 8;
+		const double p2 = static_cast<double>(height) / 8;
+		glViewport(0, 7 * p2, 4 * p1, p2);
 	}
 	glPopAttrib();
 }

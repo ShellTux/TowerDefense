@@ -1,14 +1,19 @@
 #include "OpenGL/camera.hpp"
 
 #include <GL/gl.h>
+#include <cmath>
 
 namespace OpenGL {
 
 void Perspective(GLfloat theta, GLfloat alpha, GLfloat beta)
 {
+	(void) theta;
+	(void) alpha;
+	(void) beta;
+
 	/*glMatrixMode(GL_PROJECTION);*/
 	/*glLoadIdentity();*/
-	/*GLfloat tan      = tanf(theta * 0.5 * PI / 180.0);*/
+	/*GLfloat tg       = tan(theta * 0.5 * PI / 180.0);*/
 	/*GLfloat d        = (gh() / 2.0) / tan;*/
 	/*GLfloat nearClip = d / alpha;*/
 	/*GLfloat farClip  = d * beta;*/

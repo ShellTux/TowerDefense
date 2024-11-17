@@ -22,6 +22,8 @@ static constexpr int defaultHeight   = 600;
 static constexpr char defaultTitle[] = "Tower Defense";
 static constexpr char windowClass[]  = "OpenGL";
 
+GLFWwindow *window = nullptr;
+
 void errorCallback(const int errorCode, const char *description);
 void framebufferCallback(GLFWwindow *window, const int width, const int height);
 void keyCallback(GLFWwindow *window,
@@ -79,11 +81,11 @@ int main()
 	glfwWindowHintString(GLFW_X11_CLASS_NAME, windowClass);
 	glfwWindowHintString(GLFW_WAYLAND_APP_ID, windowClass);
 
-	GLFWwindow *window = glfwCreateWindow(defaultWidth,
-	                                      defaultHeight,
-	                                      defaultTitle,
-	                                      nullptr,
-	                                      nullptr);
+	window = glfwCreateWindow(defaultWidth,
+	                          defaultHeight,
+	                          defaultTitle,
+	                          nullptr,
+	                          nullptr);
 
 	if (window == nullptr) {
 		glfwTerminate();

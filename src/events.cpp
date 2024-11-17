@@ -1,7 +1,12 @@
+#include "TowerDefense/Field.hpp"
+#include "TowerDefense/Vec3.hpp"
+
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <cstdint>
 #include <iostream>
+
+extern TowerDefense::Field field;
 
 enum DebugInput : uint32_t {
 	All,
@@ -42,7 +47,26 @@ static void keyPress(GLFWwindow *window,
 		          << std::endl;
 	}
 
+	using TowerDefense::Vec3;
+
 	switch (key) {
+	case GLFW_KEY_S:
+	case GLFW_KEY_DOWN: {
+		field.moveSelectedPosition(Vec3(1, 0));
+	} break;
+	case GLFW_KEY_W:
+	case GLFW_KEY_UP: {
+		field.moveSelectedPosition(Vec3(-1, 0));
+	} break;
+	case GLFW_KEY_A:
+	case GLFW_KEY_LEFT: {
+		field.moveSelectedPosition(Vec3(0, -1));
+	} break;
+	case GLFW_KEY_D:
+	case GLFW_KEY_RIGHT: {
+		field.moveSelectedPosition(Vec3(0, 1));
+	} break;
+
 	case GLFW_KEY_C: {
 		cull = (cull + 1) % 4;
 
