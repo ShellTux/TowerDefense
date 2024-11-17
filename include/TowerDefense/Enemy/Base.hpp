@@ -138,6 +138,11 @@ class Enemy {
 	uint8_t health;  ///< The current health of the enemy.
 	uint8_t points;  ///< The points awarded for defeating this enemy.
 	std::vector<Vec3> gridPath; ///< The path to follow
+
+	/**
+	 * @brief Draws the enemy health.
+	 */
+	void drawHealth() const;
 };
 
 } // namespace TowerDefense

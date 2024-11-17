@@ -50,6 +50,28 @@ void Enemy::draw() const
 		glTranslated(posX, posY, 0);
 		glScalef(.9, .9, 2);
 		Primitives3D::Unit::Cube();
+
+		drawHealth();
+	}
+	glPopAttrib();
+	glPopMatrix();
+}
+
+void Enemy::drawHealth() const
+{
+	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
+	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
+	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	                                     | GL_VIEWPORT_BIT;
+
+	glPushMatrix();
+	glPushAttrib(glMask);
+	{
+		glColor3ubv(Colors::GREEN.data());
+
+		glTranslated(0, 0, .5);
+		glScalef(.8, .2, .2);
+		Primitives3D::Unit::Cube();
 	}
 	glPopAttrib();
 	glPopMatrix();

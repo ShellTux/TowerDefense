@@ -102,6 +102,11 @@ class Tower {
       private:
 	Vec3 gridPosition; ///< The position of the tower in the grid.
 	uint8_t health;    ///< The health of the tower.
+
+	/**
+	 * @brief Draws the tower health representation on a grid.
+	 */
+	void drawHealth() const;
 };
 
 } // namespace TowerDefense

@@ -305,37 +305,34 @@ void Field::drawFloor() const
 	    = selectedGridPosition.getCoordinates();
 
 	glPushAttrib(glMask);
-	{
-		for (uint8_t i = 0; i < rows; ++i) {
-			for (uint8_t j = 0; j < cols; ++j) {
-				using Colors::WHITE, Colors::ORANGE,
-				    Colors::CYAN, Colors::GRAY;
+	for (uint8_t i = 0; i < rows; ++i) {
+		for (uint8_t j = 0; j < cols; ++j) {
+			using Colors::WHITE, Colors::YELLOW, Colors::CYAN,
+			    Colors::GRAY;
 
-				if (i == selectedI && j == selectedJ) {
-					glColor3ubv(ORANGE.data());
-				} else {
-					switch (map.at(i).at(j)) {
-					case CSlot:
-						glColor3ubv(WHITE.data());
-						break;
-					case CCannon:
-					case CWall:
-						glColor3ubv(
-						    Colors::MINT.data());
-						break;
-					default:
-						glColor3ubv(GRAY.data());
-						break;
-					}
-				}
+			glPushMatrix();
+			glTranslated(j, i, 0);
 
-				glPushMatrix();
-				{
-					glTranslated(j, i, 0);
-					Primitives2D::Unit::Square();
+			if (i == selectedI && j == selectedJ) {
+				glColor3ubv(YELLOW.data());
+				glScalef(.9, .9, 1);
+			} else {
+				switch (map.at(i).at(j)) {
+				case CSlot:
+					glColor3ubv(WHITE.data());
+					break;
+				case CCannon:
+				case CWall:
+					glColor3ubv(Colors::MINT.data());
+					break;
+				default:
+					glColor3ubv(GRAY.data());
+					break;
 				}
-				glPopMatrix();
 			}
+
+			Primitives2D::Unit::Square();
+			glPopMatrix();
 		}
 	}
 	glPopAttrib();
