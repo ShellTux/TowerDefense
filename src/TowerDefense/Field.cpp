@@ -5,7 +5,7 @@
 #include "TowerDefense/Cannon/Base.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
 #include "TowerDefense/Tower.hpp"
-#include "TowerDefense/Vec3.hpp"
+#include "Vec3.hpp"
 
 #include <GL/gl.h>
 #include <algorithm>

@@ -1,8 +1,7 @@
 #ifndef INCLUDE_TOWERDEFENSE_TOWER_HPP_
 #define INCLUDE_TOWERDEFENSE_TOWER_HPP_
 
-#include "TowerDefense/Cannon/Base.hpp"
-#include "TowerDefense/Vec3.hpp"
+#include "Vec3.hpp"
 
 #include <cstdint>
 #include <ostream>

@@ -1,11 +1,11 @@
-#include "TowerDefense/Vec3.hpp"
+#include "Vec3.hpp"
+
+#include "Math.hpp"
 
 #include <cmath>
 #include <random>
 #include <stdexcept>
 #include <tuple>
-
-constexpr double PI = 3.14159265358979323846;
 
 namespace TowerDefense {
 
@@ -40,7 +40,7 @@ Vec3 Vec3::RandomUnitVec3()
 	const double v = dis(gen);
 
 
-	const double theta = 2 * PI * u;
+	const double theta = 2 * Math::PI * u;
 	const double phi   = acos(2 * v - 1);
 
 

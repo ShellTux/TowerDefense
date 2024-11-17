@@ -1,7 +1,7 @@
 #ifndef INCLUDE_ENEMY_BASE_HPP_
 #define INCLUDE_ENEMY_BASE_HPP_
 
-#include "TowerDefense/Vec3.hpp"
+#include "Vec3.hpp"
 
 #include <cassert>
 #include <cstdint>

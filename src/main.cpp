@@ -2,7 +2,7 @@
 #include "TowerDefense/Enemy/Base.hpp"
 #include "TowerDefense/Field.hpp"
 #include "TowerDefense/Tower.hpp"
-#include "TowerDefense/Vec3.hpp"
+#include "Vec3.hpp"
 
 #include <GL/gl.h>
 #include <GL/glext.h>

@@ -2,10 +2,9 @@
 
 #include "Color.hpp"
 #include "Primitives/3D/core.hpp"
-#include "TowerDefense/Vec3.hpp"
+#include "Vec3.hpp"
 
 #include <GL/gl.h>
-#include <array>
 #include <cstdint>
 
 namespace TowerDefense {

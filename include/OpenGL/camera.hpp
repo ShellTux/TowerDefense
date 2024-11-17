@@ -1,7 +1,7 @@
 #ifndef INCLUDE_OPENGL_CAMERA_HPP_
 #define INCLUDE_OPENGL_CAMERA_HPP_
 
-#include "TowerDefense/Vec3.hpp"
+#include "Vec3.hpp"
 
 #include <GL/gl.h>
 

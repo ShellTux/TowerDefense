@@ -2,7 +2,7 @@
 #define INCLUDE_CANNON_BASE_HPP_
 
 #include "TowerDefense/Enemy/Base.hpp"
-#include "TowerDefense/Vec3.hpp"
+#include "Vec3.hpp"
 
 #include <cstdint>
 #include <optional>
