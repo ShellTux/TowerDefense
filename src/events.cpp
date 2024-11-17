@@ -1,3 +1,4 @@
+#include "TowerDefense/Cannon/Base.hpp"
 #include "TowerDefense/Field.hpp"
 #include "Vec3.hpp"
 
@@ -65,6 +66,19 @@ static void keyPress(GLFWwindow *window,
 	case GLFW_KEY_D:
 	case GLFW_KEY_RIGHT: {
 		field.moveSelectedPosition(Vec3(0, 1));
+	} break;
+
+	case GLFW_KEY_1: {
+		field.placeCannon(TowerDefense::Cannon::Type::TierA);
+	} break;
+	case GLFW_KEY_2: {
+		field.placeCannon(TowerDefense::Cannon::Type::TierB);
+	} break;
+	case GLFW_KEY_3: {
+		field.placeCannon(TowerDefense::Cannon::Type::TierC);
+	} break;
+	case GLFW_KEY_4: {
+		field.upgradeCannon();
 	} break;
 
 	case GLFW_KEY_C: {

@@ -198,7 +198,7 @@ class Field {
 	/**
 	 * @brief Places a cannon in the field.
 	 */
-	void placeCannon();
+	void placeCannon(const Cannon::Type &cannonType);
 
 	/**
 	 * @brief Upgrades a cannon in the field.

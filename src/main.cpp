@@ -7,6 +7,8 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 #include <chrono>
+#include <cstdlib>
+#include <ctime>
 #include <thread>
 
 #ifdef DEBUG
@@ -39,6 +41,10 @@ void draw();
 
 int main()
 {
+#ifndef RELEASE
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+#endif
+
 	using TowerDefense::Tower, TowerDefense::Field;
 	using TowerDefense::Vec3, TowerDefense::Enemy, TowerDefense::Cannon;
 

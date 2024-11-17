@@ -33,7 +33,7 @@ void Cannon::draw() const
 	glPushMatrix();
 	glPushAttrib(glMask);
 	{
-		glColor3ubv(Colors::GREEN.data());
+		glColor3ubv(color.data());
 
 		glTranslated(posX, posY, 0);
 		glScalef(.9, .9, 2);

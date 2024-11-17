@@ -86,7 +86,8 @@ void draw()
 	{
 		const GLint p1 = width / 8;
 		const GLint p2 = height / 8;
-		glViewport(0, 7 * p2, 4 * p1, p2);
+		glViewport(0, 7 * p2, 5 * p1, p2);
+		field.drawHUD();
 	}
 	glPopAttrib();
 }

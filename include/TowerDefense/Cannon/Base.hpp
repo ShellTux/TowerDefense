@@ -1,6 +1,7 @@
 #ifndef INCLUDE_CANNON_BASE_HPP_
 #define INCLUDE_CANNON_BASE_HPP_
 
+#include "Color.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
 #include "Vec3.hpp"
 
@@ -20,52 +21,36 @@ namespace TowerDefense {
  */
 class Cannon {
       public:
-	/**
-	 * @brief Default constructor that initializes the cannon with default values.
-	 *
-	 * The default values are:
-	 * - angle: 0
-	 * - range: 3
-	 * - cooldown: 10
-	 * - shotDamage: 2
-	 * - gridPosition: (0, 0, 0)
-	 */
-	Cannon()
-	    : angle(0)
-	    , range(3)
-	    , defaultCooldown(10)
-	    , cooldown(defaultCooldown)
-	    , shotDamage(2)
-	    , gridPosition(0, 0, 0)
-	{}
+	enum class Type { TierA, TierB, TierC };
 
-	Cannon(const Vec3 &gridPosition)
-	    : Cannon()
+	Cannon(const Type &type, const Vec3 &gridPosition)
+	    : angle(0)
+	    , color(Colors::BLACK)
 	{
+		switch (type) {
+		case Type::TierA: {
+			color      = Colors::RED;
+			range      = 1;
+			shotDamage = 1;
+			cooldown = defaultCooldown = 5;
+		} break;
+		case Type::TierB: {
+			color      = Colors::ORANGE;
+			range      = 3;
+			shotDamage = 2;
+			cooldown = defaultCooldown = 20;
+		} break;
+		case Type::TierC: {
+			color      = Colors::PURPLE;
+			range      = 2;
+			shotDamage = 3;
+			cooldown = defaultCooldown = 50;
+		} break;
+		}
+
 		this->gridPosition = gridPosition;
 	}
 
-	/**
-	 * @brief Parameterized constructor that initializes the cannon with specified values.
-	 *
-	 * @param angle The angle of the cannon in degrees.
-	 * @param range The effective range of the cannon.
-	 * @param cooldown The cooldown time between shots in arbitrary time units.
-	 * @param shotDamage The amount of damage dealt by each shot.
-	 * @param position A `Vec3` object representing the position of the cannon grid space.
-	 */
-	Cannon(const double angle,
-	       const double range,
-	       const uint8_t cooldown,
-	       const uint8_t shotDamage,
-	       const Vec3 position)
-	    : angle(angle)
-	    , range(range)
-	    , defaultCooldown(cooldown)
-	    , cooldown(defaultCooldown)
-	    , shotDamage(shotDamage)
-	    , gridPosition(position)
-	{}
 	Cannon(Cannon &&)                 = default;
 	Cannon(const Cannon &)            = default;
 	Cannon &operator=(Cannon &&)      = default;
@@ -119,6 +104,7 @@ class Cannon {
 	uint8_t cooldown;        ///< The cooldown time between shots.
 	uint8_t shotDamage;      ///< The damage dealt by each shot.
 	Vec3 gridPosition;       ///< The position of the cannon in 3D space.
+	Color color;
 
 	/**
 	 * @brief Update Angle based on target enemy position.

@@ -12,10 +12,10 @@ void Unit::Circle(const uint32_t resolution)
 {
 	using std::cos, std::sin, Math::PIf;
 
-	static constexpr GLfloat radius = .25f;
+	static constexpr GLfloat radius = .5f;
 	const GLfloat deltaAngle        = 2 * PIf / resolution;
 
-	glBegin(GL_TRIANGLE_STRIP);
+	glBegin(GL_POLYGON);
 	{
 		glVertex2f(0, 0);
 		for (GLfloat angle  = 0; angle < 2 * Math::PI;

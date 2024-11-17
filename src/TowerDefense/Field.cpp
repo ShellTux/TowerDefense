@@ -12,6 +12,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -60,7 +61,25 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map,
 					towerPos   = pos;
 				}
 			} else if (c == CCannon) {
-				cannons.emplace_back(pos);
+				switch (std::rand() % 3 + 1) {
+				case 1:
+					cannons.emplace_back(
+					    Cannon::Type::TierA,
+					    pos);
+					break;
+				case 2:
+					cannons.emplace_back(
+					    Cannon::Type::TierB,
+					    pos);
+					break;
+				case 3:
+					cannons.emplace_back(
+					    Cannon::Type::TierC,
+					    pos);
+					break;
+				default:
+					break;
+				}
 			}
 
 			this->map[i][j] = static_cast<Cell>(c);
@@ -236,13 +255,38 @@ void Field::draw() const
 
 void Field::drawHUD() const
 {
-	for (GLfloat i = 0; i < 5; ++i) {
+	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
+	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
+	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	                                     | GL_VIEWPORT_BIT | GL_LINE_BIT;
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-.5, 5.5, -.5, .5, -1, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	static constexpr std::array<Color, 5> a = {
+	    Colors::WHITE,
+	    Colors::RED,
+	    Colors::ORANGE,
+	    Colors::PURPLE,
+	    Colors::YELLOW,
+	};
+
+	for (size_t i = 0; i < a.size(); ++i) {
+		const Color &color = a.at(i);
+
+		glPushAttrib(glMask);
 		glPushMatrix();
 		{
-			glTranslatef(i, 0, 0);
-			Primitives2D::Unit::Circle(10);
+			glColor3ubv(color.data());
+			glTranslatef(GLfloat(i), 0, 0);
+			Primitives2D::Unit::Circle(30);
 		}
 		glPopMatrix();
+		glPopAttrib();
 	}
 }
 
@@ -350,9 +394,35 @@ void Field::update()
 	enemies = enemiesF;
 }
 
-void Field::placeCannon() {}
+void Field::placeCannon(const Cannon::Type &cannonType)
+{
+	const auto [selectedI, selectedJ, _]
+	    = selectedGridPosition.getCoordinates();
 
-void Field::upgradeCannon() {}
+	Cell &c = map.at(size_t(selectedI)).at(size_t(selectedJ));
+
+	if (c != CSlot) {
+		return;
+	}
+
+	c = CCannon;
+	cannons.emplace_back(cannonType, selectedGridPosition);
+}
+
+void Field::upgradeCannon()
+{
+	const auto [selectedI, selectedJ, _]
+	    = selectedGridPosition.getCoordinates();
+
+	const Cell &c = map.at(size_t(selectedI)).at(size_t(selectedJ));
+
+	if (c != CCannon) {
+		return;
+	}
+#ifndef RELEASE
+	std::cout << "Upgrade cannon at: " << selectedGridPosition << std::endl;
+#endif
+}
 
 void Field::moveSelectedPosition(const Vec3 &movement)
 {
