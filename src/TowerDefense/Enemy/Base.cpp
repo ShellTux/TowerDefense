@@ -6,7 +6,6 @@
 
 #include <GL/gl.h>
 #include <algorithm>
-#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <openGGL/3D/primitives/unit.hpp>

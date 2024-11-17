@@ -1,5 +1,6 @@
 #include "TowerDefense/Field.hpp"
 
+#include "Color.hpp"
 #include "Primitives/2D/core.hpp"
 #include "TowerDefense/Cannon/Base.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
@@ -33,6 +34,11 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map)
     , cols(map.at(0).size())
     , enemyGridStartPosition({0, 0})
     , selectedGridPosition({0, 0})
+    , bDrawCannons(true)
+    , bDrawEnemies(true)
+    , bDrawTower(true)
+    , bDrawFloor(true)
+    , bDrawEnemyPath(true)
 {
 	this->map = Map(rows, std::vector<Cell>(cols, CWall));
 
@@ -115,6 +121,9 @@ std::optional<Field> Field::FromFile(const std::filesystem::path &filepath)
 		for (size_t j = 0; j < cols; j++) {
 			const string &c = array.at(i).at(j);
 
+			const double iD = static_cast<double>(i);
+			const double jD = static_cast<double>(j);
+
 			try {
 				const uint32_t number = std::stoi(c);
 				field[i][j] = static_cast<uint32_t>(number);
@@ -130,13 +139,13 @@ std::optional<Field> Field::FromFile(const std::filesystem::path &filepath)
 				} else {
 					std::cerr
 					    << "Unrecognized cell type: " << c
-					    << " at " << Vec3(i, j)
+					    << " at " << Vec3(iD, jD)
 					    << ", setting to Wall."
 					    << std::endl;
 				}
 			} catch (const std::out_of_range &e) {
 				std::cerr << "Number out of range: " << c
-				          << " at " << Vec3(i, j)
+				          << " at " << Vec3(iD, jD)
 				          << ", setting to Wall." << std::endl;
 			}
 		}
@@ -227,12 +236,10 @@ void Field::draw() const
 
 void Field::drawHUD() const
 {
-	static constexpr GLfloat p = 1 / 19;
-
-	for (int i = 0; i < 5; ++i) {
+	for (GLfloat i = 0; i < 5; ++i) {
 		glPushMatrix();
 		{
-			glTranslatef(-.5 + 1.5 * p + 4 * p * i, 0, 0);
+			glTranslatef(i, 0, 0);
 			Primitives2D::Unit::Circle(10);
 		}
 		glPopMatrix();
@@ -257,15 +264,21 @@ void Field::drawFloor() const
 	{
 		for (uint8_t i = 0; i < rows; ++i) {
 			for (uint8_t j = 0; j < cols; ++j) {
+				using Colors::WHITE, Colors::ORANGE,
+				    Colors::CYAN, Colors::GRAY;
+
 				if (i == selectedI && j == selectedJ) {
-					glColor3ub(235, 147, 23);
+					glColor3ubv(ORANGE.data());
 				} else {
 					switch (map.at(i).at(j)) {
+					case CFloor:
+						glColor3ubv(WHITE.data());
+						break;
 					case CSlot:
-						glColor3ub(23, 235, 155);
+						glColor3ubv(CYAN.data());
 						break;
 					default:
-						glColor3ub(100, 100, 100);
+						glColor3ubv(GRAY.data());
 						break;
 					}
 				}
@@ -341,7 +354,22 @@ void Field::upgradeCannon() {}
 
 void Field::moveSelectedPosition(const Vec3 &movement)
 {
-	this->selectedGridPosition += movement;
+	auto [newI, newJ, _]
+	    = (selectedGridPosition + movement).getCoordinates();
+
+	if (newI < 0) {
+		newI = rows - 1;
+	} else if (newI >= rows) {
+		newI = 0;
+	}
+
+	if (newJ < 0) {
+		newJ = cols - 1;
+	} else if (newJ >= cols) {
+		newJ = 0;
+	}
+
+	selectedGridPosition = Vec3(newI, newJ);
 }
 
 Field &Field::setDrawCannons(const bool enable)

@@ -1,4 +1,3 @@
-#include "OpenGL/camera.hpp"
 #include "TowerDefense/Field.hpp"
 
 #include <GL/gl.h>
@@ -71,8 +70,8 @@ void draw()
 
 	glPushAttrib(glMask);
 	{
-		const double p1 = static_cast<double>(width) / 8;
-		const double p2 = static_cast<double>(height) / 8;
+		const GLint p1 = width / 8;
+		const GLint p2 = height / 8;
 		glViewport(p1, p2, 6 * p1, 6 * p2);
 		field.draw();
 	}
@@ -80,8 +79,8 @@ void draw()
 
 	glPushAttrib(glMask);
 	{
-		const double p1 = static_cast<double>(width) / 8;
-		const double p2 = static_cast<double>(height) / 8;
+		const GLint p1 = width / 8;
+		const GLint p2 = height / 8;
 		glViewport(0, 7 * p2, 4 * p1, p2);
 	}
 	glPopAttrib();

@@ -102,6 +102,13 @@ Vec3 Vec3::operator^(const Vec3 &other) const
 	        x * other.y - y * other.x};
 }
 
+Vec3 Vec3::operator%(const Vec3 &other) const
+{
+	using std::fmod;
+
+	return {fmod(x, other.x), fmod(y, other.y), fmod(z, other.z)};
+}
+
 bool Vec3::operator==(const Vec3 &other) const
 {
 	return (x == other.x) && (y == other.y) && (z == other.z);
@@ -133,6 +140,12 @@ Vec3 &Vec3::operator-=(const Vec3 &other)
 Vec3 &Vec3::operator/=(const double scalar)
 {
 	*this = *this / scalar;
+	return *this;
+}
+
+Vec3 &Vec3::operator%=(const Vec3 &other)
+{
+	*this = *this % other;
 	return *this;
 }
 

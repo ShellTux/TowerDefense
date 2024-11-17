@@ -27,8 +27,10 @@ class Vec3 {
 	double operator*(const Vec3 &other) const;
 	Vec3 &operator*=(const double scalar);
 	Vec3 &operator/=(const double scalar);
+	Vec3 &operator%=(const Vec3 &other);
 	Vec3 &operator+=(const Vec3 &other);
 	Vec3 &operator-=(const Vec3 &other);
+	Vec3 operator%(const Vec3 &other) const;
 	Vec3 operator+(const Vec3 &other) const;
 	Vec3 operator-(const Vec3 &other) const;
 	Vec3 operator^(const Vec3 &other) const;
