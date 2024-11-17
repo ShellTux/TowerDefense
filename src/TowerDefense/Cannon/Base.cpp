@@ -7,15 +7,13 @@
 #include "Vec3.hpp"
 
 #include <GL/gl.h>
-#include <array>
 #include <cmath>
-#include <cstdint>
 #include <limits>
 #include <openGGL/3D/primitives/unit.hpp>
 #include <optional>
 #include <vector>
 
-#ifdef DEBUG
+#ifndef RELEASE
 	#include <iostream>
 #endif
 
@@ -61,9 +59,11 @@ void Cannon::update(const std::vector<Enemy> &enemies)
 
 void Cannon::shot(Enemy &target) const
 {
+	return;
+
 	target.loseHP(shotDamage);
 
-#ifdef DEBUG
+#ifndef RELEASE
 	std::cout << "Cannon shooting at " << target << std::endl;
 #endif
 }
@@ -76,8 +76,9 @@ void Cannon::upgrade()
 	shotDamage      += 1;
 	defaultCooldown  = max(1, defaultCooldown - 1);
 
-#ifdef DEBUG
-	std::cout << "Cannon upgraded! " << *this << std::endl;
+#ifndef RELEASE
+	std::cout << "Cannon at " << gridPosition << " upgraded! " << *this
+	          << std::endl;
 #endif
 }
 
