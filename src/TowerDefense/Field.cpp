@@ -271,11 +271,13 @@ void Field::drawFloor() const
 					glColor3ubv(ORANGE.data());
 				} else {
 					switch (map.at(i).at(j)) {
-					case CFloor:
+					case CSlot:
 						glColor3ubv(WHITE.data());
 						break;
-					case CSlot:
-						glColor3ubv(CYAN.data());
+					case CCannon:
+					case CWall:
+						glColor3ubv(
+						    Colors::MINT.data());
 						break;
 					default:
 						glColor3ubv(GRAY.data());
