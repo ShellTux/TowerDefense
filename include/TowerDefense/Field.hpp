@@ -256,14 +256,14 @@ class Field {
 	Tower tower;                 ///< The tower object in the field.
 	uint8_t gameSpeed;           ///< The speed of the game.
 	uint8_t remainingCannons;    ///< The number of remaining cannons.
-	uint8_t rows, cols;      ///< The number of rows and columns in the map.
-	Vec3 enemyStartPosition; ///< The starting position of the enemies.
-	Vec3 selectedPosition;   ///< The currently selected position.
-	bool bDrawCannons;       ///< Whether to draw the cannons
-	bool bDrawEnemies;       ///< Whether to draw the enemies
-	bool bDrawTower;         ///< Whether to draw the tower
-	bool bDrawFloor;         ///< Whether to draw the floor
-	bool bDrawEnemyPath;     ///< Whether to draw the enemy path
+	uint8_t rows, cols; ///< The number of rows and columns in the map.
+	Vec3 enemyGridStartPosition; ///< The starting position of the enemies.
+	Vec3 selectedGridPosition;   ///< The currently selected position.
+	bool bDrawCannons;           ///< Whether to draw the cannons
+	bool bDrawEnemies;           ///< Whether to draw the enemies
+	bool bDrawTower;             ///< Whether to draw the tower
+	bool bDrawFloor;             ///< Whether to draw the floor
+	bool bDrawEnemyPath;         ///< Whether to draw the enemy path
 };
 
 } // namespace TowerDefense

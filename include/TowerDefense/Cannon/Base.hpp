@@ -28,7 +28,7 @@ class Cannon {
 	 * - range: 3
 	 * - cooldown: 10
 	 * - shotDamage: 2
-	 * - position: (0, 0, 0)
+	 * - gridPosition: (0, 0, 0)
 	 */
 	Cannon()
 	    : angle(0)
@@ -36,13 +36,13 @@ class Cannon {
 	    , defaultCooldown(10)
 	    , cooldown(defaultCooldown)
 	    , shotDamage(2)
-	    , position(0, 0, 0)
+	    , gridPosition(0, 0, 0)
 	{}
 
-	Cannon(const Vec3 &position)
+	Cannon(const Vec3 &gridPosition)
 	    : Cannon()
 	{
-		this->position = position;
+		this->gridPosition = gridPosition;
 	}
 
 	/**
@@ -64,7 +64,7 @@ class Cannon {
 	    , defaultCooldown(cooldown)
 	    , cooldown(defaultCooldown)
 	    , shotDamage(shotDamage)
-	    , position(position)
+	    , gridPosition(position)
 	{}
 	Cannon(Cannon &&)                 = default;
 	Cannon(const Cannon &)            = default;
@@ -81,7 +81,7 @@ class Cannon {
 	 */
 	friend std::ostream &operator<<(std::ostream &os, const Cannon &cannon)
 	{
-		os << "Cannon: " << cannon.position
+		os << "Cannon: " << cannon.gridPosition
 		   << ", angle: " << cannon.angle
 		   << ", cooldown: " << static_cast<int>(cannon.cooldown)
 		   << ", shotDamage: " << static_cast<int>(cannon.shotDamage);
@@ -118,7 +118,7 @@ class Cannon {
 	uint8_t defaultCooldown; ///< The default cooldown time between shots.
 	uint8_t cooldown;        ///< The cooldown time between shots.
 	uint8_t shotDamage;      ///< The damage dealt by each shot.
-	Vec3 position;           ///< The position of the cannon in 3D space.
+	Vec3 gridPosition;       ///< The position of the cannon in 3D space.
 
 	/**
 	 * @brief Update Angle based on target enemy position.

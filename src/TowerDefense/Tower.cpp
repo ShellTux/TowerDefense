@@ -1,5 +1,6 @@
 #include "TowerDefense/Tower.hpp"
 
+#include "Color.hpp"
 #include "Primitives/3D/core.hpp"
 #include "TowerDefense/Vec3.hpp"
 
@@ -9,9 +10,9 @@
 
 namespace TowerDefense {
 
-Vec3 Tower::getPosition() const
+Vec3 Tower::getGridPosition() const
 {
-	return position;
+	return gridPosition;
 }
 
 uint8_t Tower::getHealth() const
@@ -32,14 +33,12 @@ void Tower::draw() const
 	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
 	                                     | GL_VIEWPORT_BIT;
 
-	static constexpr std::array<uint8_t, 4> color = {0, 0, 255, 255};
-
-	const auto [posX, posY, _] = position.getCoordinates();
+	const auto [posY, posX, _] = gridPosition.getCoordinates();
 
 	glPushMatrix();
 	glPushAttrib(glMask);
 	{
-		glColor3ubv(color.data());
+		glColor3ubv(Colors::BLUE.data());
 
 		glTranslated(posX, posY, 0);
 		glScalef(.9, .9, 2);

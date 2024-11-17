@@ -31,8 +31,8 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map)
     , remainingCannons(10)
     , rows(map.size())
     , cols(map.at(0).size())
-    , enemyStartPosition({0, 0})
-    , selectedPosition({0, 0})
+    , enemyGridStartPosition({0, 0})
+    , selectedGridPosition({0, 0})
 {
 	this->map = Map(rows, std::vector<Cell>(cols, CWall));
 
@@ -40,23 +40,24 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map)
 
 	Vec3 towerPos;
 	uint32_t highestPos = 0;
-	for (size_t y = 0; y < this->map.size(); ++y) {
-		for (size_t x = 0; x < this->map.at(0).size(); ++x) {
-			const uint32_t c = map.at(y).at(x);
+	for (size_t i = 0; i < this->map.size(); ++i) {
+		for (size_t j = 0; j < this->map.at(0).size(); ++j) {
+			const uint32_t c = map.at(i).at(j);
+			const Vec3 pos(static_cast<double>(i),
+			               static_cast<double>(j));
 
 			if (c < CWall) {
-				enemyPathMap[c] = Vec3(x, y);
+				enemyPathMap[c] = pos;
 
 				if (c > highestPos) {
 					highestPos = c;
-					towerPos = Vec3{static_cast<double>(x),
-					                static_cast<double>(y)};
+					towerPos   = pos;
 				}
 			} else if (c == CCannon) {
-				cannons.emplace_back(0, 2, 10, 10, Vec3(x, y));
+				cannons.emplace_back(pos);
 			}
 
-			this->map[x][y] = static_cast<Cell>(c);
+			this->map[i][j] = static_cast<Cell>(c);
 		}
 	}
 
@@ -66,7 +67,7 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map)
 
 	enemies.emplace_back(enemyPath);
 
-	this->tower = Tower(towerPos);
+	tower = Tower(towerPos);
 }
 
 std::optional<Field> Field::FromFile(const std::filesystem::path &filepath)
@@ -141,7 +142,7 @@ std::optional<Field> Field::FromFile(const std::filesystem::path &filepath)
 		}
 	}
 
-	return field;
+	return Field(field);
 }
 
 double Field::getPoints() const
@@ -181,12 +182,12 @@ uint8_t Field::getRemainingCannons() const
 
 Vec3 Field::getEnemyStartPosition() const
 {
-	return enemyStartPosition;
+	return enemyGridStartPosition;
 }
 
 Vec3 Field::getSelectedPosition() const
 {
-	return selectedPosition;
+	return selectedGridPosition;
 }
 
 void Field::setGameSpeed(const uint8_t gameSpeed)
@@ -250,7 +251,7 @@ void Field::drawFloor() const
 	                                     | GL_VIEWPORT_BIT;
 
 	const auto [selectedI, selectedJ, _]
-	    = selectedPosition.getCoordinates();
+	    = selectedGridPosition.getCoordinates();
 
 	glPushAttrib(glMask);
 	{
@@ -301,7 +302,7 @@ void Field::drawEnemyPath() const
 		glLineWidth(10);
 		glBegin(GL_LINE_STRIP);
 		for (const Vec3 &enemyPathPos : enemyPath) {
-			const auto [posX, posY, _]
+			const auto [posY, posX, _]
 			    = enemyPathPos.getCoordinates();
 
 			glVertex2d(posX, posY);
@@ -340,7 +341,7 @@ void Field::upgradeCannon() {}
 
 void Field::moveSelectedPosition(const Vec3 &movement)
 {
-	this->selectedPosition += movement;
+	this->selectedGridPosition += movement;
 }
 
 Field &Field::setDrawCannons(const bool enable)

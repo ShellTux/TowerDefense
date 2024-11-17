@@ -1,5 +1,6 @@
 #include "TowerDefense/Cannon/Base.hpp"
 
+#include "Color.hpp"
 #include "Math.hpp"
 #include "Primitives/3D/core.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
@@ -27,14 +28,12 @@ void Cannon::draw() const
 	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
 	                                     | GL_VIEWPORT_BIT;
 
-	static constexpr std::array<uint8_t, 4> color = {0, 255, 0, 255};
-
-	const auto [posX, posY, _] = position.getCoordinates();
+	const auto [posY, posX, _] = gridPosition.getCoordinates();
 
 	glPushMatrix();
 	glPushAttrib(glMask);
 	{
-		glColor3ubv(color.data());
+		glColor3ubv(Colors::GREEN.data());
 
 		glTranslated(posX, posY, 0);
 		glScalef(.9, .9, 2);
@@ -84,8 +83,8 @@ void Cannon::upgrade()
 
 void Cannon::updateAngle(const Enemy &target)
 {
-	const auto [deltaX, deltaY, _]
-	    = (target.getGridPosition() - position).getCoordinates();
+	const auto [deltaY, deltaX, _]
+	    = (target.getGridPosition() - gridPosition).getCoordinates();
 
 	angle = Math::radiansToDegrees(std::atan2(deltaY, deltaX));
 }
@@ -99,7 +98,7 @@ Cannon::targetEnemy(const std::vector<Enemy> &enemies) const
 	const double rangeSq = range * range;
 	for (const auto &enemy : enemies) {
 		const double distanceSq
-		    = (enemy.getGridPosition() - position).magnitudeSq();
+		    = (enemy.getGridPosition() - gridPosition).magnitudeSq();
 		if (distanceSq >= rangeSq || distanceSq >= closestDistanceSq) {
 			continue;
 		}

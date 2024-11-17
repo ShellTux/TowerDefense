@@ -23,11 +23,11 @@ class Tower {
 	 * @brief Default constructor that initializes the tower at default values.
 	 *
 	 * The default values are:
-	 * - position: (0, 0, 0)
+	 * - gridPosition: (0, 0, 0)
 	 * - health: 10
 	 */
 	Tower()
-	    : position(0, 0, 0)
+	    : gridPosition(0, 0, 0)
 	    , health(10)
 	{}
 
@@ -36,20 +36,20 @@ class Tower {
 	 *
 	 * @param position A `Vec3` object representing the position of the tower in the game world.
 	 */
-	Tower(const Vec3 &position)
+	Tower(const Vec3 &gridPosition)
 	    : Tower()
 	{
-		this->position = position;
+		this->gridPosition = gridPosition;
 	}
 
 	/**
 	 * @brief Parameterized constructor that initializes the tower with a specified position and health.
 	 *
-	 * @param position A `Vec3` object representing the position of the tower.
+	 * @param gridPosition A `Vec3` object representing the position of the tower.
 	 * @param health The health of the tower.
 	 */
-	Tower(const Vec3 &position, const uint8_t health)
-	    : position(position)
+	Tower(const Vec3 &gridPosition, const uint8_t health)
+	    : gridPosition(gridPosition)
 	    , health(health)
 	{}
 
@@ -68,17 +68,17 @@ class Tower {
 	 */
 	friend std::ostream &operator<<(std::ostream &os, const Tower &tower)
 	{
-		os << "Tower: " << tower.getPosition()
+		os << "Tower: " << tower.getGridPosition()
 		   << ", health: " << static_cast<int>(tower.getHealth());
 		return os;
 	}
 
 	/**
-	 * @brief Gets the position of the tower.
+	 * @brief Gets the position of the tower in the grid.
 	 *
 	 * @return The position of the tower as a `Vec3` object.
 	 */
-	[[nodiscard]] Vec3 getPosition() const;
+	[[nodiscard]] Vec3 getGridPosition() const;
 
 	/**
 	 * @brief Gets the current health of the tower.
@@ -96,13 +96,13 @@ class Tower {
 	uint8_t damage(const uint8_t damage);
 
 	/**
-	 * @brief Draws the tower representation on a grid defined by rows and columns.
+	 * @brief Draws the tower representation on a grid.
 	 */
 	void draw() const;
 
       private:
-	Vec3 position;  ///< The position of the tower in the grid.
-	uint8_t health; ///< The health of the tower.
+	Vec3 gridPosition; ///< The position of the tower in the grid.
+	uint8_t health;    ///< The health of the tower.
 };
 
 } // namespace TowerDefense

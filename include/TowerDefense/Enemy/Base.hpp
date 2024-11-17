@@ -19,12 +19,12 @@ class Enemy {
 	/**
 	 * @brief Default constructs an Enemy with initial position, speed, health, and points.
 	 */
-	Enemy(const std::vector<Vec3> &path)
+	Enemy(const std::vector<Vec3> &gridPath)
 	    : position(0)
 	    , speed((double) 1 / 1000)
 	    , health(10)
 	    , points(10)
-	    , path(path)
+	    , gridPath(gridPath)
 	{}
 
 	Enemy(const std::vector<Vec3> &path, const double position)
@@ -45,12 +45,12 @@ class Enemy {
 	      const double speed,
 	      const uint8_t health,
 	      const uint8_t points,
-	      const std::vector<Vec3> &path)
+	      const std::vector<Vec3> &gridPath)
 	    : position(position)
 	    , speed(speed)
 	    , health(health)
 	    , points(points)
-	    , path(path)
+	    , gridPath(gridPath)
 	{
 		assert((0 <= position && position <= 1)
 		       && "Position needs to be between [0-1]");
@@ -137,7 +137,7 @@ class Enemy {
 	double speed;    ///< The speed at which the enemy moves.
 	uint8_t health;  ///< The current health of the enemy.
 	uint8_t points;  ///< The points awarded for defeating this enemy.
-	std::vector<Vec3> path; ///< The path to follow
+	std::vector<Vec3> gridPath; ///< The path to follow
 };
 
 } // namespace TowerDefense
