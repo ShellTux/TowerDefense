@@ -82,6 +82,16 @@ void draw()
 	}
 	glPopAttrib();
 
+	// NOTE: Minimap
+	glPushAttrib(glMask);
+	{
+		const GLint p1 = width / 8;
+		const GLint p2 = height / 8;
+		glViewport(7 * p1, 7 * p2, p1, p2);
+		field.draw();
+	}
+	glPopAttrib();
+
 	glPushAttrib(glMask);
 	{
 		const GLint p1 = width / 8;
