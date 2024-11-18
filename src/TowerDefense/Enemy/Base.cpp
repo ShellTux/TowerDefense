@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <openGGL/3D/primitives/unit.hpp>
 #include <vector>
 
@@ -33,6 +34,23 @@ uint8_t Enemy::getPoints() const
 	return points;
 }
 
+Enemy Enemy::Random(const std::vector<Vec3> &path, const double position)
+{
+	switch (std::rand() % 3 + 1) {
+	case 1: {
+		return {Type::TierA, path, position};
+	} break;
+	case 2: {
+		return {Type::TierB, path, position};
+	} break;
+	case 3: {
+		return {Type::TierC, path, position};
+	} break;
+	}
+
+	return {Type::TierA, path, position};
+}
+
 void Enemy::draw() const
 {
 	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
@@ -45,7 +63,7 @@ void Enemy::draw() const
 	glPushMatrix();
 	glPushAttrib(glMask);
 	{
-		glColor3ubv(Colors::RED.data());
+		glColor3ubv(color.data());
 
 		glTranslated(posX, posY, 0);
 		glScalef(.9, .9, 2);

@@ -1,6 +1,7 @@
 #ifndef INCLUDE_ENEMY_BASE_HPP_
 #define INCLUDE_ENEMY_BASE_HPP_
 
+#include "Color.hpp"
 #include "Vec3.hpp"
 
 #include <cassert>
@@ -16,47 +17,52 @@ namespace TowerDefense {
  */
 class Enemy {
       public:
+	enum class Type { TierA, TierB, TierC };
+
 	/**
 	 * @brief Default constructs an Enemy with initial position, speed, health, and points.
 	 */
-	Enemy(const std::vector<Vec3> &gridPath)
+	Enemy(const Type &type, const std::vector<Vec3> &gridPath)
 	    : position(0)
-	    , speed((double) 1 / 1000)
-	    , health(10)
-	    , points(10)
 	    , gridPath(gridPath)
-	{}
+	    , color(Colors::RED)
+	{
+		static constexpr double baseSpeed    = (double) 1 / 1000;
+		static constexpr uint32_t baseHealth = 10;
 
-	Enemy(const std::vector<Vec3> &path, const double position)
-	    : Enemy(path)
+		switch (type) {
+		case Type::TierA: {
+			speed  = 3 * baseSpeed;
+			health = 1 * baseHealth;
+			points = 1 * baseHealth;
+			color  = Colors::RED;
+		} break;
+		case Type::TierB: {
+			speed  = 1.5 * baseSpeed;
+			health = 3 * baseHealth;
+			points = 3 * baseHealth;
+			color  = Colors::ORANGE;
+		} break;
+		case Type::TierC: {
+			speed  = 1 * baseSpeed;
+			health = 5 * baseHealth;
+			points = 5 * baseHealth;
+			color  = Colors::PURPLE;
+		} break;
+		}
+	}
+
+	Enemy(const Type &type,
+	      const std::vector<Vec3> &gridPath,
+	      const double position)
+	    : Enemy(type, gridPath)
 	{
 		this->position = position;
 	}
 
-	/**
-	 * @brief Constructs an Enemy with specified parameters.
-	 *
-	 * @param position The initial unidimensional position of the enemy. [0-1]
-	 * @param speed The speed of the enemy. [0-1]
-	 * @param health The initial health points of the enemy.
-	 * @param points The points awarded for defeating the enemy.
-	 */
-	Enemy(const double position,
-	      const double speed,
-	      const uint8_t health,
-	      const uint8_t points,
-	      const std::vector<Vec3> &gridPath)
-	    : position(position)
-	    , speed(speed)
-	    , health(health)
-	    , points(points)
-	    , gridPath(gridPath)
-	{
-		assert((0 <= position && position <= 1)
-		       && "Position needs to be between [0-1]");
-		assert((0 <= speed && speed <= 1)
-		       && "speed needs to be between [0-1]");
-	}
+	static Enemy Random(const std::vector<Vec3> &path,
+	                    const double position = 0);
+
 	Enemy(Enemy &&)                 = default;
 	Enemy(const Enemy &)            = default;
 	Enemy &operator=(Enemy &&)      = default;
@@ -138,6 +144,7 @@ class Enemy {
 	uint32_t health; ///< The current health of the enemy.
 	uint8_t points;  ///< The points awarded for defeating this enemy.
 	std::vector<Vec3> gridPath; ///< The path to follow
+	Color color;                ///< The color of the enemy
 
 	/**
 	 * @brief Draws the enemy health.

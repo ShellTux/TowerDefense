@@ -93,7 +93,7 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map,
 
 	static constexpr int enemiesN = 10;
 	for (int i = 0; i < enemiesN; ++i) {
-		enemies.emplace_back(enemyPath, -.1 * i);
+		enemies.push_back(Enemy::Random(enemyPath, -.1 * i));
 	}
 
 	tower = Tower(towerPos);
