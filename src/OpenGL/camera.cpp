@@ -1,5 +1,7 @@
 #include "OpenGL/camera.hpp"
 
+#include "Math.hpp"
+
 #include <GL/gl.h>
 #include <cmath>
 
@@ -7,19 +9,15 @@ namespace OpenGL {
 
 void Perspective(GLfloat theta, GLfloat alpha, GLfloat beta)
 {
-	(void) theta;
-	(void) alpha;
-	(void) beta;
-
-	/*glMatrixMode(GL_PROJECTION);*/
-	/*glLoadIdentity();*/
-	/*GLfloat tg       = tan(theta * 0.5 * PI / 180.0);*/
-	/*GLfloat d        = (gh() / 2.0) / tan;*/
-	/*GLfloat nearClip = d / alpha;*/
-	/*GLfloat farClip  = d * beta;*/
-	/*GLfloat ymax     = nearClip * tan;*/
-	/*GLfloat xmax     = (gw() / gh()) * ymax;*/
-	/*glFrustum(-xmax, xmax, -ymax, ymax, nearClip, farClip);*/
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	GLfloat tg       = tan(Math::degreesToRadians(theta));
+	GLfloat d        = (1 / 2.0) / tg;
+	GLfloat nearClip = d / alpha;
+	GLfloat farClip  = d * beta;
+	GLfloat ymax     = nearClip * tg;
+	GLfloat xmax     = (1.f / 1.f) * ymax;
+	glFrustum(-xmax, xmax, ymax, -ymax, nearClip, farClip);
 }
 
 namespace Camera {

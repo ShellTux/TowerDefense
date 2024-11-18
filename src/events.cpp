@@ -8,6 +8,8 @@
 #include <iostream>
 
 extern TowerDefense::Field field;
+extern uint8_t view;
+extern bool focusMinimap;
 
 enum DebugInput : uint32_t {
 	All,
@@ -115,6 +117,16 @@ static void keyPress(GLFWwindow *window,
 			break;
 		}
 
+	} break;
+	case GLFW_KEY_V: {
+		view = (view + 1) % 2;
+	} break;
+	case GLFW_KEY_M: {
+		focusMinimap = !focusMinimap;
+	} break;
+	case GLFW_KEY_R: {
+		view         = 0;
+		focusMinimap = false;
 	} break;
 	}
 }

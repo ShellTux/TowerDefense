@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <optional>
 #include <ostream>
+#include <utility>
 #include <vector>
 
 namespace TowerDefense {
@@ -162,6 +163,8 @@ class Field {
 	 * @return A Vec3 representing the selected position.
 	 */
 	[[nodiscard]] Vec3 getSelectedPosition() const;
+
+	[[nodiscard]] std::pair<int, int> getMapDimensions() const;
 
 	/**
 	 * @brief Sets the game speed.

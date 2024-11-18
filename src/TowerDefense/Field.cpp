@@ -21,6 +21,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace TowerDefense {
@@ -218,6 +219,14 @@ Vec3 Field::getSelectedPosition() const
 	return selectedGridPosition;
 }
 
+std::pair<int, int> Field::getMapDimensions() const
+{
+	const size_t rows = map.size();
+	const size_t cols = map.at(0).size();
+
+	return {rows, cols};
+}
+
 void Field::setGameSpeed(const uint8_t gameSpeed)
 {
 	this->gameSpeed = gameSpeed;
@@ -225,13 +234,6 @@ void Field::setGameSpeed(const uint8_t gameSpeed)
 
 void Field::draw() const
 {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-.7, cols - .2, rows - .2, -.7, -1000, 1000);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
 	drawFloor();
 
 	if (bDrawEnemies) {
