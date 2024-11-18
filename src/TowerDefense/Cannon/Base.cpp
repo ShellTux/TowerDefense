@@ -44,7 +44,9 @@ void Cannon::draw() const
 
 void Cannon::update(const std::vector<Enemy> &enemies)
 {
-	cooldown = cooldown > 0 ? cooldown - 1 : defaultCooldown;
+	if (cooldown > 0) {
+		cooldown--;
+	}
 
 	const std::optional<Enemy *> enemy = targetEnemy(enemies);
 	if (!enemy) {
@@ -75,7 +77,7 @@ void Cannon::upgrade()
 
 	range           += 1;
 	shotDamage      += 1;
-	defaultCooldown  = max(1, defaultCooldown - 1);
+	defaultCooldown /= 2;
 
 #ifndef RELEASE
 	std::cout << "Cannon at " << gridPosition << " upgraded! " << *this

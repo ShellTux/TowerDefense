@@ -135,7 +135,7 @@ class Enemy {
       private:
 	double position; ///< The enemy's current unidimensional position.
 	double speed;    ///< The speed at which the enemy moves.
-	uint8_t health;  ///< The current health of the enemy.
+	uint32_t health; ///< The current health of the enemy.
 	uint8_t points;  ///< The points awarded for defeating this enemy.
 	std::vector<Vec3> gridPath; ///< The path to follow
 

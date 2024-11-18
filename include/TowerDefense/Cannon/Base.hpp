@@ -25,26 +25,27 @@ class Cannon {
 
 	Cannon(const Type &type, const Vec3 &gridPosition)
 	    : angle(0)
+	    , cooldown(0)
 	    , color(Colors::BLACK)
 	{
 		switch (type) {
 		case Type::TierA: {
-			color      = Colors::RED;
-			range      = 1;
-			shotDamage = 1;
-			cooldown = defaultCooldown = 5;
+			color           = Colors::RED;
+			range           = 2;
+			shotDamage      = 1;
+			defaultCooldown = 1 * 60;
 		} break;
 		case Type::TierB: {
-			color      = Colors::ORANGE;
-			range      = 3;
-			shotDamage = 2;
-			cooldown = defaultCooldown = 20;
+			color           = Colors::ORANGE;
+			range           = 4;
+			shotDamage      = 2;
+			defaultCooldown = 5 * 60;
 		} break;
 		case Type::TierC: {
-			color      = Colors::PURPLE;
-			range      = 2;
-			shotDamage = 3;
-			cooldown = defaultCooldown = 50;
+			color           = Colors::PURPLE;
+			range           = 3;
+			shotDamage      = 3;
+			defaultCooldown = 10 * 60;
 		} break;
 		}
 
@@ -98,12 +99,12 @@ class Cannon {
 	void upgrade();
 
       private:
-	double angle;            ///< The angle of the cannon in degrees.
-	double range;            ///< The effective range of the cannon.
-	uint8_t defaultCooldown; ///< The default cooldown time between shots.
-	uint8_t cooldown;        ///< The cooldown time between shots.
-	uint8_t shotDamage;      ///< The damage dealt by each shot.
-	Vec3 gridPosition;       ///< The position of the cannon in 3D space.
+	double angle;             ///< The angle of the cannon in degrees.
+	double range;             ///< The effective range of the cannon.
+	uint32_t defaultCooldown; ///< The default cooldown time between shots.
+	uint32_t cooldown;        ///< The cooldown time between shots.
+	uint8_t shotDamage;       ///< The damage dealt by each shot.
+	Vec3 gridPosition;        ///< The position of the cannon in 3D space.
 	Color color;
 
 	/**
