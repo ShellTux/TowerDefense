@@ -77,7 +77,7 @@ class Cannon {
 	/**
 	 * @brief Draws the cannon at its position in a grid.
 	 */
-	void draw() const;
+	void draw(const Vec3 &selectedGridPosition) const;
 
 	/**
 	 * @brief Updates the state of the cannon (e.g., cooldown, targeting, etc.).
@@ -89,7 +89,7 @@ class Cannon {
 	 *
 	 * @param target A reference to the `Enemy` object that is the target.
 	 */
-	void shot(Enemy &target) const;
+	void shot(Enemy &target);
 
 	/**
 	 * @brief Upgrades the cannon attributes.
@@ -121,6 +121,9 @@ class Cannon {
 	 */
 	[[nodiscard]] std::optional<Enemy *>
 	targetEnemy(const std::vector<Enemy> &enemies) const;
+
+	void drawRange(const Vec3 &selectedGridPosition) const;
+	void drawShot() const;
 };
 
 } // namespace TowerDefense

@@ -2,11 +2,13 @@
 
 #include "Color.hpp"
 #include "Math.hpp"
+#include "Primitives/2D/core.hpp"
 #include "Primitives/3D/core.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
 #include "Vec3.hpp"
 
 #include <GL/gl.h>
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <openGGL/3D/primitives/unit.hpp>
@@ -19,7 +21,7 @@
 
 namespace TowerDefense {
 
-void Cannon::draw() const
+void Cannon::draw(const Vec3 &selectedGridPosition) const
 {
 	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
 	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
@@ -43,8 +45,8 @@ void Cannon::draw() const
 		}
 		glPopMatrix();
 
-		// TODO: drawRange();
-		// TODO: drawShot();
+		drawRange(selectedGridPosition);
+		drawShot();
 	}
 	glPopAttrib();
 	glPopMatrix();
@@ -55,6 +57,7 @@ void Cannon::update(const std::vector<Enemy> &enemies)
 	if (cooldown > 0) {
 		cooldown--;
 	}
+	angle = 0;
 
 	const std::optional<Enemy *> enemy = targetEnemy(enemies);
 	if (!enemy) {
@@ -63,14 +66,16 @@ void Cannon::update(const std::vector<Enemy> &enemies)
 
 	Enemy &target = *enemy.value();
 	updateAngle(target);
-	if (cooldown <= 0) {
-		shot(target);
-	}
+	shot(target);
 }
 
-void Cannon::shot(Enemy &target) const
+void Cannon::shot(Enemy &target)
 {
-	return;
+	if (cooldown > 0) {
+		return;
+	}
+
+	cooldown = defaultCooldown;
 
 	target.loseHP(shotDamage);
 
@@ -124,6 +129,58 @@ Cannon::targetEnemy(const std::vector<Enemy> &enemies) const
 	}
 
 	return closestEnemy;
+}
+
+void Cannon::drawRange(const Vec3 &selectedGridPosition) const
+{
+	if (selectedGridPosition != gridPosition) {
+		return;
+	}
+
+	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
+	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
+	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	                                     | GL_VIEWPORT_BIT;
+
+	glPushMatrix();
+	glPushAttrib(glMask);
+	{
+		glColor3ubv(color.data());
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glLineWidth(5);
+
+		glScalef(2, 2, 1);
+		glScaled(range, range, 1);
+		Primitives2D::Unit::Circle(36, false);
+	}
+	glPopAttrib();
+	glPopMatrix();
+}
+
+void Cannon::drawShot() const
+{
+	const double ratio = (double) cooldown / defaultCooldown;
+	if (ratio < .92) {
+		return;
+	}
+
+
+	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
+	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
+	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	                                     | GL_VIEWPORT_BIT;
+
+	glPushMatrix();
+	glPushAttrib(glMask);
+	{
+		glColor3ubv(Colors::SALMON.data());
+
+		glScaled(range * .25, 1, 1);
+		glTranslated(1, 0, 0);
+		Primitives3D::Unit::Cube();
+	}
+	glPopAttrib();
+	glPopMatrix();
 }
 
 } // namespace TowerDefense

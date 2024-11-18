@@ -6,7 +6,7 @@
 namespace Primitives2D {
 namespace Unit {
 
-void Circle(const uint32_t resolution);
+void Circle(const uint32_t resolution, const bool fill = true);
 void Square();
 void Grid(const uint32_t rows, const uint32_t cols);
 

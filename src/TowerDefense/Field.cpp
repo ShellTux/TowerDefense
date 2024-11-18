@@ -242,7 +242,7 @@ void Field::draw() const
 
 	if (bDrawCannons) {
 		for (const auto &cannon : cannons) {
-			cannon.draw();
+			cannon.draw(selectedGridPosition);
 		}
 	}
 
