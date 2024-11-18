@@ -34,6 +34,7 @@ void Cannon::draw() const
 		glColor3ubv(color.data());
 
 		glTranslated(posX, posY, 0);
+		glRotated(angle, 0, 0, 1);
 		glScalef(.9, .9, 2);
 		Primitives3D::Unit::Cube();
 	}
