@@ -37,6 +37,8 @@
 
 # End of https://www.toptal.com/developers/gitignore/api/c++
 
-.direnv
+bin
 .clangd
+.direnv
+obj
 td
