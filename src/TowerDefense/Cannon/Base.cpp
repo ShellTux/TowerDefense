@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
-#include <openGGL/3D/primitives/unit.hpp>
 #include <optional>
 #include <vector>
 

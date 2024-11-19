@@ -9,7 +9,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
-#include <openGGL/3D/primitives/unit.hpp>
 #include <vector>
 
 namespace TowerDefense {
