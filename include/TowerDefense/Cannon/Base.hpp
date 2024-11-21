@@ -3,9 +3,9 @@
 
 #include "Color.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
+#include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 
-#include <cstdint>
 #include <optional>
 #include <ostream>
 #include <vector>
@@ -21,35 +21,15 @@ namespace TowerDefense {
  */
 class Cannon {
       public:
-	enum class Type { TierA, TierB, TierC };
-
-	Cannon(const Type &type, const Vec3 &gridPosition)
+	Cannon(const Stats::Tier &tier, const Vec3 &gridPosition)
 	    : angle(0)
-	    , cooldown(0)
+	    , cooldownMs(0)
+	    , gridPosition(gridPosition)
 	    , color(Colors::BLACK)
+	    , currentLevel(Stats::Level::L1)
+	    , currentTier(tier)
 	{
-		switch (type) {
-		case Type::TierA: {
-			color           = Colors::RED;
-			range           = 2;
-			shotDamage      = 1;
-			defaultCooldown = 1 * 60;
-		} break;
-		case Type::TierB: {
-			color           = Colors::ORANGE;
-			range           = 4;
-			shotDamage      = 2;
-			defaultCooldown = 5 * 60;
-		} break;
-		case Type::TierC: {
-			color           = Colors::PURPLE;
-			range           = 3;
-			shotDamage      = 3;
-			defaultCooldown = 10 * 60;
-		} break;
-		}
-
-		this->gridPosition = gridPosition;
+		updateStats();
 	}
 
 	Cannon(Cannon &&)                 = default;
@@ -69,8 +49,9 @@ class Cannon {
 	{
 		os << "Cannon: " << cannon.gridPosition
 		   << ", angle: " << cannon.angle
-		   << ", cooldown: " << static_cast<int>(cannon.cooldown)
-		   << ", shotDamage: " << static_cast<int>(cannon.shotDamage);
+		   << ", cooldown: " << static_cast<int>(cannon.cooldownMs)
+		   << ", shotDamage: " << static_cast<int>(cannon.shotDamage)
+		   << ", " << cannon.currentTier << ", " << cannon.currentLevel;
 		return os;
 	}
 
@@ -99,13 +80,15 @@ class Cannon {
 	void upgrade();
 
       private:
-	double angle;             ///< The angle of the cannon in degrees.
-	double range;             ///< The effective range of the cannon.
-	uint32_t defaultCooldown; ///< The default cooldown time between shots.
-	uint32_t cooldown;        ///< The cooldown time between shots.
-	uint8_t shotDamage;       ///< The damage dealt by each shot.
-	Vec3 gridPosition;        ///< The position of the cannon in 3D space.
+	double angle;       ///< The angle of the cannon in degrees.
+	Stats::Range range; ///< The effective range of the cannon.
+	Stats::CooldownMs defaultCooldownMs; ///< The default cooldown time.
+	Stats::CooldownMs cooldownMs;   ///< The cooldown time between shots.
+	Stats::HealthPoints shotDamage; ///< The damage dealt by each shot.
+	Vec3 gridPosition; ///< The position of the cannon in 3D space.
 	Color color;
+	Stats::Level currentLevel;
+	Stats::Tier currentTier;
 
 	/**
 	 * @brief Update Angle based on target enemy position.
@@ -124,6 +107,7 @@ class Cannon {
 
 	void drawRange(const Vec3 &selectedGridPosition) const;
 	void drawShot() const;
+	void updateStats();
 };
 
 } // namespace TowerDefense

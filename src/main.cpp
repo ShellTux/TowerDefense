@@ -1,6 +1,7 @@
 #include "TowerDefense/Cannon/Base.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
 #include "TowerDefense/Field.hpp"
+#include "TowerDefense/Stats.hpp"
 #include "TowerDefense/Tower.hpp"
 #include "Vec3.hpp"
 
@@ -52,32 +53,35 @@ int main()
 	Vec3 v = Vec3::RandomUnitVec3();
 	std::cout << "||" << v << "|| = " << v.magnitude() << std::endl;
 
-	Enemy e(.5, 0.1, 10, 10, {0.5, 0.5, 0});
+	Enemy e(TowerDefense::Stats::Tier::A, {});
 	std::cout << std::endl << e << std::endl;
 
-	Cannon c;
+	Cannon c(TowerDefense::Stats::Tier::A, {});
 	std::cout << std::endl << c << std::endl;
 
-	Tower t;
+	Tower t({}, 0);
 	std::cout << std::endl << t << std::endl;
 
-	#define F TowerDefense::Field::Cell::Floor
-	#define W TowerDefense::Field::Cell::Wall
-	#define S TowerDefense::Field::Cell::Slot
-	Field f({
-	    {W, W, W, W, W},
-	    {6, 5, 4, 3, W},
-	    {W, W, S, 2, W},
-	    {W, W, W, 1, 0},
-	    {W, W, W, W, W},
-	    {W, W, W, W, W},
-	});
+	#define F TowerDefense::Field::Cell::CFloor
+	#define W TowerDefense::Field::Cell::CWall
+	#define S TowerDefense::Field::Cell::CSlot
+	Field f(
+	    {
+	        {W, W, W, W, W},
+	        {6, 5, 4, 3, W},
+	        {W, W, S, 2, W},
+	        {W, W, W, 1, 0},
+	        {W, W, W, W, W},
+	        {W, W, W, W, W},
+        },
+	    {});
 	#undef F
 	#undef W
 	#undef S
 
 	std::cout << std::endl << f << std::endl;
-#else
+#endif
+
 	glfwSetErrorCallback(errorCallback);
 
 	if (glfwInit() == GLFW_FALSE) {
@@ -117,7 +121,6 @@ int main()
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
-#endif
 
 	return 0;
 }

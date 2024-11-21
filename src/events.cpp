@@ -1,5 +1,6 @@
 #include "TowerDefense/Cannon/Base.hpp"
 #include "TowerDefense/Field.hpp"
+#include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 
 #include <GL/gl.h>
@@ -71,13 +72,13 @@ static void keyPress(GLFWwindow *window,
 	} break;
 
 	case GLFW_KEY_1: {
-		field.placeCannon(TowerDefense::Cannon::Type::TierA);
+		field.placeCannon(TowerDefense::Stats::Tier::A);
 	} break;
 	case GLFW_KEY_2: {
-		field.placeCannon(TowerDefense::Cannon::Type::TierB);
+		field.placeCannon(TowerDefense::Stats::Tier::B);
 	} break;
 	case GLFW_KEY_3: {
-		field.placeCannon(TowerDefense::Cannon::Type::TierC);
+		field.placeCannon(TowerDefense::Stats::Tier::C);
 	} break;
 	case GLFW_KEY_4: {
 		field.upgradeCannon();

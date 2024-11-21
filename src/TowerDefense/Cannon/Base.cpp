@@ -5,10 +5,10 @@
 #include "Primitives/2D/core.hpp"
 #include "Primitives/3D/core.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
+#include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 
 #include <GL/gl.h>
-#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <optional>
@@ -17,6 +17,8 @@
 #ifndef RELEASE
 	#include <iostream>
 #endif
+
+extern TowerDefense::Stats::CooldownMs deltaTimeMs;
 
 namespace TowerDefense {
 
@@ -53,10 +55,8 @@ void Cannon::draw(const Vec3 &selectedGridPosition) const
 
 void Cannon::update(const std::vector<Enemy> &enemies)
 {
-	if (cooldown > 0) {
-		cooldown--;
-	}
-	angle = 0;
+	cooldownMs = (deltaTimeMs > cooldownMs) ? 0 : cooldownMs - deltaTimeMs;
+	angle      = 0;
 
 	const std::optional<Enemy *> enemy = targetEnemy(enemies);
 	if (!enemy) {
@@ -70,11 +70,11 @@ void Cannon::update(const std::vector<Enemy> &enemies)
 
 void Cannon::shot(Enemy &target)
 {
-	if (cooldown > 0) {
+	if (cooldownMs > 0) {
 		return;
 	}
 
-	cooldown = defaultCooldown;
+	cooldownMs = defaultCooldownMs;
 
 	target.loseHP(shotDamage);
 
@@ -85,16 +85,35 @@ void Cannon::shot(Enemy &target)
 
 void Cannon::upgrade()
 {
-	using std::max;
+	switch (currentLevel) {
+	case Stats::Level::L1: {
+		currentLevel = Stats::Level::L2;
+	} break;
+	case Stats::Level::L2: {
+		currentLevel = Stats::Level::L3;
+	} break;
+	case Stats::Level::L3: {
+		return;
+	} break;
+	}
 
-	range           += 1;
-	shotDamage      += 1;
-	defaultCooldown /= 2;
+	updateStats();
 
 #ifndef RELEASE
-	std::cout << "Cannon at " << gridPosition << " upgraded! " << *this
-	          << std::endl;
+	std::cout << "Cannon upgraded: " << *this << std::endl;
 #endif
+}
+
+void Cannon::updateStats()
+{
+	using Stats::Cannon::Get;
+
+	const Stats::CannonStats cannonStats = Get(currentTier, currentLevel);
+
+	shotDamage        = cannonStats.damage;
+	range             = cannonStats.range;
+	defaultCooldownMs = cannonStats.cooldownMs;
+	color             = cannonStats.color;
 }
 
 void Cannon::updateAngle(const Enemy &target)
@@ -158,7 +177,7 @@ void Cannon::drawRange(const Vec3 &selectedGridPosition) const
 
 void Cannon::drawShot() const
 {
-	const double ratio = (double) cooldown / defaultCooldown;
+	const double ratio = (double) cooldownMs / defaultCooldownMs;
 	if (ratio < .92) {
 		return;
 	}

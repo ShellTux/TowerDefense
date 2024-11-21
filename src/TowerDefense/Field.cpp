@@ -4,6 +4,7 @@
 #include "Primitives/2D/core.hpp"
 #include "TowerDefense/Cannon/Base.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
+#include "TowerDefense/Stats.hpp"
 #include "TowerDefense/Tower.hpp"
 #include "Vec3.hpp"
 
@@ -64,19 +65,16 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map,
 			} else if (c == CCannon) {
 				switch (std::rand() % 3 + 1) {
 				case 1:
-					cannons.emplace_back(
-					    Cannon::Type::TierA,
-					    pos);
+					cannons.emplace_back(Stats::Tier::A,
+					                     pos);
 					break;
 				case 2:
-					cannons.emplace_back(
-					    Cannon::Type::TierB,
-					    pos);
+					cannons.emplace_back(Stats::Tier::B,
+					                     pos);
 					break;
 				case 3:
-					cannons.emplace_back(
-					    Cannon::Type::TierC,
-					    pos);
+					cannons.emplace_back(Stats::Tier::C,
+					                     pos);
 					break;
 				default:
 					break;
@@ -92,10 +90,14 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map,
 		enemyPath.push_back(pos);
 	}
 
-	static constexpr int enemiesN = 10;
+	static constexpr int enemiesN = 100;
 	for (int i = 0; i < enemiesN; ++i) {
 		enemies.push_back(Enemy::Random(enemyPath, -.1 * i));
 	}
+
+	enemies.emplace_back(Stats::Tier::A, enemyPath);
+	enemies.emplace_back(Stats::Tier::B, enemyPath);
+	enemies.emplace_back(Stats::Tier::C, enemyPath);
 
 	tower = Tower(towerPos);
 }
@@ -388,12 +390,19 @@ void Field::update()
 	copy_if(enemies.begin(),
 	        enemies.end(),
 	        back_inserter(enemiesF),
-	        [](const Enemy &enemy) { return enemy.getPosition() < 1; });
+	        [this](const Enemy &enemy) {
+		        if (enemy.getPosition() >= 1) {
+			        tower.damage(enemy.getHealth());
+			        return false;
+		        }
+
+		        return enemy.getHealth() > 0;
+	        });
 
 	enemies = enemiesF;
 }
 
-void Field::placeCannon(const Cannon::Type &cannonType)
+void Field::placeCannon(const Stats::Tier &cannonType)
 {
 	const auto [selectedI, selectedJ, _]
 	    = selectedGridPosition.getCoordinates();

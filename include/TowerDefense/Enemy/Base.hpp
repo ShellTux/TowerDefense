@@ -2,6 +2,7 @@
 #define INCLUDE_ENEMY_BASE_HPP_
 
 #include "Color.hpp"
+#include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 
 #include <cassert>
@@ -17,45 +18,21 @@ namespace TowerDefense {
  */
 class Enemy {
       public:
-	enum class Type { TierA, TierB, TierC };
-
 	/**
 	 * @brief Default constructs an Enemy with initial position, speed, health, and points.
 	 */
-	Enemy(const Type &type, const std::vector<Vec3> &gridPath)
+	Enemy(const Stats::Tier &tier, const std::vector<Vec3> &gridPath)
 	    : position(0)
 	    , gridPath(gridPath)
 	    , color(Colors::RED)
 	{
-		static constexpr double baseSpeed    = (double) 1 / 1000;
-		static constexpr uint32_t baseHealth = 10;
-
-		switch (type) {
-		case Type::TierA: {
-			speed  = 3 * baseSpeed;
-			health = 1 * baseHealth;
-			points = 1 * baseHealth;
-			color  = Colors::RED;
-		} break;
-		case Type::TierB: {
-			speed  = 1.5 * baseSpeed;
-			health = 3 * baseHealth;
-			points = 3 * baseHealth;
-			color  = Colors::ORANGE;
-		} break;
-		case Type::TierC: {
-			speed  = 1 * baseSpeed;
-			health = 5 * baseHealth;
-			points = 5 * baseHealth;
-			color  = Colors::PURPLE;
-		} break;
-		}
+		updateStats(tier);
 	}
 
-	Enemy(const Type &type,
+	Enemy(const Stats::Tier &tier,
 	      const std::vector<Vec3> &gridPath,
 	      const double position)
-	    : Enemy(type, gridPath)
+	    : Enemy(tier, gridPath)
 	{
 		this->position = position;
 	}
@@ -79,7 +56,7 @@ class Enemy {
 	friend std::ostream &operator<<(std::ostream &os, const Enemy &enemy)
 	{
 		os << "Enemy: " << enemy.getPosition()
-		   << ", speed: " << enemy.getSpeed()
+		   << ", speed: " << enemy.getSpeedUpMs()
 		   << ", health: " << static_cast<int>(enemy.getHealth())
 		   << ", points: " << static_cast<int>(enemy.getPoints());
 		return os;
@@ -97,7 +74,7 @@ class Enemy {
 	 *
 	 * @return The speed of the enemy.
 	 */
-	[[nodiscard]] double getSpeed() const;
+	[[nodiscard]] double getSpeedUpMs() const;
 
 	/**
 	 * @brief Gets the current health of the enemy.
@@ -129,7 +106,7 @@ class Enemy {
 	 * @param healthPoints The amount of health points to lose.
 	 * @return The remaining health points after loss.
 	 */
-	uint8_t loseHP(const uint8_t healthPoints);
+	Stats::HealthPoints loseHP(const Stats::HealthPoints damagePoints);
 
 	/**
 	 * @brief Gets position on the grid based on unidimensional position on the path.
@@ -140,9 +117,9 @@ class Enemy {
 
       private:
 	double position; ///< The enemy's current unidimensional position.
-	double speed;    ///< The speed at which the enemy moves.
-	uint32_t health; ///< The current health of the enemy.
-	uint8_t points;  ///< The points awarded for defeating this enemy.
+	Stats::Speed speedUpMs;     ///< The speed at which the enemy moves.
+	Stats::HealthPoints health; ///< The current health of the enemy.
+	Stats::HealthPoints fullHealth;
 	std::vector<Vec3> gridPath; ///< The path to follow
 	Color color;                ///< The color of the enemy
 
@@ -150,6 +127,8 @@ class Enemy {
 	 * @brief Draws the enemy health.
 	 */
 	void drawHealth() const;
+
+	void updateStats(const Stats::Tier &tier);
 };
 
 } // namespace TowerDefense

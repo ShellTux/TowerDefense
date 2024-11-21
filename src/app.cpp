@@ -1,9 +1,10 @@
-#include "Math.hpp"
 #include "OpenGL/camera.hpp"
 #include "TowerDefense/Field.hpp"
+#include "TowerDefense/Stats.hpp"
 
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
+#include <chrono>
 #include <cmath>
 #include <cstdint>
 #include <iostream>
@@ -36,6 +37,11 @@ static int height;
 static int rows;
 static int cols;
 static GLfloat orbitAngle = 0;
+
+using Clock = std::chrono::steady_clock;
+
+Clock::time_point lastFrameTime             = Clock::now();
+TowerDefense::Stats::CooldownMs deltaTimeMs = 0;
 
 extern GLFWwindow *window;
 
@@ -70,11 +76,18 @@ void setup()
 	glEnable(GL_DEPTH_TEST);
 }
 
+static void updateTime()
+{
+	deltaTimeMs   = (Clock::now() - lastFrameTime).count() / (long) 1e6;
+	lastFrameTime = Clock::now();
+}
+
 void update()
 {
 	glfwGetWindowSize(window, &width, &height);
 
 	orbitAngle += .01;
+	updateTime();
 
 	field.update();
 }

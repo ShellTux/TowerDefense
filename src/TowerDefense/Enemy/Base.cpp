@@ -2,6 +2,7 @@
 
 #include "Color.hpp"
 #include "Primitives/3D/core.hpp"
+#include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 
 #include <GL/gl.h>
@@ -18,9 +19,9 @@ double Enemy::getPosition() const
 	return position;
 }
 
-double Enemy::getSpeed() const
+double Enemy::getSpeedUpMs() const
 {
-	return speed;
+	return speedUpMs;
 }
 
 uint8_t Enemy::getHealth() const
@@ -30,24 +31,23 @@ uint8_t Enemy::getHealth() const
 
 uint8_t Enemy::getPoints() const
 {
-	return points;
+	return fullHealth;
 }
 
 Enemy Enemy::Random(const std::vector<Vec3> &path, const double position)
 {
 	switch (std::rand() % 3 + 1) {
+	default:
 	case 1: {
-		return {Type::TierA, path, position};
+		return {Stats::Tier::A, path, position};
 	} break;
 	case 2: {
-		return {Type::TierB, path, position};
+		return {Stats::Tier::B, path, position};
 	} break;
 	case 3: {
-		return {Type::TierC, path, position};
+		return {Stats::Tier::C, path, position};
 	} break;
 	}
-
-	return {Type::TierA, path, position};
 }
 
 void Enemy::draw() const
@@ -81,13 +81,15 @@ void Enemy::drawHealth() const
 	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
 	                                     | GL_VIEWPORT_BIT;
 
+	const double healthRatio = 1. * health / fullHealth;
+
 	glPushMatrix();
 	glPushAttrib(glMask);
 	{
 		glColor3ubv(Colors::GREEN.data());
 
 		glTranslated(0, 0, .5);
-		glScalef(.8, .2, .2);
+		glScaled(.8 * healthRatio, .2, .2);
 		Primitives3D::Unit::Cube();
 	}
 	glPopAttrib();
@@ -96,12 +98,12 @@ void Enemy::drawHealth() const
 
 void Enemy::update()
 {
-	position += speed;
+	position += speedUpMs * 100;
 }
 
-uint8_t Enemy::loseHP(const uint8_t healthPoints)
+Stats::HealthPoints Enemy::loseHP(const Stats::HealthPoints damagePoints)
 {
-	health = (health > healthPoints) ? health - healthPoints : 0;
+	health = (health > damagePoints) ? health - damagePoints : 0;
 	return health;
 }
 
@@ -125,6 +127,15 @@ Vec3 Enemy::getGridPosition() const
 	const double segmentProgress = distanceAlongPath - startIdx;
 
 	return startPoint * (1 - segmentProgress) + endPoint * segmentProgress;
+}
+
+void Enemy::updateStats(const Stats::Tier &tier)
+{
+	const Stats::EnemyStats enemyStats = Stats::Enemy::Get(tier);
+
+	speedUpMs = enemyStats.speedUpMs;
+	health = fullHealth = enemyStats.health;
+	color               = enemyStats.color;
 }
 
 } // namespace TowerDefense

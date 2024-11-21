@@ -19,6 +19,7 @@ SRC = \
       ./src/Primitives/2D/core.cpp \
       ./src/OpenGL/camera.cpp \
       ./src/TowerDefense/Vec3.cpp \
+      ./src/TowerDefense/Stats.cpp \
       ./src/TowerDefense/Enemy/Base.cpp \
       ./src/TowerDefense/Cannon/Base.cpp \
       ./src/TowerDefense/Tower.cpp \

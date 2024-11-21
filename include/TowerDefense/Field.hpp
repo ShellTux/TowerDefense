@@ -3,9 +3,11 @@
 
 #include "TowerDefense/Cannon/Base.hpp"
 #include "TowerDefense/Enemy/Base.hpp"
+#include "TowerDefense/Stats.hpp"
 #include "TowerDefense/Tower.hpp"
 #include "Vec3.hpp"
 
+#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <filesystem>
@@ -42,6 +44,8 @@ class Field {
 	 * @brief A 2D vector to represent the field map.
 	 */
 	using Map = std::vector<std::vector<Cell>>;
+
+	using FrameTime = std::chrono::steady_clock::time_point;
 
 	/**
 	 * @brief Constructs a Field object from a given map.
@@ -201,7 +205,7 @@ class Field {
 	/**
 	 * @brief Places a cannon in the field.
 	 */
-	void placeCannon(const Cannon::Type &cannonType);
+	void placeCannon(const Stats::Tier &cannonType);
 
 	/**
 	 * @brief Upgrades a cannon in the field.
