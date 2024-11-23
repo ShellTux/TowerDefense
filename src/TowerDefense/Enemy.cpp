@@ -4,6 +4,7 @@
 #include "Primitives/3D/core.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
+#include "types.hpp"
 
 #include <GL/gl.h>
 #include <algorithm>
@@ -96,9 +97,9 @@ void Enemy::drawHealth() const
 	glPopMatrix();
 }
 
-void Enemy::update()
+void Enemy::update(const Stats::CooldownMs deltaTimeMs)
 {
-	position += speedUpMs * 100;
+	position += speedUpMs * f32(deltaTimeMs) * 2;
 }
 
 Stats::HealthPoints Enemy::loseHP(const Stats::HealthPoints damagePoints)

@@ -98,7 +98,7 @@ class Enemy {
 	/**
 	 * @brief Updates the enemy along the specified path.
 	 */
-	void update();
+	void update(const Stats::CooldownMs deltaTimeMs);
 
 	/**
 	 * @brief Decreases the enemy's health by a specified amount.

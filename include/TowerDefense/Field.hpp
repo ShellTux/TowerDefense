@@ -6,6 +6,7 @@
 #include "TowerDefense/Stats.hpp"
 #include "TowerDefense/Tower.hpp"
 #include "Vec3.hpp"
+#include "types.hpp"
 
 #include <chrono>
 #include <cstddef>
@@ -63,6 +64,8 @@ class Field {
 	static std::optional<Field>
 	FromFile(const std::filesystem::path &filepath,
 	         const Vec3 &enemyGridStartPosition);
+
+	static Field Generate(const u32 rows, const u32 cols, const u8 waves);
 
 	friend std::ostream &operator<<(std::ostream &os, const Field &field)
 	{
@@ -200,7 +203,7 @@ class Field {
 	/**
 	 * @brief Updates the state of the field.
 	 */
-	void update();
+	void update(const Stats::CooldownMs deltaTimeMs);
 
 	/**
 	 * @brief Places a cannon in the field.

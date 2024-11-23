@@ -41,22 +41,28 @@ void Cannon::draw(const Vec3 &selectedGridPosition) const
 
 		glPushMatrix();
 		{
-			glScalef(.9, .9, 2);
+			glScalef(.9, .9, 1);
 			Primitives3D::Unit::Cube();
 		}
 		glPopMatrix();
 
 		drawRange(selectedGridPosition);
-		drawShot();
+
+		glPushMatrix();
+		{
+			glTranslated(0, 0, .5);
+			drawShot();
+		}
+		glPopMatrix();
 	}
 	glPopAttrib();
 	glPopMatrix();
 }
 
-void Cannon::update(const std::vector<Enemy> &enemies)
+void Cannon::update(const Stats::CooldownMs deltaTimeMs,
+                    const std::vector<Enemy> &enemies)
 {
 	cooldownMs = (deltaTimeMs > cooldownMs) ? 0 : cooldownMs - deltaTimeMs;
-	angle      = 0;
 
 	const std::optional<Enemy *> enemy = targetEnemy(enemies);
 	if (!enemy) {
@@ -78,7 +84,7 @@ void Cannon::shot(Enemy &target)
 
 	target.loseHP(shotDamage);
 
-#ifndef RELEASE
+#ifdef DEBUG
 	std::cout << "Cannon shooting at " << target << std::endl;
 #endif
 }
@@ -193,7 +199,7 @@ void Cannon::drawShot() const
 	{
 		glColor3ubv(Colors::SALMON.data());
 
-		glScaled(range * .25, 1, 1);
+		glScaled(range * .25, .2, .2);
 		glTranslated(1, 0, 0);
 		Primitives3D::Unit::Cube();
 	}

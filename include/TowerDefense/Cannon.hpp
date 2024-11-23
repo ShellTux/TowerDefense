@@ -63,7 +63,8 @@ class Cannon {
 	/**
 	 * @brief Updates the state of the cannon (e.g., cooldown, targeting, etc.).
 	 */
-	void update(const std::vector<Enemy> &enemies);
+	void update(const Stats::CooldownMs deltaTimeMs,
+	            const std::vector<Enemy> &enemies);
 
 	/**
 	 * @brief Shoots at a specified enemy.

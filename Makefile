@@ -12,12 +12,14 @@ TARGET = td
 SRC = \
       ./src/main.cpp \
       ./src/app.cpp \
-      ./src/events.cpp \
       ./src/Math.cpp \
       ./src/Color.cpp \
       ./src/Primitives/3D/core.cpp \
       ./src/Primitives/2D/core.cpp \
       ./src/OpenGL/camera.cpp \
+      ./src/App/Base.cpp \
+      ./src/App/App.cpp \
+      ./src/App/Events.cpp \
       ./src/TowerDefense/Vec3.cpp \
       ./src/TowerDefense/Stats.cpp \
       ./src/TowerDefense/Enemy.cpp \

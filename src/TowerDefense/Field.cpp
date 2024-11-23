@@ -181,6 +181,36 @@ std::optional<Field> Field::FromFile(const std::filesystem::path &filepath,
 	return Field(field, enemyGridStartPosition);
 }
 
+Field Field::Generate(const u32 rows, const u32 cols, const u8 waves)
+{
+	(void) rows;
+	(void) cols;
+	(void) waves;
+	// TODO: Generate Field
+#define F TowerDefense::Field::Cell::CFloor
+#define W TowerDefense::Field::Cell::CWall
+#define S TowerDefense::Field::Cell::CSlot
+#define C TowerDefense::Field::Cell::CCannon
+
+	return Field(
+	    {
+	        { W,  W,  W,  W,  W, W, W, W, W, W},
+	        { W,  W,  W,  W, 10, 9, 8, 7, W, W},
+	        { W,  W,  W,  W, 11, W, W, 6, W, W},
+	        {26, 25,  W,  S, 12, W, W, 5, W, W},
+	        { W, 24,  W,  S, 13, W, W, 4, W, W},
+	        { C, 23,  W,  S, 14, W, W, 3, S, S},
+	        { C, 22,  W,  S, 15, W, W, 2, 1, 0},
+	        { W, 21,  W,  W, 16, W, W, S, S, S},
+	        { W, 20, 19, 18, 17, W, W, W, W, W},
+        },
+	    {6, 10});
+#undef F
+#undef W
+#undef S
+#undef C
+}
+
 double Field::getPoints() const
 {
 	return points;
@@ -373,14 +403,14 @@ void Field::drawEnemyPath() const
 	glPopMatrix();
 }
 
-void Field::update()
+void Field::update(const Stats::CooldownMs deltaTimeMs)
 {
 	for (Enemy &enemy : enemies) {
-		enemy.update();
+		enemy.update(deltaTimeMs);
 	}
 
 	for (Cannon &cannon : cannons) {
-		cannon.update(enemies);
+		cannon.update(deltaTimeMs, enemies);
 	}
 
 	std::vector<Enemy> enemiesF;
