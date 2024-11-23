@@ -19,8 +19,8 @@ SRC = \
       ./src/OpenGL/camera.cpp \
       ./src/TowerDefense/Vec3.cpp \
       ./src/TowerDefense/Stats.cpp \
-      ./src/TowerDefense/Enemy/Base.cpp \
-      ./src/TowerDefense/Cannon/Base.cpp \
+      ./src/TowerDefense/Enemy.cpp \
+      ./src/TowerDefense/Cannon.cpp \
       ./src/TowerDefense/Tower.cpp \
       ./src/TowerDefense/Field.cpp
 OBJ := $(SRC:.cpp=.o)

@@ -2,7 +2,7 @@
 #define INCLUDE_CANNON_BASE_HPP_
 
 #include "Color.hpp"
-#include "TowerDefense/Enemy/Base.hpp"
+#include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 

@@ -1,8 +1,8 @@
 #ifndef INCLUDE_TOWERDEFENSE_FIELD_HPP_
 #define INCLUDE_TOWERDEFENSE_FIELD_HPP_
 
-#include "TowerDefense/Cannon/Base.hpp"
-#include "TowerDefense/Enemy/Base.hpp"
+#include "TowerDefense/Cannon.hpp"
+#include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "TowerDefense/Tower.hpp"
 #include "Vec3.hpp"

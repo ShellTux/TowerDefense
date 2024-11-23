@@ -1,4 +1,4 @@
-#include "TowerDefense/Enemy/Base.hpp"
+#include "TowerDefense/Enemy.hpp"
 
 #include "Color.hpp"
 #include "Primitives/3D/core.hpp"

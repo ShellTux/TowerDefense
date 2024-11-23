@@ -1,10 +1,10 @@
-#include "TowerDefense/Cannon/Base.hpp"
+#include "TowerDefense/Cannon.hpp"
 
 #include "Color.hpp"
 #include "Math.hpp"
 #include "Primitives/2D/core.hpp"
 #include "Primitives/3D/core.hpp"
-#include "TowerDefense/Enemy/Base.hpp"
+#include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 

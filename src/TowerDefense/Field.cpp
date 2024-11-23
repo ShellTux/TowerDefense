@@ -2,8 +2,8 @@
 
 #include "Color.hpp"
 #include "Primitives/2D/core.hpp"
-#include "TowerDefense/Cannon/Base.hpp"
-#include "TowerDefense/Enemy/Base.hpp"
+#include "TowerDefense/Cannon.hpp"
+#include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "TowerDefense/Tower.hpp"
 #include "Vec3.hpp"

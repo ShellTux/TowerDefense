@@ -1,4 +1,4 @@
-#include "TowerDefense/Cannon/Base.hpp"
+#include "TowerDefense/Cannon.hpp"
 #include "TowerDefense/Field.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
