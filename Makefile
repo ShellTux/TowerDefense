@@ -14,6 +14,7 @@ SRC = \
       ./src/app.cpp \
       ./src/events.cpp \
       ./src/Math.cpp \
+      ./src/Color.cpp \
       ./src/Primitives/3D/core.cpp \
       ./src/Primitives/2D/core.cpp \
       ./src/OpenGL/camera.cpp \

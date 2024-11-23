@@ -1,10 +1,12 @@
 #ifndef INCLUDE_INCLUDE_COLOR_HPP_
 #define INCLUDE_INCLUDE_COLOR_HPP_
 
-#include <array>
-#include <cstdint>
+#include "types.hpp"
 
-using Color = std::array<uint8_t, 4>;
+#include <array>
+#include <ostream>
+
+using Color = std::array<u8, 4>;
 
 namespace Colors {
 
@@ -41,6 +43,8 @@ constexpr Color CHOCOLATE = {210, 105, 30, 255};
 constexpr Color KHAKI     = {240, 230, 140, 255};
 constexpr Color LIME      = {0, 255, 0, 255};
 constexpr Color ENDER     = {255, 0, 255, 255};
+
+std::ostream &operator<<(std::ostream &os, const Color &color);
 
 } // namespace Colors
 
