@@ -167,16 +167,20 @@ void Enemy::updateStats(const Stats::Tier &tier)
 
 std::tuple<Vec3, Vec3, Vec3> Enemy::getLookAt() const
 {
-	// TODO: NOT working
-	const static f64 z = .2;
+	const static f64 z = .5;
 
 	const Vec3 pos     = getGridPosition();
 	const Vec3 nextPos = getNextGridPosition();
+	const Vec3 dir     = (nextPos - pos).normalize();
 
-	const auto &[cameraI, cameraJ, _]  = pos.getCoordinates();
-	const auto &[targetI, targetJ, _1] = nextPos.getCoordinates();
+	std::cout << dir << std::endl;
 
-	const Vec3 camera    = Vec3(cameraJ + 1, cameraI, z);
+	static constexpr f64 r            = .5;
+	const auto &[cameraI, cameraJ, _] = (pos + dir * r).getCoordinates();
+	const auto &[targetI, targetJ, _1]
+	    = (pos + dir * (r + 1)).getCoordinates();
+
+	const Vec3 camera    = Vec3(cameraJ, cameraI, z);
 	const Vec3 target    = Vec3(targetJ, targetI, z);
 	static const Vec3 up = {0, 0, -1};
 
