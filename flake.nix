@@ -33,6 +33,8 @@
 				glm
 				libGLU
 				openggl.packages.${system}.openGGL
+				pandoc
+				texlive.combined.scheme-full
 			];
 
 			LD_LIBRARY_PATH = libPath + "/run/opengl-driver/lib:/run/opengl-driver-32/lib";

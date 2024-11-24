@@ -30,6 +30,9 @@ OBJ := $(SRC:.cpp=.o)
 $(TARGET): $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
+%.pdf: %.md
+	pandoc $(PANDOC_OPTS) --from=markdown-implicit_figures --output=$@ $<
+
 .PHONY: run
 run: $(TARGET)
 	./$^
@@ -39,8 +42,8 @@ clean:
 	find . -type f -iname "*.o" -exec rm "{}" \;
 
 .PHONY: archive
-archive:
-	git archive --verbose --output=CG_LEI_2024_PROJETO_META_01_2018280716.zip HEAD
+archive: README.pdf
+	git archive --verbose --output=CG_LEI_2024_PROJETO_META_01_2018280716.zip $(^:%=--add-file=%) HEAD
 
 .PHONY: .clangd
 .clangd:
