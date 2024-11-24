@@ -28,6 +28,7 @@
 				freeglut
 				gcc
 				gcc
+				gdb
 				glfw
 				glm
 				libGLU
