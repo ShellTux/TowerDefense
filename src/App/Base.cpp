@@ -68,8 +68,10 @@ void App::loop()
 	const milliseconds deltaTimeMs(u32(1e3 / 60));
 
 	while (glfwWindowShouldClose(window) == 0) {
-		update();
-		draw();
+		if (!pause) {
+			update();
+			draw();
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

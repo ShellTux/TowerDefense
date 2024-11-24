@@ -35,6 +35,7 @@ class App {
 
       private:
 	bool focusMinimap  = false;
+	bool pause         = false;
 	GLFWwindow *window = nullptr;
 	u32 width          = 0;
 	u32 height         = 0;

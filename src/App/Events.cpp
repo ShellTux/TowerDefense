@@ -69,7 +69,7 @@ void App::KeyPress(const int key)
 		} break;
 		}
 	}; break;
-	case GLFW_KEY_P: {
+	case GLFW_KEY_T: {
 		polygonMode = (polygonMode + 1) % 2;
 
 		switch (polygonMode) {
@@ -91,6 +91,9 @@ void App::KeyPress(const int key)
 	case GLFW_KEY_R: {
 		view         = 0;
 		focusMinimap = false;
+	} break;
+	case GLFW_KEY_P: {
+		pause = !pause;
 	} break;
 	}
 }

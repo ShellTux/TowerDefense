@@ -90,9 +90,10 @@ struct EnemyStats {
 | 4/U             | Upgrade Cannon at selected position                 |
 | I               | Print Info at selected position (debug mode).       |
 | C               | Toggle between cull face modes (opengl debug mode). |
-| P               | Toggle between polygon modes (opengl debug mode).   |
+| T               | Toggle between polygon modes (opengl debug mode).   |
 | V               | Switch between views                                |
 | M               | Focus Minimap                                       |
+| P               | Pause Game                                          |
 | R               | Reset view and minimap focus to default             |
 
 #### Views
