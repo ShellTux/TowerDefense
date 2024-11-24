@@ -40,7 +40,7 @@ clean:
 
 .PHONY: archive
 archive:
-	git archive --verbose --output=TowerDefense.zip HEAD
+	git archive --verbose --output=CG_LEI_2024_PROJETO_META_01_2018280716.zip HEAD
 
 .PHONY: .clangd
 .clangd:
