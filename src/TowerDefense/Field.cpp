@@ -7,6 +7,7 @@
 #include "TowerDefense/Stats.hpp"
 #include "TowerDefense/Tower.hpp"
 #include "Vec3.hpp"
+#include "types.hpp"
 
 #include <GL/gl.h>
 #include <algorithm>
@@ -460,10 +461,7 @@ void Field::placeCannon(const Stats::Tier &cannonType)
 		return;
 	}
 
-	const auto [selectedI, selectedJ, _]
-	    = selectedGridPosition.getCoordinates();
-
-	Cell &c = map.at(size_t(selectedI)).at(size_t(selectedJ));
+	Cell &c = getCell(selectedGridPosition);
 
 	if (c != CSlot) {
 		return;
@@ -477,17 +475,19 @@ void Field::placeCannon(const Stats::Tier &cannonType)
 
 void Field::upgradeCannon()
 {
-	const auto [selectedI, selectedJ, _]
-	    = selectedGridPosition.getCoordinates();
-
-	const Cell &c = map.at(size_t(selectedI)).at(size_t(selectedJ));
-
-	if (c != CCannon) {
+	if (getCell(selectedGridPosition) != CCannon) {
 		return;
 	}
-#ifndef RELEASE
-	std::cout << "Upgrade cannon at: " << selectedGridPosition << std::endl;
-#endif
+
+	for (Cannon &cannon : cannons) {
+		if (cannon.getGridPosition() != selectedGridPosition) {
+			continue;
+		}
+
+		cannon.upgrade();
+	}
+
+	std::cout << "Upgrade Cannon: " << selectedGridPosition << std::endl;
 }
 
 void Field::moveSelectedPosition(const Vec3 &movement)
@@ -543,6 +543,63 @@ Field &Field::setDrawEnemyPath(const bool enable)
 	bDrawEnemyPath = enable;
 
 	return *this;
+}
+
+Field::Cell Field::getCell(const u32 row, const u32 col) const
+{
+	return map.at(row).at(col);
+}
+
+Field::Cell Field::getCell(const Vec3 &pos) const
+{
+	const auto &[row, col, _] = pos.getCoordinates();
+
+	return getCell(u32(row), u32(col));
+}
+
+Field::Cell &Field::getCell(const u32 row, const u32 col)
+{
+	return map.at(row).at(col);
+}
+
+Field::Cell &Field::getCell(const Vec3 &pos)
+{
+	const auto &[row, col, _] = pos.getCoordinates();
+
+	return getCell(u32(row), u32(col));
+}
+
+void Field::printInfoAtSelectedPosition() const
+{
+#ifndef RELEASE
+	switch (getCell(selectedGridPosition)) {
+	case CWall: {
+		std::cout << "Wall: " << selectedGridPosition << std::endl;
+	} break;
+	case CFloor: {
+		std::cout << "Floor: " << selectedGridPosition << std::endl;
+	} break;
+	case CSlot: {
+		std::cout << "Slot: " << selectedGridPosition << std::endl;
+	} break;
+	case CCannon: {
+		std::cout << getCannonAt(selectedGridPosition) << std::endl;
+	} break;
+	}
+#endif
+}
+
+std::optional<Cannon> Field::getCannonAt(const Vec3 &pos) const
+{
+	for (const Cannon &cannon : cannons) {
+		if (cannon.getGridPosition() != pos) {
+			continue;
+		}
+
+		return cannon;
+	}
+
+	return std::nullopt;
 }
 
 } // namespace TowerDefense

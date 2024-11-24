@@ -262,6 +262,15 @@ class Field {
 	 */
 	Field &setDrawEnemyPath(const bool enable);
 
+	[[nodiscard]] Cell getCell(const u32 row, const u32 col) const;
+	[[nodiscard]] Cell getCell(const Vec3 &pos) const;
+	[[nodiscard]] Cell &getCell(const u32 row, const u32 col);
+	[[nodiscard]] Cell &getCell(const Vec3 &pos);
+
+	void printInfoAtSelectedPosition() const;
+
+	[[nodiscard]] std::optional<Cannon> getCannonAt(const Vec3 &pos) const;
+
 
       private:
 	Stats::HealthPoints points; ///< The current points scored.

@@ -6,6 +6,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 #include <string>
 #include <thread>
 
@@ -80,19 +81,16 @@ void App::loop()
 
 void App::ErrorCallback(const int errorCode, const char *description)
 {
-	(void) errorCode;
-	(void) description;
+	std::cerr << "Error(" << errorCode << "): " << description << std::endl;
 }
 
 void App::FramebufferCallback(GLFWwindow *window,
                               const int width,
                               const int height)
 {
-	const App *app = allApps.at(window);
-
+	(void) window;
 	(void) width;
 	(void) height;
-	(void) app;
 }
 
 void App::KeyCallback(GLFWwindow *window,
@@ -106,10 +104,7 @@ void App::KeyCallback(GLFWwindow *window,
 	(void) mods;
 
 #ifdef DEBUG
-	if (isDebugInputOn(KeyPress)) {
-		std::cout << "Key Pressed: " << glfwGetKeyName(key, 0)
-		          << std::endl;
-	}
+	std::cout << "Key Pressed: " << glfwGetKeyName(key, 0) << std::endl;
 #endif
 
 	switch (action) {

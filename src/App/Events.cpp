@@ -37,8 +37,12 @@ void App::KeyPress(const int key)
 	case GLFW_KEY_3: {
 		field.placeCannon(TowerDefense::Stats::Tier::C);
 	} break;
+	case GLFW_KEY_U:
 	case GLFW_KEY_4: {
 		field.upgradeCannon();
+	} break;
+	case GLFW_KEY_I: {
+		field.printInfoAtSelectedPosition();
 	} break;
 
 	case GLFW_KEY_C: {

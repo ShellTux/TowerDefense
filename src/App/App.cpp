@@ -103,9 +103,7 @@ void App::drawHUD()
 
 void App::setup()
 {
-#ifdef DEBUG
 	std::cout << field << std::endl;
-#endif
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);

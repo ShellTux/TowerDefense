@@ -55,6 +55,18 @@ class Cannon {
 		return os;
 	}
 
+	friend std::ostream &operator<<(std::ostream &os,
+	                                const std::optional<Cannon> &cannonOpt)
+	{
+		if (!cannonOpt.has_value()) {
+			os << "No Cannon";
+			return os;
+		}
+
+		os << cannonOpt.value();
+		return os;
+	}
+
 	/**
 	 * @brief Draws the cannon at its position in a grid.
 	 */
@@ -79,6 +91,8 @@ class Cannon {
 	 * This function modifies the cannon's attributes to enhance its capabilities.
 	 */
 	void upgrade();
+
+	[[nodiscard]] Vec3 getGridPosition() const;
 
       private:
 	double angle;       ///< The angle of the cannon in degrees.

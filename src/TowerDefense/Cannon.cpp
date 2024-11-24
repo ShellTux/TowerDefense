@@ -105,10 +105,11 @@ void Cannon::upgrade()
 	}
 
 	updateStats();
+}
 
-#ifndef RELEASE
-	std::cout << "Cannon upgraded: " << *this << std::endl;
-#endif
+Vec3 Cannon::getGridPosition() const
+{
+	return gridPosition;
 }
 
 void Cannon::updateStats()
