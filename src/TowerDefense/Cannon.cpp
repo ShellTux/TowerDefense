@@ -7,6 +7,7 @@
 #include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
+#include "types.hpp"
 
 #include <GL/gl.h>
 #include <cmath>

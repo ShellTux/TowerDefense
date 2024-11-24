@@ -53,7 +53,7 @@ class Field {
 	 *
 	 * @param map A 2D vector of uint32_t values representing the initial state of the field.
 	 */
-	Field(const std::vector<std::vector<uint32_t>> &map,
+	Field(const std::vector<std::vector<u32>> &map,
 	      const Vec3 &enemyGridStartPosition);
 	Field(Field &&)                 = default;
 	Field(const Field &)            = default;
@@ -103,6 +103,7 @@ class Field {
 			}
 		}
 		os << std::endl << field.getTower();
+		os << std::endl << "points: " << field.getPoints();
 		os << std::endl << "}";
 
 		return os;
@@ -179,6 +180,10 @@ class Field {
 	 * @param gameSpeed The new game speed to set.
 	 */
 	void setGameSpeed(const uint8_t gameSpeed);
+
+	Field &addPoints(const Stats::HealthPoints &points);
+
+	void printPoints() const;
 
 	/**
 	 * @brief Draws the game field.
@@ -259,16 +264,16 @@ class Field {
 
 
       private:
-	double points; ///< The current points scored.
-	Map map;       ///< The 2D map of the field.
+	Stats::HealthPoints points; ///< The current points scored.
+	Map map;                    ///< The 2D map of the field.
 	// TODO: use another structure for the cannons/enemies
 	std::vector<Cannon> cannons; ///< The list of cannons in the field.
 	std::vector<Enemy> enemies;  ///< The list of enemies in the field.
 	std::vector<Vec3> enemyPath; ///< The path of the enemies.
 	Tower tower;                 ///< The tower object in the field.
-	uint8_t gameSpeed;           ///< The speed of the game.
-	uint8_t remainingCannons;    ///< The number of remaining cannons.
-	uint8_t rows, cols; ///< The number of rows and columns in the map.
+	u32 gameSpeed;               ///< The speed of the game.
+	u32 remainingCannons;        ///< The number of remaining cannons.
+	u32 rows, cols; ///< The number of rows and columns in the map.
 	Vec3 selectedGridPosition; ///< The currently selected position.
 	bool bDrawCannons;         ///< Whether to draw the cannons
 	bool bDrawEnemies;         ///< Whether to draw the enemies

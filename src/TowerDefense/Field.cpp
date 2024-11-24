@@ -29,7 +29,7 @@ namespace TowerDefense {
 
 Field::Field(const std::vector<std::vector<uint32_t>> &map,
              const Vec3 &enemyGridStartPosition)
-    : points(10)
+    : points(100)
     , enemies({})
     , enemyPath({})
     , gameSpeed(1)
@@ -264,6 +264,18 @@ void Field::setGameSpeed(const uint8_t gameSpeed)
 	this->gameSpeed = gameSpeed;
 }
 
+Field &Field::addPoints(const Stats::HealthPoints &points)
+{
+	this->points += points;
+	printPoints();
+	return *this;
+}
+
+void Field::printPoints() const
+{
+	std::cout << "Field Points: " << points << std::endl;
+}
+
 void Field::draw() const
 {
 	drawFloor();
@@ -426,7 +438,12 @@ void Field::update(const Stats::CooldownMs deltaTimeMs)
 			        return false;
 		        }
 
-		        return enemy.getHealth() > 0;
+		        if (enemy.getHealth() <= 0) {
+			        addPoints(enemy.getPoints());
+			        return false;
+		        }
+
+		        return true;
 	        });
 
 	enemies = enemiesF;
@@ -434,6 +451,15 @@ void Field::update(const Stats::CooldownMs deltaTimeMs)
 
 void Field::placeCannon(const Stats::Tier &cannonType)
 {
+	using Stats::CannonStats, Stats::HealthPoints;
+
+	const CannonStats cannonStats
+	    = Stats::Cannon::Get(cannonType, Stats::Level::L1);
+
+	if (cannonStats.cost > getPoints()) {
+		return;
+	}
+
 	const auto [selectedI, selectedJ, _]
 	    = selectedGridPosition.getCoordinates();
 
@@ -445,6 +471,8 @@ void Field::placeCannon(const Stats::Tier &cannonType)
 
 	c = CCannon;
 	cannons.emplace_back(cannonType, selectedGridPosition);
+
+	addPoints(-cannonStats.cost);
 }
 
 void Field::upgradeCannon()
