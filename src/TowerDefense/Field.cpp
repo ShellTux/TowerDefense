@@ -96,10 +96,6 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map,
 		enemies.push_back(Enemy::Random(enemyPath, -.1 * i));
 	}
 
-	enemies.emplace_back(Stats::Tier::A, enemyPath);
-	enemies.emplace_back(Stats::Tier::B, enemyPath);
-	enemies.emplace_back(Stats::Tier::C, enemyPath);
-
 	tower = Tower(towerPos);
 }
 
