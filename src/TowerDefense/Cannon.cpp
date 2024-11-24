@@ -131,29 +131,33 @@ void Cannon::updateAngle(const Enemy &target)
 	angle = Math::radiansToDegrees(std::atan2(deltaY, deltaX));
 }
 
-[[nodiscard]] std::optional<Enemy *>
+std::optional<Enemy *>
 Cannon::targetEnemy(const std::vector<Enemy> &enemies) const
 {
-	double closestDistanceSq = std::numeric_limits<double>::max();
-	Enemy *closestEnemy      = nullptr;
+	Enemy *target = nullptr;
 
-	const double rangeSq = range * range;
-	for (const auto &enemy : enemies) {
-		const double distanceSq
+	const f64 rangeSq = range * range;
+	for (const Enemy &enemy : enemies) {
+		const f64 distanceSq
 		    = (enemy.getGridPosition() - gridPosition).magnitudeSq();
-		if (distanceSq >= rangeSq || distanceSq >= closestDistanceSq) {
+
+		if (distanceSq >= rangeSq) {
 			continue;
 		}
 
-		closestDistanceSq = distanceSq;
-		closestEnemy      = const_cast<Enemy *>(&enemy);
+		if (target == nullptr) {
+			target = const_cast<Enemy *>(&enemy);
+			continue;
+		}
+
+		if (target->getPosition() > enemy.getPosition()) {
+			continue;
+		}
+
+		target = const_cast<Enemy *>(&enemy);
 	}
 
-	if (closestEnemy == nullptr) {
-		return std::nullopt;
-	}
-
-	return closestEnemy;
+	return target == nullptr ? std::nullopt : std::make_optional(target);
 }
 
 void Cannon::drawRange(const Vec3 &selectedGridPosition) const
