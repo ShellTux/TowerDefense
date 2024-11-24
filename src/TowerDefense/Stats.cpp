@@ -137,6 +137,8 @@ CannonStats Cannon::Get(const Tier &tier, const Level &level)
 		}
 	} break;
 	}
+
+	return {};
 }
 
 EnemyStats Enemy::Get(const Tier &tier)
@@ -169,6 +171,8 @@ EnemyStats Enemy::Get(const Tier &tier)
 		};
 	} break;
 	}
+
+	return {};
 }
 
 } // namespace TowerDefense::Stats
