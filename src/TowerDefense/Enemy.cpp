@@ -173,8 +173,6 @@ std::tuple<Vec3, Vec3, Vec3> Enemy::getLookAt() const
 	const Vec3 nextPos = getNextGridPosition();
 	const Vec3 dir     = (nextPos - pos).normalize();
 
-	std::cout << dir << std::endl;
-
 	static constexpr f64 r            = .5;
 	const auto &[cameraI, cameraJ, _] = (pos + dir * r).getCoordinates();
 	const auto &[targetI, targetJ, _1]
