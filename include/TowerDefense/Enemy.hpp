@@ -4,10 +4,12 @@
 #include "Color.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
+#include "types.hpp"
 
 #include <cassert>
 #include <cstdint>
 #include <ostream>
+#include <tuple>
 #include <vector>
 
 namespace TowerDefense {
@@ -114,6 +116,9 @@ class Enemy {
 	 * @return The converted Vec3 position.
 	 */
 	[[nodiscard]] Vec3 getGridPosition() const;
+	[[nodiscard]] Vec3 getNextGridPosition() const;
+
+	[[nodiscard]] std::tuple<Vec3, Vec3, Vec3> getLookAt() const;
 
       private:
 	double position; ///< The enemy's current unidimensional position.
@@ -129,6 +134,9 @@ class Enemy {
 	void drawHealth() const;
 
 	void updateStats(const Stats::Tier &tier);
+
+	[[nodiscard]] std::tuple<Vec3, Vec3, f64>
+	getInterpolatingGridPositions() const;
 };
 
 } // namespace TowerDefense

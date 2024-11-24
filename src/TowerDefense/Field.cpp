@@ -602,4 +602,13 @@ std::optional<Cannon> Field::getCannonAt(const Vec3 &pos) const
 	return std::nullopt;
 }
 
+std::optional<Enemy> Field::getEnemy(const u32 enemyIndex) const
+{
+	if (enemyIndex >= enemies.size()) {
+		return std::nullopt;
+	}
+
+	return enemies.at(enemyIndex);
+}
+
 } // namespace TowerDefense

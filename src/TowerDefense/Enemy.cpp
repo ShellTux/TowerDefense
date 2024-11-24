@@ -11,6 +11,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <iostream>
+#include <tuple>
 #include <vector>
 
 namespace TowerDefense {
@@ -108,7 +110,7 @@ Stats::HealthPoints Enemy::loseHP(const Stats::HealthPoints damagePoints)
 	return health;
 }
 
-Vec3 Enemy::getGridPosition() const
+std::tuple<Vec3, Vec3, f64> Enemy::getInterpolatingGridPositions() const
 {
 	if (gridPath.empty()) {
 		return {};
@@ -125,9 +127,33 @@ Vec3 Enemy::getGridPosition() const
 	const Vec3 &startPoint = gridPath.at(startIdx);
 	const Vec3 &endPoint   = gridPath.at(endIdx);
 
+
 	const double segmentProgress = distanceAlongPath - startIdx;
 
-	return startPoint * (1 - segmentProgress) + endPoint * segmentProgress;
+	return {startPoint, endPoint, segmentProgress};
+}
+
+Vec3 Enemy::getGridPosition() const
+{
+	if (gridPath.empty()) {
+		return {};
+	}
+
+	const auto &[startPoint, endPoint, ratio]
+	    = getInterpolatingGridPositions();
+
+	return startPoint * (1 - ratio) + endPoint * ratio;
+}
+
+Vec3 Enemy::getNextGridPosition() const
+{
+	if (gridPath.empty()) {
+		return {};
+	}
+
+	const auto &[_, endPoint, _1] = getInterpolatingGridPositions();
+
+	return endPoint;
 }
 
 void Enemy::updateStats(const Stats::Tier &tier)
@@ -137,6 +163,24 @@ void Enemy::updateStats(const Stats::Tier &tier)
 	speedUpMs = enemyStats.speedUpMs;
 	health = fullHealth = enemyStats.health;
 	color               = enemyStats.color;
+}
+
+std::tuple<Vec3, Vec3, Vec3> Enemy::getLookAt() const
+{
+	// TODO: NOT working
+	const static f64 z = .2;
+
+	const Vec3 pos     = getGridPosition();
+	const Vec3 nextPos = getNextGridPosition();
+
+	const auto &[cameraI, cameraJ, _]  = pos.getCoordinates();
+	const auto &[targetI, targetJ, _1] = nextPos.getCoordinates();
+
+	const Vec3 camera    = Vec3(cameraJ + 1, cameraI, z);
+	const Vec3 target    = Vec3(targetJ, targetI, z);
+	static const Vec3 up = {0, 0, -1};
+
+	return {camera, target, up};
 }
 
 } // namespace TowerDefense

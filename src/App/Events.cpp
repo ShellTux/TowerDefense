@@ -83,7 +83,7 @@ void App::KeyPress(const int key)
 
 	} break;
 	case GLFW_KEY_V: {
-		view = (view + 1) % 2;
+		view++;
 	} break;
 	case GLFW_KEY_M: {
 		focusMinimap = !focusMinimap;

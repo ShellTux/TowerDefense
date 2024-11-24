@@ -270,6 +270,7 @@ class Field {
 	void printInfoAtSelectedPosition() const;
 
 	[[nodiscard]] std::optional<Cannon> getCannonAt(const Vec3 &pos) const;
+	[[nodiscard]] std::optional<Enemy> getEnemy(const u32 enemyIndex) const;
 
 
       private:

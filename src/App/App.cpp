@@ -1,12 +1,16 @@
 #include "App.hpp"
 
 #include "OpenGL/camera.hpp"
+#include "TowerDefense/Enemy.hpp"
+#include "types.hpp"
 
 #include <GL/gl.h>
 #include <cmath>
 #include <iostream>
+#include <optional>
 
-static constexpr int glMask = GL_VIEWPORT_BIT | GL_TRANSFORM_BIT;
+static constexpr int glMask
+    = GL_VIEWPORT_BIT | GL_TRANSFORM_BIT | GL_POLYGON_BIT;
 
 struct Rect {
 	int x;
@@ -66,22 +70,45 @@ void App::drawField()
 
 			const auto [rows, cols] = field.getMapDimensions();
 
-			Vec3 camera;
+			static Vec3 camera;
+			static Vec3 target;
+			static Vec3 up;
+
+			camera = {cols / 2., 1.5 * rows, 5};
+			target = {cols / 2., rows / 2., 0};
+			up     = {0, 1, 0};
+
 			switch (view) {
-			case 0: {
-				camera = {cols / 2., 1.5 * rows, 5};
-			} break;
+			case 0:
+				break;
 			case 1: {
 				using std::cos, std::sin;
-				camera = {cols / 2. * (1 + cos(orbitAngle)),
-				          rows / 2. * (1 + sin(-orbitAngle)),
-				          5};
+				camera = {
+				    .5 * cols * (1 + 2 * cos(0.5 * orbitAngle)),
+				    .5 * rows * (1 + 2 * sin(0.5 * orbitAngle)),
+				    5};
+				up = {0, 0, -1};
+			} break;
+			default: {
+				const u32 enemyIndex = view - 2;
+				const std::optional<TowerDefense::Enemy> enemy
+				    = field.getEnemy(enemyIndex);
+
+				if (!enemy.has_value()
+				    || enemy->getPosition() < 0) {
+					view = 0;
+				}
+
+				const auto &[c, t, u] = enemy->getLookAt();
+				camera                = c;
+				target                = t;
+				up                    = u;
+
+				glCullFace(GL_FRONT);
 			} break;
 			}
 
-			static const Vec3 target{cols / 2., rows / 2., 0};
-
-			OpenGL::Camera::LookAt(camera, target, {0, 1, 0});
+			OpenGL::Camera::LookAt(camera, target, up);
 			field.draw();
 		}
 		glPopMatrix();

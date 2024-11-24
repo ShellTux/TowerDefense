@@ -1,6 +1,7 @@
 #include "Vec3.hpp"
 
 #include "Math.hpp"
+#include "types.hpp"
 
 #include <cmath>
 #include <random>
@@ -15,13 +16,13 @@ Vec3::Vec3()
     , z(0)
 {}
 
-Vec3::Vec3(const double x, const double y)
+Vec3::Vec3(const f64 x, const f64 y)
     : x(x)
     , y(y)
     , z(0)
 {}
 
-Vec3::Vec3(const double x, const double y, const double z)
+Vec3::Vec3(const f64 x, const f64 y, const f64 z)
     : x(x)
     , y(y)
     , z(z)
@@ -36,22 +37,52 @@ Vec3 Vec3::RandomUnitVec3()
 	std::uniform_real_distribution<> dis(0, 1);
 
 
-	const double u = dis(gen);
-	const double v = dis(gen);
+	const f64 u = dis(gen);
+	const f64 v = dis(gen);
 
 
-	const double theta = 2 * Math::PI * u;
-	const double phi   = acos(2 * v - 1);
+	const f64 theta = 2 * Math::PI * u;
+	const f64 phi   = acos(2 * v - 1);
 
 
-	const double x = sin(phi) * cos(theta);
-	const double y = sin(phi) * sin(theta);
-	const double z = cos(phi);
+	const f64 x = sin(phi) * cos(theta);
+	const f64 y = sin(phi) * sin(theta);
+	const f64 z = cos(phi);
 
 	return {x, y, z};
 }
 
-double Vec3::Dot(const Vec3 &a, const Vec3 &b)
+Vec3 Vec3::Polar2D(const f64 angle)
+{
+	using std::cos, std::sin;
+
+	return {cos(angle), sin(angle)};
+}
+
+Vec3 Vec3::Polar2D(const Vec3 &center, const f64 radius, const f64 angle)
+{
+	return center + Polar2D(angle) * radius;
+}
+
+f64 Vec3::AngleBetween(const Vec3 &a, const Vec3 &b)
+{
+	const f64 dotProduct = Dot(a, b);
+	const f64 magA       = a.magnitude();
+	const f64 magB       = b.magnitude();
+
+	if (magA == 0 || magB == 0) {
+		throw std::runtime_error(
+		    "Cannot compute angle with a zero-length vector");
+	}
+
+	// Clamp value to avoid domain errors due to potential precision issues
+	const f64 cosAngle
+	    = std::fmax(-1.0, std::fmin(1.0, dotProduct / (magA * magB)));
+
+	return std::acos(cosAngle);
+}
+
+f64 Vec3::Dot(const Vec3 &a, const Vec3 &b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
@@ -76,12 +107,12 @@ Vec3 Vec3::operator-(const Vec3 &other) const
 	return {x - other.x, y - other.y, z - other.z};
 }
 
-Vec3 Vec3::operator*(double scalar) const
+Vec3 Vec3::operator*(f64 scalar) const
 {
 	return {x * scalar, y * scalar, z * scalar};
 }
 
-Vec3 Vec3::operator/(double scalar) const
+Vec3 Vec3::operator/(f64 scalar) const
 {
 	if (scalar == 0) {
 		throw std::runtime_error("Division by zero");
@@ -90,7 +121,7 @@ Vec3 Vec3::operator/(double scalar) const
 	return {x / scalar, y / scalar, z / scalar};
 }
 
-double Vec3::operator*(const Vec3 &other) const
+f64 Vec3::operator*(const Vec3 &other) const
 {
 	return (x * other.x) + (y * other.y) + (z * other.z);
 }
@@ -119,7 +150,7 @@ bool Vec3::operator!=(const Vec3 &other) const
 	return !(*this == other);
 }
 
-Vec3 &Vec3::operator*=(const double scalar)
+Vec3 &Vec3::operator*=(const f64 scalar)
 {
 	*this = *this * scalar;
 	return *this;
@@ -137,7 +168,7 @@ Vec3 &Vec3::operator-=(const Vec3 &other)
 	return *this;
 }
 
-Vec3 &Vec3::operator/=(const double scalar)
+Vec3 &Vec3::operator/=(const f64 scalar)
 {
 	*this = *this / scalar;
 	return *this;
@@ -149,22 +180,22 @@ Vec3 &Vec3::operator%=(const Vec3 &other)
 	return *this;
 }
 
-double Vec3::dot(const Vec3 &other) const
+f64 Vec3::dot(const Vec3 &other) const
 {
 	return Dot(*this, other);
 }
 
-double Vec3::magnitude() const
+f64 Vec3::magnitude() const
 {
 	return std::sqrt(magnitudeSq());
 }
 
-double Vec3::magnitudeSq() const
+f64 Vec3::magnitudeSq() const
 {
 	return dot(*this);
 }
 
-std::tuple<double, double, double> Vec3::getCoordinates() const
+std::tuple<f64, f64, f64> Vec3::getCoordinates() const
 {
 	return {x, y, z};
 }
@@ -179,6 +210,11 @@ Vec3 Vec3::cross(const Vec3 &other) const
 Vec3 Vec3::normalize() const
 {
 	return Normalize(*this);
+}
+
+Vec3 Vec3::transpose2D() const
+{
+	return {y, x, z};
 }
 
 } // namespace TowerDefense
