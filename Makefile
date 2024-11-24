@@ -39,6 +39,10 @@ run: $(TARGET)
 clean:
 	find . -type f -iname "*.o" -exec rm "{}" \;
 
+.PHONY: archive
+archive:
+	git archive --verbose --output=TowerDefense.zip HEAD
+
 .PHONY: .clangd
 .clangd:
 	rm --force $@
