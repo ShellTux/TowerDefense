@@ -378,7 +378,13 @@ void Field::drawFloor() const
 				}
 			}
 
-			Primitives2D::Unit::Square();
+			glPushMatrix();
+			{
+				glTranslated(0, 0, -.01);
+				Primitives2D::Unit::Square();
+			}
+			glPopMatrix();
+
 			glPopMatrix();
 		}
 	}
