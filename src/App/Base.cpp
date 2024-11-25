@@ -108,7 +108,8 @@ void App::KeyCallback(GLFWwindow *window,
 #endif
 
 	switch (action) {
-	case GLFW_PRESS: {
+	case GLFW_PRESS:
+	case GLFW_REPEAT: {
 		app->KeyPress(key);
 	} break;
 	case GLFW_RELEASE: {
