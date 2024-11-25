@@ -2,6 +2,7 @@
 
 #include "Color.hpp"
 #include "Primitives/2D/core.hpp"
+#include "Primitives/3D/core.hpp"
 #include "TowerDefense/Cannon.hpp"
 #include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
@@ -21,8 +22,7 @@
 
 namespace TowerDefense {
 
-Field::Field(const std::vector<std::vector<u32>> &map,
-             const Vec3 &enemyGridStartPosition)
+Field::Field(const std::vector<std::vector<u32>> &map)
     : cols(map.at(0).size())
     , rows(map.size())
 {
@@ -52,8 +52,10 @@ Field::Field(const std::vector<std::vector<u32>> &map,
 
 			switch (static_cast<Cell>(c)) {
 			case CWall:
-			case CFloor:
 			case CSlot:
+			case CPcb1:
+			case CPcb2:
+			case CPcb3:
 				break;
 			case CCannon: {
 				switch (std::rand() % 3 + 1) {
@@ -77,7 +79,6 @@ Field::Field(const std::vector<std::vector<u32>> &map,
 		}
 	}
 
-	enemyPath.push_back(enemyGridStartPosition);
 	for (const auto &[index, pos] : enemyPathMap) {
 		enemyPath.push_back(pos);
 	}
@@ -90,34 +91,94 @@ Field::Field(const std::vector<std::vector<u32>> &map,
 	tower = Tower(towerPos);
 }
 
+Field::u32Map Field::GenerateMap(const u32 rows, const u32 cols)
+{
+	u32Map map(rows, std::vector<u32>(cols, CWall));
+
+	for (u32 i = 0; i < rows; ++i) {
+		for (u32 j = 0; j < cols; ++j) {
+			u32 &c = map[i][j];
+
+			switch (std::rand() % 7 + 1) {
+			case 1: {
+				c = CPcb1;
+			} break;
+			case 2: {
+				c = CPcb2;
+			} break;
+			case 3: {
+				c = CPcb3;
+			} break;
+			case 4: {
+				if (std::rand() % 10 == 0) {
+					c = CSlot;
+				}
+			} break;
+			default:
+				break;
+			}
+		}
+	}
+
+	u32 enemyPathPos = 0;
+
+	u32 i     = Random::u32(0, rows - 1);
+	u32 nextI = Random::u32(0, rows - 1);
+
+	for (u32 j = 0; j < cols; ++j) {
+		map[i][j] = enemyPathPos++;
+
+		while (i < nextI) {
+			map[++i][j] = enemyPathPos++;
+		}
+
+		while (i > nextI) {
+			map[--i][j] = enemyPathPos++;
+		}
+
+		i = nextI;
+
+		if (std::rand() % 3 == 0) {
+			nextI = Random::u32(0, rows - 1);
+		}
+	}
+
+	// WARN: Possible infinite loop
+	for (u8 slots = 10; slots > 0;) {
+		usize i = Random::u32(0, rows - 1);
+		usize j = Random::u32(0, cols - 1);
+
+		u32 &c = map[i][j];
+		/*if (c >= CWall) {*/
+		/*	continue;*/
+		/*}*/
+
+		switch (static_cast<Cell>(c)) {
+		case CPcb1:
+		case CPcb2:
+		case CPcb3: {
+			c = CSlot;
+			slots--;
+		} break;
+		default:
+			break;
+		}
+	}
+
+	return map;
+}
+
 Field Field::Generate(const u32 rows, const u32 cols, const u8 waves)
 {
-	(void) rows;
-	(void) cols;
 	(void) waves;
-	// TODO: Generate Field
-#define F TowerDefense::Field::Cell::CFloor
-#define W TowerDefense::Field::Cell::CWall
-#define S TowerDefense::Field::Cell::CSlot
-#define C TowerDefense::Field::Cell::CCannon
 
-	return Field(
-	    {
-	        { W,  W,  W,  W,  W, W, W, W, W, W},
-	        { W,  W,  W,  W, 10, 9, 8, 7, W, W},
-	        { W,  W,  W,  W, 11, W, W, 6, W, W},
-	        {26, 25,  W,  S, 12, W, W, 5, W, W},
-	        { W, 24,  W,  S, 13, W, W, 4, W, W},
-	        { C, 23,  W,  S, 14, W, W, 3, S, S},
-	        { C, 22,  W,  S, 15, W, W, 2, 1, 0},
-	        { W, 21,  W,  W, 16, W, W, S, S, S},
-	        { W, 20, 19, 18, 17, W, W, W, W, W},
-        },
-	    {6, 10});
-#undef F
-#undef W
-#undef S
-#undef C
+	Field field(GenerateMap(rows, cols));
+
+#ifdef DEBUG
+	std::cout << field << std::endl;
+#endif
+
+	return field;
 }
 
 Stats::HealthPoints Field::getPoints() const
@@ -211,11 +272,6 @@ void Field::draw() const
 
 void Field::drawHUD() const
 {
-	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
-	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
-	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
-	                                     | GL_VIEWPORT_BIT | GL_LINE_BIT;
-
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(-.5, 5.5, -.5, .5, -1, 1);
@@ -234,7 +290,7 @@ void Field::drawHUD() const
 	for (size_t i = 0; i < a.size(); ++i) {
 		const Color &color = a.at(i);
 
-		glPushAttrib(glMask);
+		glPushAttrib(drawGlMask);
 		glPushMatrix();
 		{
 			glColor3ubv(color.data());
@@ -252,50 +308,28 @@ void Field::drawFloor() const
 		return;
 	}
 
-	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
-	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
-	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
-	                                     | GL_VIEWPORT_BIT;
-
 	const auto [selectedI, selectedJ, _]
 	    = selectedGridPosition.getCoordinates();
 
-	glPushAttrib(glMask);
-	for (u8 i = 0; i < rows; ++i) {
-		for (u8 j = 0; j < cols; ++j) {
-			using Colors::WHITE, Colors::YELLOW, Colors::CYAN,
-			    Colors::GRAY;
+	glPushAttrib(drawGlMask);
+	{
+		glPushMatrix();
+		{
+			glColor3ubv(Colors::MINT.data());
+			glTranslated(-.5 + cols * .5, -.5 + rows * .5, -.01);
 
-			glPushMatrix();
-			glTranslated(j, i, 0);
-
-			if (i == selectedI && j == selectedJ) {
-				glColor3ubv(YELLOW.data());
-				glScalef(.9, .9, 1);
-			} else {
-				switch (map.at(i).at(j)) {
-				case CSlot:
-					glColor3ubv(WHITE.data());
-					break;
-				case CCannon:
-				case CWall:
-					glColor3ubv(Colors::MINT.data());
-					break;
-				default:
-					glColor3ubv(GRAY.data());
-					break;
-				}
-			}
-
-			glPushMatrix();
-			{
-				glTranslated(0, 0, -.01);
-				Primitives2D::Unit::Square();
-			}
-			glPopMatrix();
-
-			glPopMatrix();
+			glScaled(cols, rows, 1);
+			Primitives2D::Unit::Grid(rows, cols);
 		}
+		glPopMatrix();
+
+		for (u32 i = 0; i < rows; ++i) {
+			for (u32 j = 0; j < cols; ++j) {
+				drawPcb(i, j);
+			}
+		}
+
+		drawSelected();
 	}
 	glPopAttrib();
 }
@@ -306,18 +340,14 @@ void Field::drawEnemyPath() const
 		return;
 	}
 
-	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
-	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
-	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
-	                                     | GL_VIEWPORT_BIT | GL_LINE_BIT;
-
-	static constexpr std::array<u8, 4> color = {255, 255, 255, 255};
-
 	glPushMatrix();
-	glPushAttrib(glMask);
+	glPushAttrib(drawGlMask);
 	{
-		glColor3ubv(color.data());
+		glColor3ubv(Colors::BROWN.data());
 		glLineWidth(10);
+
+		glTranslated(0, 0, .05);
+
 		glBegin(GL_LINE_STRIP);
 		for (const Vec3 &enemyPathPos : enemyPath) {
 			const auto [posY, posX, _]
@@ -486,17 +516,23 @@ void Field::printInfoAtSelectedPosition() const
 {
 #ifndef RELEASE
 	switch (getCell(selectedGridPosition)) {
-	case CWall: {
-		std::cout << "Wall: " << selectedGridPosition << std::endl;
+	case CPcb1: {
+		std::cout << "PCB1: " << selectedGridPosition << std::endl;
 	} break;
-	case CFloor: {
-		std::cout << "Floor: " << selectedGridPosition << std::endl;
+	case CPcb2: {
+		std::cout << "PCB2: " << selectedGridPosition << std::endl;
+	} break;
+	case CPcb3: {
+		std::cout << "PCB3: " << selectedGridPosition << std::endl;
 	} break;
 	case CSlot: {
 		std::cout << "Slot: " << selectedGridPosition << std::endl;
 	} break;
 	case CCannon: {
 		std::cout << getCannonAt(selectedGridPosition) << std::endl;
+	} break;
+	case CWall: {
+		std::cout << "Wall: " << selectedGridPosition << std::endl;
 	} break;
 	}
 #endif
@@ -527,6 +563,91 @@ std::optional<Enemy> Field::getEnemy(const u32 enemyIndex) const
 u32 Field::getWave() const
 {
 	return wave;
+}
+
+void Field::drawPcb(const u32 i, const u32 j) const
+{
+	const Cell &cell = map[i][j];
+
+	switch (cell) {
+	case CWall:
+	case CCannon:
+		return;
+	default:
+		break;
+	}
+
+	glPushAttrib(drawGlMask);
+	{
+		switch (cell) {
+		case CPcb1: {
+			glColor3ubv(Colors::GREEN.data());
+		} break;
+		case CPcb2: {
+			glColor3ubv(Colors::PURPLE.data());
+		} break;
+		case CPcb3: {
+			glColor3ubv(Colors::YELLOW.data());
+		} break;
+		case CSlot: {
+			glColor3ub(35, 212, 224);
+		} break;
+		case CWall:
+		case CCannon:
+			break;
+		}
+
+		if (cell < CWall) {
+			glColor3ubv(Colors::GRAY.data());
+		}
+
+		glPushMatrix();
+		{
+			glTranslated(j, i, 0);
+
+			do {
+				if (cell < CWall) {
+					Primitives2D::Unit::Square();
+					break;
+				}
+
+				switch (cell) {
+				case CPcb1:
+				case CPcb2:
+				case CPcb3: {
+					glTranslated(0, 0, .2);
+					glScaled(.8, .8, .2);
+					Primitives3D::Unit::Cube();
+				} break;
+				case CSlot: {
+					Primitives2D::Unit::Square();
+				} break;
+				case CWall:
+				case CCannon:
+					break;
+				}
+			} while (false);
+		}
+	}
+	glPopMatrix();
+	glPopAttrib();
+}
+
+void Field::drawSelected() const
+{
+	const auto &[posY, posX, _] = getSelectedPosition().getCoordinates();
+
+	glPushAttrib(drawGlMask);
+	glPushMatrix();
+	{
+		glColor3ubv(Colors::YELLOW.data());
+
+		glTranslated(posX, posY, .01);
+
+		Primitives2D::Unit::Square();
+	}
+	glPopAttrib();
+	glPopMatrix();
 }
 
 } // namespace TowerDefense

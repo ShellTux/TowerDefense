@@ -52,6 +52,10 @@ Enemy Enemy::Random(const std::vector<Vec3> &path, const f64 position)
 
 void Enemy::draw() const
 {
+	if (getPosition() < 0) {
+		return;
+	}
+
 	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
 	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
 	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
@@ -126,8 +130,10 @@ std::tuple<Vec3, Vec3, f64> Enemy::getInterpolatingGridPositions() const
 	const Vec3 &startPoint = gridPath.at(startIdx);
 	const Vec3 &endPoint   = gridPath.at(endIdx);
 
-
-	const f64 segmentProgress = distanceAlongPath - f64(startIdx);
+	const f64 segmentProgress
+	    = getPosition() < 0
+	          ? (getPosition() * f64(totalPoints - 1)) - f64(startIdx)
+	          : distanceAlongPath - f64(startIdx);
 
 	return {startPoint, endPoint, segmentProgress};
 }

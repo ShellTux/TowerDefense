@@ -11,6 +11,7 @@ all: td
 TARGET = td
 SRC = \
       ./src/main.cpp \
+      ./src/types.cpp \
       ./src/Math.cpp \
       ./src/Color.cpp \
       ./src/Vec3.cpp \

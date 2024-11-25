@@ -8,6 +8,7 @@
 #include "Vec3.hpp"
 #include "types.hpp"
 
+#include <GL/gl.h>
 #include <chrono>
 #include <optional>
 #include <ostream>
@@ -18,62 +19,80 @@ namespace TowerDefense {
 
 class Field {
       public:
-	using Cell = enum
-	    : u32 { CWall = 500,
-		    CFloor,
-		    CSlot,
-		    CCannon,
-	    };
+	enum Cell : u64 {
+		CWall = 500,
+		CPcb1,
+		CPcb2,
+		CPcb3,
+		CSlot,
+		CCannon,
+	};
+
+	friend std::ostream &operator<<(std::ostream &os, const enum Cell &cell)
+	{
+		switch (cell) {
+		case Field::CWall: {
+			os << "W";
+		} break;
+		case Field::CSlot: {
+			os << "\033[33m";
+			os << "S";
+		} break;
+		case Field::CCannon: {
+			os << "\033[33m";
+			os << "C";
+		} break;
+		case Field::CPcb1:
+		case Field::CPcb2:
+		case Field::CPcb3: {
+			os << "\033[34m";
+			os << "P";
+		} break;
+		}
+
+		os << "\033[0m";
+
+		return os;
+	}
 
 	using Map    = std::vector<std::vector<Cell>>;
 	using u32Map = std::vector<std::vector<u32>>;
 
 	using FrameTime = std::chrono::steady_clock::time_point;
 
-	Field(const u32Map &map, const Vec3 &enemyGridStartPosition);
+	Field(const u32Map &map);
 	Field(Field &&)                 = default;
 	Field(const Field &)            = default;
 	Field &operator=(Field &&)      = default;
 	Field &operator=(const Field &) = default;
 	~Field()                        = default;
 
+	static u32Map GenerateMap(const u32 rows, const u32 cols);
 	static Field Generate(const u32 rows, const u32 cols, const u8 waves);
 
 	friend std::ostream &operator<<(std::ostream &os, const Field &field)
 	{
 		os << "Field {" << std::endl;
-		for (usize y = 0; y < field.map.at(0).size(); ++y) {
-			if (y > 0) {
-				os << std::endl;
-			}
 
-			for (usize x = 0; x < field.map.size(); ++x) {
-				const Cell c = field.map.at(x).at(y);
-				if (x > 0) {
+		const usize rows = field.map.size();
+		const usize cols = field.map.at(0).size();
+		for (usize i = 0; i < rows; ++i) {
+			for (usize j = 0; j < cols; ++j) {
+				const Cell c = field.map.at(i).at(j);
+				if (j > 0) {
 					os << " ";
 				}
 
-				if (c < CWall) {
+				if (c < CPcb1) {
 					os << static_cast<int>(c);
 					continue;
 				}
 
-				switch (c) {
-				case Field::CWall: {
-					os << "\033[31mW\033[0m";
-				} break;
-				case Field::CFloor: {
-					os << "\033[32mF\033[0m";
-				} break;
-				case Field::CSlot: {
-					os << "\033[33mS\033[0m";
-				} break;
-				case Field::CCannon: {
-					os << "\033[33mC\033[0m";
-				} break;
-				}
+				os << c;
 			}
+			os << std::endl;
 		}
+
 		os << std::endl << field.getTower();
 		os << std::endl << "points: " << field.getPoints();
 		os << std::endl << "}";
@@ -138,6 +157,14 @@ class Field {
 	u32 rows{0};
 	u32 wave{1};
 	Vec3 selectedGridPosition{0, 0};
+
+	static constexpr GLbitfield drawGlMask
+	    = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_LIGHTING_BIT
+	      | GL_POLYGON_BIT | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	      | GL_VIEWPORT_BIT;
+
+	void drawPcb(const u32 i, const u32 j) const;
+	void drawSelected() const;
 };
 
 } // namespace TowerDefense

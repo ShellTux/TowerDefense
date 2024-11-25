@@ -2,7 +2,7 @@ Checks: >
   -*,
   bugprone-*,-bugprone-easily-swappable-parameters
   clang-analyzer-*,
-  cppcoreguidelines-*,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-pro-bounds-constant-array-index,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-macro-usage,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-avoid-non-const-global-variables
+  cppcoreguidelines-*,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-pro-bounds-constant-array-index,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-macro-usage,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-avoid-non-const-global-variables,-cppcoreguidelines-avoid-do-while
   misc-*,
   modernize-*,-modernize-use-trailing-return-type,-modernize-use-auto
   performance-*,
