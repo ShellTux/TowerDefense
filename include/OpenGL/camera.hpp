@@ -5,8 +5,6 @@
 
 #include <GL/gl.h>
 
-using TowerDefense::Vec3;
-
 namespace OpenGL {
 
 void Perspective(GLfloat theta, GLfloat alpha, GLfloat beta);

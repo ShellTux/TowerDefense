@@ -8,8 +8,6 @@
 
 void App::KeyPress(const int key)
 {
-	using TowerDefense::Vec3;
-
 	if (key == GLFW_KEY_P) {
 		if (gameSpeed == 0) {
 			lastFrameTime = Clock::now();

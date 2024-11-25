@@ -8,8 +8,6 @@
 #include <stdexcept>
 #include <tuple>
 
-namespace TowerDefense {
-
 Vec3::Vec3()
     : x(0)
     , y(0)
@@ -216,5 +214,3 @@ Vec3 Vec3::transpose2D() const
 {
 	return {y, x, z};
 }
-
-} // namespace TowerDefense

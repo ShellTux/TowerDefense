@@ -8,8 +8,6 @@
 #include <stdexcept>
 #include <tuple>
 
-namespace TowerDefense {
-
 class Vec3 {
       public:
 	Vec3();
@@ -64,7 +62,5 @@ class Vec3 {
 	f64 y;
 	f64 z;
 };
-
-} // namespace TowerDefense
 
 #endif // INCLUDE_TOWERDEFENSE_VEC3_HPP_
