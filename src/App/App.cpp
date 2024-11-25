@@ -138,10 +138,12 @@ void App::setup()
 
 void App::update()
 {
-	orbitAngle += .01;
 	updateTime();
+	orbitAngle += .01;
 
-	field.update(deltaTimeMs);
+	for (u8 i = 0; i < gameSpeed; ++i) {
+		field.update(deltaTimeMs);
+	}
 }
 
 void App::updateTime()

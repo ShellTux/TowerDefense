@@ -35,7 +35,6 @@ class App {
 
       private:
 	bool focusMinimap  = false;
-	bool pause         = false;
 	GLFWwindow *window = nullptr;
 	u32 width          = 0;
 	u32 height         = 0;
@@ -44,6 +43,8 @@ class App {
 	u8 polygonMode     = 0;
 	u8 view            = 0;
 	f64 orbitAngle     = 0;
+	u8 gameSpeed       = 1;
+	u8 maxGameSpeed    = 8;
 
 	Clock::time_point lastFrameTime             = Clock::now();
 	TowerDefense::Stats::CooldownMs deltaTimeMs = 0;

@@ -11,15 +11,14 @@ void App::KeyPress(const int key)
 	using TowerDefense::Vec3;
 
 	if (key == GLFW_KEY_P) {
-		if (pause) {
+		if (gameSpeed == 0) {
 			lastFrameTime = Clock::now();
 		}
 
-		pause = !pause;
-	}
+		gameSpeed = gameSpeed == 0 ? 1 : 0;
 
-	if (pause) {
-		return;
+		std::cout << "gameSpeed: " << static_cast<int>(gameSpeed)
+		          << std::endl;
 	}
 
 	switch (key) {
@@ -103,6 +102,15 @@ void App::KeyPress(const int key)
 	case GLFW_KEY_R: {
 		view         = 0;
 		focusMinimap = false;
+	} break;
+	case GLFW_KEY_X: {
+		gameSpeed *= 2;
+		if (gameSpeed > maxGameSpeed) {
+			gameSpeed = 1;
+		}
+
+		std::cout << "gameSpeed: " << static_cast<int>(gameSpeed)
+		          << std::endl;
 	} break;
 	}
 }
