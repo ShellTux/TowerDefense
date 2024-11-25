@@ -6,6 +6,7 @@
 #include "Vec3.hpp"
 #include "types.hpp"
 
+#include <GL/gl.h>
 #include <ostream>
 #include <tuple>
 #include <vector>
@@ -51,6 +52,7 @@ class Enemy {
 
 	Stats::HealthPoints loseHP(const Stats::HealthPoints damagePoints);
 
+	[[nodiscard]] f64 getHealthRatio() const;
 	[[nodiscard]] f64 getPosition() const;
 	[[nodiscard]] Stats::HealthPoints getHealth() const;
 	[[nodiscard]] Stats::HealthPoints getPoints() const;
@@ -66,6 +68,11 @@ class Enemy {
 	Stats::HealthPoints health{10};
 	Stats::Speed speedUpMs{};
 	std::vector<Vec3> gridPath;
+
+	static constexpr GLbitfield drawGlMask
+	    = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_LIGHTING_BIT
+	      | GL_POLYGON_BIT | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	      | GL_VIEWPORT_BIT;
 
 	void drawHealth() const;
 	void updateStats(const Stats::Tier &tier);

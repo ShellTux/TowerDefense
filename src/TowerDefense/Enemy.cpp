@@ -14,6 +14,11 @@
 
 namespace TowerDefense {
 
+f64 Enemy::getHealthRatio() const
+{
+	return f64(getHealth()) / getPoints();
+}
+
 f64 Enemy::getPosition() const
 {
 	return position;
@@ -56,15 +61,10 @@ void Enemy::draw() const
 		return;
 	}
 
-	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
-	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
-	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
-	                                     | GL_VIEWPORT_BIT;
-
 	const auto [posY, posX, _] = getGridPosition().getCoordinates();
 
 	glPushMatrix();
-	glPushAttrib(glMask);
+	glPushAttrib(drawGlMask);
 	{
 		glColor3ubv(color.data());
 
@@ -80,20 +80,17 @@ void Enemy::draw() const
 
 void Enemy::drawHealth() const
 {
-	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
-	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
-	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
-	                                     | GL_VIEWPORT_BIT;
-
-	const f64 healthRatio = 1. * health / fullHealth;
+	if (getHealth() <= 0) {
+		return;
+	}
 
 	glPushMatrix();
-	glPushAttrib(glMask);
+	glPushAttrib(drawGlMask);
 	{
 		glColor3ubv(Colors::GREEN.data());
 
 		glTranslated(0, 0, .5);
-		glScaled(.8 * healthRatio, .2, .2);
+		glScaled(.8 * getHealthRatio(), .2, .2);
 		Primitives3D::Unit::Cube();
 	}
 	glPopAttrib();

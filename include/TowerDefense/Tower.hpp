@@ -3,7 +3,9 @@
 
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
+#include "types.hpp"
 
+#include <GL/gl.h>
 #include <ostream>
 
 namespace TowerDefense {
@@ -36,6 +38,8 @@ class Tower {
 
 	void draw() const;
 
+	[[nodiscard]] f64 getHealthRatio() const;
+	[[nodiscard]] Stats::HealthPoints getFullHealth() const;
 	[[nodiscard]] Stats::HealthPoints getHealth() const;
 	[[nodiscard]] Vec3 getGridPosition() const;
 
@@ -44,6 +48,12 @@ class Tower {
       private:
 	Vec3 gridPosition;
 	Stats::HealthPoints health{100};
+	Stats::HealthPoints fullHealth{100};
+
+	static constexpr GLbitfield drawGlMask
+	    = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_LIGHTING_BIT
+	      | GL_POLYGON_BIT | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	      | GL_VIEWPORT_BIT;
 
 	void drawHealth() const;
 };

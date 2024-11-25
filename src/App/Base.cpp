@@ -125,6 +125,9 @@ void App::printStats() const
 	std::cout << "\033[5m" << "\033[35m" << "Wave " << field.getWave()
 	          << "\033[0m" << std::endl;
 	std::cout << "Points: " << field.getPoints() << std::endl;
+	std::cout << "Tower Health(%): "
+	          << field.getTower().getHealthRatio() * 100 << "%"
+	          << std::endl;
 	std::cout << "Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
 	std::cout << "Selected Position: " << field.getSelectedPosition()
 	          << std::endl;

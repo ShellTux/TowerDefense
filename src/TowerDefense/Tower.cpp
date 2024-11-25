@@ -4,6 +4,7 @@
 #include "Primitives/3D/core.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
+#include "types.hpp"
 
 #include <GL/gl.h>
 
@@ -14,6 +15,16 @@ Vec3 Tower::getGridPosition() const
 	return gridPosition;
 }
 
+f64 Tower::getHealthRatio() const
+{
+	return f64(getHealth()) / getFullHealth();
+}
+
+Stats::HealthPoints Tower::getFullHealth() const
+{
+	return fullHealth;
+}
+
 Stats::HealthPoints Tower::getHealth() const
 {
 	return health;
@@ -21,21 +32,16 @@ Stats::HealthPoints Tower::getHealth() const
 
 Stats::HealthPoints Tower::damage(const Stats::HealthPoints damage)
 {
-	health -= damage;
+	health = damage > health ? 0 : health - damage;
 	return health;
 }
 
 void Tower::draw() const
 {
-	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
-	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
-	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
-	                                     | GL_VIEWPORT_BIT;
-
 	const auto [posY, posX, _] = gridPosition.getCoordinates();
 
 	glPushMatrix();
-	glPushAttrib(glMask);
+	glPushAttrib(drawGlMask);
 	{
 		glColor3ubv(Colors::AQUA.data());
 
@@ -51,18 +57,17 @@ void Tower::draw() const
 
 void Tower::drawHealth() const
 {
-	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
-	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
-	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
-	                                     | GL_VIEWPORT_BIT;
+	if (getHealth() <= 0) {
+		return;
+	}
 
 	glPushMatrix();
-	glPushAttrib(glMask);
+	glPushAttrib(drawGlMask);
 	{
 		glColor3ubv(Colors::GREEN.data());
 
 		glTranslated(0, 0, .5);
-		glScalef(.8, .3, .3);
+		glScaled(.8 * getHealthRatio(), .3, .3);
 		Primitives3D::Unit::Cube();
 	}
 	glPopAttrib();
