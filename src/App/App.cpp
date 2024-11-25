@@ -145,7 +145,7 @@ void App::update()
 	updateTime();
 	orbitAngle += .01;
 
-	for (u8 i = 0; i < gameSpeed; ++i) {
+	for (u8 i = 0; i < gameSpeed * static_cast<u8>(!pause); ++i) {
 		field.update(deltaTimeMs);
 	}
 }

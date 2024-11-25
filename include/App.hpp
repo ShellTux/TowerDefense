@@ -36,6 +36,7 @@ class App {
 	void printStats() const;
 
       private:
+	bool pause         = false;
 	bool focusMinimap  = false;
 	GLFWwindow *window = nullptr;
 	u32 width          = 0;
@@ -46,7 +47,7 @@ class App {
 	u8 view            = 0;
 	f64 orbitAngle     = 0;
 	u8 gameSpeed       = 1;
-	u8 maxGameSpeed    = 8;
+	u8 maxGameSpeed    = 16;
 
 	Clock::time_point lastFrameTime         = Clock::now();
 	TowerDefense::Stats::TimeMs deltaTimeMs = 0;

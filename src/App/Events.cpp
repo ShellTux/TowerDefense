@@ -8,11 +8,11 @@
 void App::KeyPress(const int key)
 {
 	if (key == GLFW_KEY_P) {
-		if (gameSpeed == 0) {
+		if (pause) {
 			lastFrameTime = Clock::now();
 		}
 
-		gameSpeed = gameSpeed == 0 ? 1 : 0;
+		pause = !pause;
 	}
 
 	switch (key) {
