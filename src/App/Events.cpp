@@ -10,6 +10,18 @@ void App::KeyPress(const int key)
 {
 	using TowerDefense::Vec3;
 
+	if (key == GLFW_KEY_P) {
+		if (pause) {
+			lastFrameTime = Clock::now();
+		}
+
+		pause = !pause;
+	}
+
+	if (pause) {
+		return;
+	}
+
 	switch (key) {
 	case GLFW_KEY_S:
 	case GLFW_KEY_DOWN: {
@@ -91,9 +103,6 @@ void App::KeyPress(const int key)
 	case GLFW_KEY_R: {
 		view         = 0;
 		focusMinimap = false;
-	} break;
-	case GLFW_KEY_P: {
-		pause = !pause;
 	} break;
 	}
 }
