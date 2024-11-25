@@ -83,10 +83,10 @@ void App::drawField()
 				break;
 			case 1: {
 				using std::cos, std::sin;
-				camera = {
-				    .5 * cols * (1 + 2 * cos(0.5 * orbitAngle)),
-				    .5 * rows * (1 + 2 * sin(0.5 * orbitAngle)),
-				    5};
+				camera
+				    = Vec3::Polar2D({.5 * cols, .5 * rows, 3},
+				                    (cols + rows) * .5,
+				                    orbitAngle);
 				up = {0, 0, -1};
 			} break;
 			default: {
