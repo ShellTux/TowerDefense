@@ -116,3 +116,15 @@ void App::KeyCallback(GLFWwindow *window,
 	} break;
 	}
 }
+
+void App::printStats() const
+{
+	std::cout << "\033[2J\033[H";
+	std::cout << "-------Tower Defense Stats-------" << std::endl;
+	std::cout << "Points: " << field.getPoints() << std::endl;
+	std::cout << "Wave: " << field.getWave() << std::endl;
+	std::cout << "Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
+	std::cout << "Cannons: " << field.getCannonsSize() << std::endl;
+	std::cout << "Enemies: " << field.getEnemiesSize() << std::endl;
+	std::cout << "---------------------------------" << std::endl;
+}

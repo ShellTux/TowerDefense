@@ -130,8 +130,6 @@ void App::drawHUD()
 
 void App::setup()
 {
-	std::cout << field << std::endl;
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 }
@@ -159,4 +157,6 @@ void App::draw()
 	drawField();
 	drawMinimap();
 	drawHUD();
+
+	printStats();
 }

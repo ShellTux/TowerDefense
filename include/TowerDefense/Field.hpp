@@ -129,6 +129,10 @@ class Field {
 	 * @return A vector of Enemy objects.
 	 */
 	[[nodiscard]] std::vector<Enemy> getEnemies() const;
+	[[nodiscard]] std::vector<Cannon> getCannons() const;
+
+	[[nodiscard]] size_t getEnemiesSize() const;
+	[[nodiscard]] size_t getCannonsSize() const;
 
 	/**
 	 * @brief Retrieves the path of the enemies in the field.
@@ -272,6 +276,8 @@ class Field {
 	[[nodiscard]] std::optional<Cannon> getCannonAt(const Vec3 &pos) const;
 	[[nodiscard]] std::optional<Enemy> getEnemy(const u32 enemyIndex) const;
 
+	[[nodiscard]] u32 getWave() const;
+
 
       private:
 	Stats::HealthPoints points; ///< The current points scored.
@@ -290,6 +296,7 @@ class Field {
 	bool bDrawTower;           ///< Whether to draw the tower
 	bool bDrawFloor;           ///< Whether to draw the floor
 	bool bDrawEnemyPath;       ///< Whether to draw the enemy path
+	u32 wave;
 };
 
 } // namespace TowerDefense

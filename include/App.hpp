@@ -33,6 +33,8 @@ class App {
 
 	void loop();
 
+	void printStats() const;
+
       private:
 	bool focusMinimap  = false;
 	GLFWwindow *window = nullptr;

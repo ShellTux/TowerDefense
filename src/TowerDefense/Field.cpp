@@ -43,6 +43,7 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map,
     , bDrawTower(true)
     , bDrawFloor(true)
     , bDrawEnemyPath(true)
+    , wave(1)
 {
 	this->map = Map(rows, std::vector<Cell>(cols, CWall));
 
@@ -221,6 +222,21 @@ Field::Map Field::getMap() const
 std::vector<Enemy> Field::getEnemies() const
 {
 	return enemies;
+}
+
+std::vector<Cannon> Field::getCannons() const
+{
+	return cannons;
+}
+
+size_t Field::getEnemiesSize() const
+{
+	return enemies.size();
+}
+
+size_t Field::getCannonsSize() const
+{
+	return cannons.size();
 }
 
 std::vector<Vec3> Field::getEnemyPath() const
@@ -609,6 +625,11 @@ std::optional<Enemy> Field::getEnemy(const u32 enemyIndex) const
 	}
 
 	return enemies.at(enemyIndex);
+}
+
+u32 Field::getWave() const
+{
+	return wave;
 }
 
 } // namespace TowerDefense

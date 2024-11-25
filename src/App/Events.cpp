@@ -16,9 +16,6 @@ void App::KeyPress(const int key)
 		}
 
 		gameSpeed = gameSpeed == 0 ? 1 : 0;
-
-		std::cout << "gameSpeed: " << static_cast<int>(gameSpeed)
-		          << std::endl;
 	}
 
 	switch (key) {
@@ -58,10 +55,6 @@ void App::KeyPress(const int key)
 
 	case GLFW_KEY_C: {
 		cull = (cull + 1) % 4;
-
-#ifdef DEBUG
-		std::cout << "Cull: " << cull << std::endl;
-#endif
 		switch (cull) {
 		case 0: {
 			glEnable(GL_CULL_FACE);
@@ -108,9 +101,6 @@ void App::KeyPress(const int key)
 		if (gameSpeed > maxGameSpeed) {
 			gameSpeed = 1;
 		}
-
-		std::cout << "gameSpeed: " << static_cast<int>(gameSpeed)
-		          << std::endl;
 	} break;
 	}
 }
