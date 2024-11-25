@@ -488,8 +488,6 @@ void Field::upgradeCannon()
 
 		cannon.upgrade();
 	}
-
-	std::cout << "Upgrade Cannon: " << selectedGridPosition << std::endl;
 }
 
 void Field::moveSelectedPosition(const Vec3 &movement)

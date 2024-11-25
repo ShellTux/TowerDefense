@@ -105,6 +105,8 @@ void Cannon::upgrade()
 	}
 
 	updateStats();
+
+	std::cout << "Upgrade Cannon: " << getGridPosition() << std::endl;
 }
 
 Vec3 Cannon::getGridPosition() const
