@@ -1,32 +1,24 @@
 #include "Primitives/2D/core.hpp"
 
 #include "Math.hpp"
+#include "types.hpp"
 
 #include <GL/gl.h>
 #include <cmath>
-#include <cstdint>
 
 namespace Primitives2D {
 
-void Unit::Circle(const uint32_t resolution, const bool fill)
+void Unit::Circle()
 {
 	using std::cos, std::sin, Math::PIf;
 
-	static constexpr GLfloat radius = .5f;
-	const GLfloat deltaAngle        = 2 * PIf / resolution;
+	static constexpr f64 radius = .5;
+	const f64 deltaAngle        = 2 * Math::PI / resolution;
 
-	glBegin(fill ? GL_TRIANGLE_FAN : GL_LINE_LOOP);
+	glBegin(GL_POLYGON);
 	{
-		if (fill) {
-			glVertex2f(0, 0);
-		}
-
-		for (GLfloat angle  = 0; angle < 2 * Math::PI;
-		     angle         += deltaAngle) {
-			const GLfloat x = radius * cos(angle);
-			const GLfloat y = radius * sin(angle);
-
-			glVertex2f(x, y);
+		for (f64 angle = 0; angle < 2 * Math::PI; angle += deltaAngle) {
+			glVertex2d(radius * cos(angle), radius * sin(angle));
 		}
 	}
 	glEnd();
@@ -34,7 +26,7 @@ void Unit::Circle(const uint32_t resolution, const bool fill)
 
 void Unit::Square()
 {
-	static constexpr GLfloat p = .5f;
+	static constexpr f32 p = .5f;
 
 	glBegin(GL_QUADS);
 	{
@@ -46,19 +38,19 @@ void Unit::Square()
 	glEnd();
 }
 
-void Unit::Grid(const uint32_t rows, const uint32_t cols)
+void Unit::Grid(const u32 rows, const u32 cols)
 {
-	const GLfloat cellWidth  = 1.0f / cols;
-	const GLfloat cellHeight = 1.0f / rows;
+	const f32 cellWidth  = 1.0f / f32(cols);
+	const f32 cellHeight = 1.0f / f32(rows);
 
 	glBegin(GL_QUADS);
 	{
-		for (uint32_t r = 0; r < rows; ++r) {
-			for (uint32_t c = 0; c < cols; ++c) {
-				const GLfloat x1 = -.5f + c * cellWidth;
-				const GLfloat x2 = x1 + cellWidth;
-				const GLfloat y1 = -.5f + r * cellHeight;
-				const GLfloat y2 = y1 + cellHeight;
+		for (u32 row = 0; row < rows; ++row) {
+			for (u32 col = 0; col < cols; ++col) {
+				const f32 x1 = -.5f + f32(col) * cellWidth;
+				const f32 x2 = x1 + cellWidth;
+				const f32 y1 = -.5f + f32(row) * cellHeight;
+				const f32 y2 = y1 + cellHeight;
 
 				glVertex2f(x1, y1);
 				glVertex2f(x1, y2);

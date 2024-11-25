@@ -4,7 +4,6 @@
 
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 void App::KeyPress(const int key)
 {

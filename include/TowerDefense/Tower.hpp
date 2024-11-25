@@ -1,30 +1,25 @@
 #ifndef INCLUDE_TOWERDEFENSE_TOWER_HPP_
 #define INCLUDE_TOWERDEFENSE_TOWER_HPP_
 
+#include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 
-#include <cstdint>
 #include <ostream>
 
 namespace TowerDefense {
 
 class Tower {
       public:
-	Tower()
-	    : gridPosition(0, 0, 0)
-	    , health(10)
-	{}
-
+	Tower() = default;
 	Tower(const Vec3 &gridPosition)
-	    : Tower()
-	{
-		this->gridPosition = gridPosition;
-	}
-
-	Tower(const Vec3 &gridPosition, const uint8_t health)
 	    : gridPosition(gridPosition)
-	    , health(health)
 	{}
+
+	Tower(const Vec3 &gridPosition, const Stats::HealthPoints health)
+	    : Tower(gridPosition)
+	{
+		this->health = health;
+	}
 
 	Tower(Tower &&)                 = default;
 	Tower(const Tower &)            = default;
@@ -39,16 +34,16 @@ class Tower {
 		return os;
 	}
 
-	[[nodiscard]] Vec3 getGridPosition() const;
-	[[nodiscard]] uint8_t getHealth() const;
-
-	uint8_t damage(const uint8_t damage);
-
 	void draw() const;
 
+	[[nodiscard]] Stats::HealthPoints getHealth() const;
+	[[nodiscard]] Vec3 getGridPosition() const;
+
+	Stats::HealthPoints damage(const Stats::HealthPoints damage);
+
       private:
-	Vec3 gridPosition; ///< The position of the tower in the grid.
-	uint8_t health;    ///< The health of the tower.
+	Vec3 gridPosition;
+	Stats::HealthPoints health{100};
 
 	void drawHealth() const;
 };

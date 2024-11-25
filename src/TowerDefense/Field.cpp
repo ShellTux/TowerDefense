@@ -12,50 +12,33 @@
 #include <GL/gl.h>
 #include <algorithm>
 #include <array>
-#include <cstddef>
-#include <cstdint>
 #include <cstdlib>
-#include <filesystem>
-#include <fstream>
 #include <iostream>
 #include <map>
 #include <optional>
-#include <sstream>
-#include <stdexcept>
-#include <string>
 #include <utility>
 #include <vector>
 
 namespace TowerDefense {
 
-Field::Field(const std::vector<std::vector<uint32_t>> &map,
+Field::Field(const std::vector<std::vector<u32>> &map,
              const Vec3 &enemyGridStartPosition)
-    : points(100)
-    , enemies({})
-    , enemyPath({})
-    , gameSpeed(1)
-    , remainingCannons(10)
+    : cols(map.at(0).size())
     , rows(map.size())
-    , cols(map.at(0).size())
-    , selectedGridPosition({0, 0})
-    , bDrawCannons(true)
-    , bDrawEnemies(true)
-    , bDrawTower(true)
-    , bDrawFloor(true)
-    , bDrawEnemyPath(true)
-    , wave(1)
 {
 	this->map = Map(rows, std::vector<Cell>(cols, CWall));
 
-	std::map<uint32_t, Vec3> enemyPathMap;
+	std::map<u32, Vec3> enemyPathMap;
 
 	Vec3 towerPos;
-	uint32_t highestPos = 0;
-	for (size_t i = 0; i < this->map.size(); ++i) {
-		for (size_t j = 0; j < this->map.at(0).size(); ++j) {
-			const uint32_t c = map.at(i).at(j);
-			const Vec3 pos(static_cast<double>(i),
-			               static_cast<double>(j));
+	u32 highestPos = 0;
+	for (size_t i = 0; i < rows; ++i) {
+		for (size_t j = 0; j < cols; ++j) {
+			const u32 c = map.at(i).at(j);
+			const Vec3 pos(static_cast<f64>(i),
+			               static_cast<f64>(j));
+
+			this->map[i][j] = static_cast<Cell>(c);
 
 			if (c < CWall) {
 				enemyPathMap[c] = pos;
@@ -64,7 +47,15 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map,
 					highestPos = c;
 					towerPos   = pos;
 				}
-			} else if (c == CCannon) {
+				continue;
+			}
+
+			switch (static_cast<Cell>(c)) {
+			case CWall:
+			case CFloor:
+			case CSlot:
+				break;
+			case CCannon: {
 				switch (std::rand() % 3 + 1) {
 				case 1:
 					cannons.emplace_back(Stats::Tier::A,
@@ -81,9 +72,8 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map,
 				default:
 					break;
 				}
+			} break;
 			}
-
-			this->map[i][j] = static_cast<Cell>(c);
 		}
 	}
 
@@ -92,91 +82,12 @@ Field::Field(const std::vector<std::vector<uint32_t>> &map,
 		enemyPath.push_back(pos);
 	}
 
-	static constexpr int enemiesN = 100;
-	for (int i = 0; i < enemiesN; ++i) {
+	static constexpr u32 enemiesN = 100;
+	for (u32 i = 0; i < enemiesN; ++i) {
 		enemies.push_back(Enemy::Random(enemyPath, -.1 * i));
 	}
 
 	tower = Tower(towerPos);
-}
-
-std::optional<Field> Field::FromFile(const std::filesystem::path &filepath,
-                                     const Vec3 &enemyGridStartPosition)
-{
-	using std::vector, std::ifstream, std::string, std::stringstream;
-
-	vector<vector<string>> array;
-	ifstream file(filepath);
-
-	if (!file) {
-		std::cerr << "Could not open the file: " << filepath
-		          << std::endl;
-		return std::nullopt;
-	}
-
-	string line;
-	while (std::getline(file, line)) {
-		if (line.empty()) {
-			continue;
-		}
-
-		vector<string> row;
-		stringstream ss(line);
-		string cell;
-
-		while (std::getline(ss, cell, '|')) {
-			cell.erase(0, cell.find_first_not_of(" \t"));
-			cell.erase(cell.find_last_not_of(" \t") + 1);
-
-			if (cell.empty()) {
-				continue;
-			}
-
-			row.push_back(cell);
-		}
-
-		array.push_back(row);
-	}
-
-	const size_t rows = array.size();
-	const size_t cols = array.at(0).size();
-
-	vector<vector<uint32_t>> field(rows, vector<uint32_t>(cols, CWall));
-	for (size_t i = 0; i < rows; i++) {
-		for (size_t j = 0; j < cols; j++) {
-			const string &c = array.at(i).at(j);
-
-			const double iD = static_cast<double>(i);
-			const double jD = static_cast<double>(j);
-
-			try {
-				const uint32_t number = std::stoi(c);
-				field[i][j] = static_cast<uint32_t>(number);
-			} catch (const std::invalid_argument &e) {
-				if (c == "W") {
-					field[i][j] = Field::CWall;
-				} else if (c == "F") {
-					field[i][j] = Field::CFloor;
-				} else if (c == "S") {
-					field[i][j] = Field::CSlot;
-				} else if (c == "C") {
-					field[i][j] = Field::CCannon;
-				} else {
-					std::cerr
-					    << "Unrecognized cell type: " << c
-					    << " at " << Vec3(iD, jD)
-					    << ", setting to Wall."
-					    << std::endl;
-				}
-			} catch (const std::out_of_range &e) {
-				std::cerr << "Number out of range: " << c
-				          << " at " << Vec3(iD, jD)
-				          << ", setting to Wall." << std::endl;
-			}
-		}
-	}
-
-	return Field(field, enemyGridStartPosition);
 }
 
 Field Field::Generate(const u32 rows, const u32 cols, const u8 waves)
@@ -209,7 +120,7 @@ Field Field::Generate(const u32 rows, const u32 cols, const u8 waves)
 #undef C
 }
 
-double Field::getPoints() const
+Stats::HealthPoints Field::getPoints() const
 {
 	return points;
 }
@@ -249,12 +160,7 @@ Tower Field::getTower() const
 	return tower;
 }
 
-uint8_t Field::getGameSpeed() const
-{
-	return gameSpeed;
-}
-
-uint8_t Field::getRemainingCannons() const
+u8 Field::getRemainingCannons() const
 {
 	return remainingCannons;
 }
@@ -264,50 +170,41 @@ Vec3 Field::getSelectedPosition() const
 	return selectedGridPosition;
 }
 
-std::pair<int, int> Field::getMapDimensions() const
+std::pair<usize, usize> Field::getMapDimensions() const
 {
-	const size_t rows = map.size();
-	const size_t cols = map.at(0).size();
-
-	return {rows, cols};
-}
-
-void Field::setGameSpeed(const uint8_t gameSpeed)
-{
-	this->gameSpeed = gameSpeed;
+	return {map.size(), map.at(0).size()};
 }
 
 Field &Field::addPoints(const Stats::HealthPoints &points)
 {
 	this->points += points;
-	printPoints();
 	return *this;
-}
-
-void Field::printPoints() const
-{
-	std::cout << "Field Points: " << points << std::endl;
 }
 
 void Field::draw() const
 {
 	drawFloor();
 
-	if (bDrawEnemies) {
-		for (const auto &enemy : enemies) {
-			enemy.draw();
+	glPushMatrix();
+	{
+		glTranslated(0, 0, .5);
+		if (bDrawEnemies) {
+			for (const auto &enemy : enemies) {
+				enemy.draw();
+			}
+		}
+
+		if (bDrawCannons) {
+			for (const auto &cannon : cannons) {
+				cannon.draw(selectedGridPosition);
+			}
+		}
+
+		if (bDrawTower) {
+			tower.draw();
 		}
 	}
-
-	if (bDrawCannons) {
-		for (const auto &cannon : cannons) {
-			cannon.draw(selectedGridPosition);
-		}
-	}
-
-	if (bDrawTower) {
-		tower.draw();
-	}
+	glPopMatrix();
 
 	drawEnemyPath();
 }
@@ -342,7 +239,7 @@ void Field::drawHUD() const
 		{
 			glColor3ubv(color.data());
 			glTranslatef(GLfloat(i), 0, 0);
-			Primitives2D::Unit::Circle(30);
+			Primitives2D::Unit::Circle();
 		}
 		glPopMatrix();
 		glPopAttrib();
@@ -364,8 +261,8 @@ void Field::drawFloor() const
 	    = selectedGridPosition.getCoordinates();
 
 	glPushAttrib(glMask);
-	for (uint8_t i = 0; i < rows; ++i) {
-		for (uint8_t j = 0; j < cols; ++j) {
+	for (u8 i = 0; i < rows; ++i) {
+		for (u8 j = 0; j < cols; ++j) {
 			using Colors::WHITE, Colors::YELLOW, Colors::CYAN,
 			    Colors::GRAY;
 
@@ -414,7 +311,7 @@ void Field::drawEnemyPath() const
 	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
 	                                     | GL_VIEWPORT_BIT | GL_LINE_BIT;
 
-	static constexpr std::array<uint8_t, 4> color = {255, 255, 255, 255};
+	static constexpr std::array<u8, 4> color = {255, 255, 255, 255};
 
 	glPushMatrix();
 	glPushAttrib(glMask);
@@ -434,7 +331,7 @@ void Field::drawEnemyPath() const
 	glPopMatrix();
 }
 
-void Field::update(const Stats::CooldownMs deltaTimeMs)
+void Field::update(const Stats::TimeMs deltaTimeMs)
 {
 	for (Enemy &enemy : enemies) {
 		enemy.update(deltaTimeMs);

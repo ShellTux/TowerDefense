@@ -11,15 +11,9 @@
 
 #include <GL/gl.h>
 #include <cmath>
-#include <limits>
+#include <iostream>
 #include <optional>
 #include <vector>
-
-#ifndef RELEASE
-	#include <iostream>
-#endif
-
-extern TowerDefense::Stats::CooldownMs deltaTimeMs;
 
 namespace TowerDefense {
 
@@ -37,7 +31,7 @@ void Cannon::draw(const Vec3 &selectedGridPosition) const
 	{
 		glColor3ubv(color.data());
 
-		glTranslated(posX, posY, .5);
+		glTranslated(posX, posY, 0);
 		glRotated(angle, 0, 0, 1);
 
 		glPushMatrix();
@@ -60,7 +54,7 @@ void Cannon::draw(const Vec3 &selectedGridPosition) const
 	glPopMatrix();
 }
 
-void Cannon::update(const Stats::CooldownMs deltaTimeMs,
+void Cannon::update(const Stats::TimeMs deltaTimeMs,
                     const std::vector<Enemy> &enemies)
 {
 	cooldownMs = (deltaTimeMs > cooldownMs) ? 0 : cooldownMs - deltaTimeMs;
@@ -90,7 +84,7 @@ void Cannon::shot(Enemy &target)
 #endif
 }
 
-void Cannon::upgrade()
+bool Cannon::upgrade()
 {
 	switch (currentLevel) {
 	case Stats::Level::L1: {
@@ -100,13 +94,15 @@ void Cannon::upgrade()
 		currentLevel = Stats::Level::L3;
 	} break;
 	case Stats::Level::L3: {
-		return;
+		return false;
 	} break;
 	}
 
 	updateStats();
 
 	std::cout << "Upgrade Cannon: " << getGridPosition() << std::endl;
+
+	return true;
 }
 
 Vec3 Cannon::getGridPosition() const
@@ -183,7 +179,7 @@ void Cannon::drawRange(const Vec3 &selectedGridPosition) const
 
 		glScalef(2, 2, 1);
 		glScaled(range, range, 1);
-		Primitives2D::Unit::Circle(36, false);
+		Primitives2D::Unit::Circle();
 	}
 	glPopAttrib();
 	glPopMatrix();
@@ -191,7 +187,7 @@ void Cannon::drawRange(const Vec3 &selectedGridPosition) const
 
 void Cannon::drawShot() const
 {
-	const double ratio = (double) cooldownMs / defaultCooldownMs;
+	const f64 ratio = (f64) cooldownMs / defaultCooldownMs;
 	if (ratio < .92) {
 		return;
 	}

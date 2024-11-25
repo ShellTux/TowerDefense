@@ -1,12 +1,14 @@
 #include "Math.hpp"
 
+#include "types.hpp"
+
 namespace Math {
-double radiansToDegrees(const double radians)
+f64 radiansToDegrees(const f64 radians)
 {
 	return radians * (180.0 / PI);
 }
 
-double degreesToRadians(const double degrees)
+f64 degreesToRadians(const f64 degrees)
 {
 	return degrees * (PI / 180.0);
 }

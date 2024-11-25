@@ -48,8 +48,8 @@ class App {
 	u8 gameSpeed       = 1;
 	u8 maxGameSpeed    = 8;
 
-	Clock::time_point lastFrameTime             = Clock::now();
-	TowerDefense::Stats::CooldownMs deltaTimeMs = 0;
+	Clock::time_point lastFrameTime         = Clock::now();
+	TowerDefense::Stats::TimeMs deltaTimeMs = 0;
 
 	TowerDefense::Field field;
 

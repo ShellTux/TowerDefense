@@ -5,7 +5,6 @@
 
 #include <cmath>
 #include <iostream>
-#include <stdexcept>
 #include <tuple>
 
 class Vec3 {
@@ -31,11 +30,13 @@ class Vec3 {
 	bool operator!=(const Vec3 &other) const;
 	bool operator==(const Vec3 &other) const;
 	f64 operator*(const Vec3 &other) const;
+
 	Vec3 &operator*=(const f64 scalar);
 	Vec3 &operator/=(const f64 scalar);
 	Vec3 &operator%=(const Vec3 &other);
 	Vec3 &operator+=(const Vec3 &other);
 	Vec3 &operator-=(const Vec3 &other);
+
 	Vec3 operator%(const Vec3 &other) const;
 	Vec3 operator+(const Vec3 &other) const;
 	Vec3 operator-(const Vec3 &other) const;

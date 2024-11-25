@@ -1,13 +1,18 @@
 #include "Primitives/3D/core.hpp"
 
+#include "Vec3.hpp"
+#include "types.hpp"
+
 #include <GL/gl.h>
-#include <cstdint>
+#include <cassert>
 
 namespace Primitives3D {
 
-void Unit::Cube()
+namespace Unit {
+
+void Cube()
 {
-	static constexpr GLfloat p = .5;
+	static constexpr f32 p = .5;
 
 	glBegin(GL_QUADS);
 	{
@@ -48,6 +53,24 @@ void Unit::Cube()
 		glVertex3f(p, -p, p);
 	}
 	glEnd();
+}
+
+} // namespace Unit
+
+void Cube(const f32 x, const f32 y, const f32 z)
+{
+	(void) x;
+	(void) y;
+	(void) z;
+
+	assert(false && "Not yet Implemented\n");
+}
+
+void Cube(const Vec3 &pos)
+{
+	(void) pos;
+
+	assert(false && "Not yet Implemented\n");
 }
 
 } // namespace Primitives3D

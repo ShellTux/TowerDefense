@@ -14,14 +14,14 @@ enum class Level { L1, L2, L3 };
 std::ostream &operator<<(std::ostream &os, const Tier &tier);
 std::ostream &operator<<(std::ostream &os, const Level &level);
 
-using CooldownMs   = u32;
+using TimeMs       = u32;
 using HealthPoints = u32;
 using Range        = f32;
 using Speed        = f32;
 
 struct CannonStats {
 	Color color;
-	CooldownMs cooldownMs;
+	TimeMs cooldownMs;
 	HealthPoints damage;
 	Range range;
 	HealthPoints cost;

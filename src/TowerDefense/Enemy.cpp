@@ -8,36 +8,33 @@
 
 #include <GL/gl.h>
 #include <algorithm>
-#include <cstddef>
-#include <cstdint>
 #include <cstdlib>
-#include <iostream>
 #include <tuple>
 #include <vector>
 
 namespace TowerDefense {
 
-double Enemy::getPosition() const
+f64 Enemy::getPosition() const
 {
 	return position;
 }
 
-double Enemy::getSpeedUpMs() const
+Stats::Speed Enemy::getSpeedUpMs() const
 {
 	return speedUpMs;
 }
 
-uint8_t Enemy::getHealth() const
+Stats::HealthPoints Enemy::getHealth() const
 {
 	return health;
 }
 
-uint8_t Enemy::getPoints() const
+Stats::HealthPoints Enemy::getPoints() const
 {
 	return fullHealth;
 }
 
-Enemy Enemy::Random(const std::vector<Vec3> &path, const double position)
+Enemy Enemy::Random(const std::vector<Vec3> &path, const f64 position)
 {
 	switch (std::rand() % 3 + 1) {
 	default:
@@ -68,7 +65,7 @@ void Enemy::draw() const
 		glColor3ubv(color.data());
 
 		glTranslated(posX, posY, 0);
-		glScalef(.9, .9, 2);
+		glScalef(.9, .9, 1);
 		Primitives3D::Unit::Cube();
 
 		drawHealth();
@@ -84,7 +81,7 @@ void Enemy::drawHealth() const
 	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
 	                                     | GL_VIEWPORT_BIT;
 
-	const double healthRatio = 1. * health / fullHealth;
+	const f64 healthRatio = 1. * health / fullHealth;
 
 	glPushMatrix();
 	glPushAttrib(glMask);
@@ -99,7 +96,7 @@ void Enemy::drawHealth() const
 	glPopMatrix();
 }
 
-void Enemy::update(const Stats::CooldownMs deltaTimeMs)
+void Enemy::update(const Stats::TimeMs deltaTimeMs)
 {
 	position += speedUpMs * f32(deltaTimeMs) * 2;
 }
@@ -116,19 +113,21 @@ std::tuple<Vec3, Vec3, f64> Enemy::getInterpolatingGridPositions() const
 		return {};
 	}
 
-	const double clampedPosition = std::clamp(position, 0.0, 1.0);
+	using std::clamp, std::min;
 
-	const size_t totalPoints       = gridPath.size();
-	const double distanceAlongPath = clampedPosition * (totalPoints - 1);
+	const f64 clampedPosition = clamp(position, 0.0, 1.0);
 
-	const size_t startIdx = static_cast<size_t>(distanceAlongPath);
-	const size_t endIdx   = std::min(startIdx + 1, totalPoints - 1);
+	const usize totalPoints     = gridPath.size();
+	const f64 distanceAlongPath = clampedPosition * f64(totalPoints - 1);
+
+	const usize startIdx = static_cast<usize>(distanceAlongPath);
+	const usize endIdx   = min(startIdx + 1, totalPoints - 1);
 
 	const Vec3 &startPoint = gridPath.at(startIdx);
 	const Vec3 &endPoint   = gridPath.at(endIdx);
 
 
-	const double segmentProgress = distanceAlongPath - startIdx;
+	const f64 segmentProgress = distanceAlongPath - f64(startIdx);
 
 	return {startPoint, endPoint, segmentProgress};
 }

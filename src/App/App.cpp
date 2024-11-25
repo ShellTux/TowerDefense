@@ -1,12 +1,13 @@
 #include "App.hpp"
 
+#include "Math.hpp"
 #include "OpenGL/camera.hpp"
 #include "TowerDefense/Enemy.hpp"
+#include "Vec3.hpp"
 #include "types.hpp"
 
 #include <GL/gl.h>
 #include <cmath>
-#include <iostream>
 #include <optional>
 
 static constexpr int glMask
@@ -44,7 +45,7 @@ void App::drawMinimap()
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(-.7, cols - .2, rows - .2, -.7, -1000, 1000);
+		glOrtho(-.7, f64(cols) - .2, f64(rows) - .2, -.7, -1000, 1000);
 
 		field.draw();
 	}
@@ -57,12 +58,10 @@ void App::drawField()
 	{
 		glPushMatrix();
 		{
-			const GLint p1 = width / 8;
-			const GLint p2 = height / 8;
+			const i32 p1 = i32(width) / 8;
+			const i32 p2 = i32(height) / 8;
 			glViewport(p1, p2, 6 * p1, 6 * p2);
 
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
 			OpenGL::Perspective(30, 45, 45);
 
 			glMatrixMode(GL_MODELVIEW);
@@ -70,27 +69,34 @@ void App::drawField()
 
 			const auto [rows, cols] = field.getMapDimensions();
 
+			static const Vec3 orbitCenter
+			    = {.5 * f64(cols), .5 * f64(rows), 3};
+
 			static Vec3 camera;
 			static Vec3 target;
 			static Vec3 up;
 
-			camera = {cols / 2., 1.5 * rows, 5};
-			target = {cols / 2., rows / 2., 0};
-			up     = {0, 1, 0};
+			camera = {f64(cols) / 2., 1.5 * f64(rows), 3};
+			target = {f64(cols) / 2., f64(rows) / 2., 0};
+			up     = {0, 0, -1};
 
 			switch (view) {
 			case 0:
-				break;
-			case 1: {
-				using std::cos, std::sin;
+			case 1:
+			case 2:
+			case 3: {
 				camera
-				    = Vec3::Polar2D({.5 * cols, .5 * rows, 3},
-				                    (cols + rows) * .5,
-				                    orbitAngle);
-				up = {0, 0, -1};
+				    = Vec3::Polar2D(orbitCenter,
+				                    f64(rows + cols) * .5,
+				                    (view + 1) * Math::PI / 2);
+			} break;
+			case 4: {
+				camera = Vec3::Polar2D(orbitCenter,
+				                       f64(cols + rows) * .5,
+				                       orbitAngle);
 			} break;
 			default: {
-				const u32 enemyIndex = view - 2;
+				const u32 enemyIndex = view - 5;
 				const std::optional<TowerDefense::Enemy> enemy
 				    = field.getEnemy(enemyIndex);
 
@@ -120,8 +126,8 @@ void App::drawHUD()
 {
 	glPushAttrib(glMask);
 	{
-		const GLint p1 = width / 8;
-		const GLint p2 = height / 8;
+		const i32 p1 = i32(width) / 8;
+		const i32 p2 = i32(height) / 8;
 		glViewport(0, 7 * p2, 5 * p1, p2);
 		field.drawHUD();
 	}

@@ -5,6 +5,7 @@
 #include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
+#include "types.hpp"
 
 #include <optional>
 #include <ostream>
@@ -15,11 +16,7 @@ namespace TowerDefense {
 class Cannon {
       public:
 	Cannon(const Stats::Tier &tier, const Vec3 &gridPosition)
-	    : angle(0)
-	    , cooldownMs(0)
-	    , gridPosition(gridPosition)
-	    , color(Colors::BLACK)
-	    , currentLevel(Stats::Level::L1)
+	    : gridPosition(gridPosition)
 	    , currentTier(tier)
 	{
 		updateStats();
@@ -54,32 +51,33 @@ class Cannon {
 	}
 
 	void draw(const Vec3 &selectedGridPosition) const;
-	void update(const Stats::CooldownMs deltaTimeMs,
+	void update(const Stats::TimeMs deltaTimeMs,
 	            const std::vector<Enemy> &enemies);
 	void shot(Enemy &target);
-	void upgrade();
+	bool upgrade();
 
 	[[nodiscard]] Vec3 getGridPosition() const;
 
       private:
-	double angle;       ///< The angle of the cannon in degrees.
-	Stats::Range range; ///< The effective range of the cannon.
-	Stats::CooldownMs defaultCooldownMs; ///< The default cooldown time.
-	Stats::CooldownMs cooldownMs;   ///< The cooldown time between shots.
-	Stats::HealthPoints shotDamage; ///< The damage dealt by each shot.
-	Vec3 gridPosition; ///< The position of the cannon in 3D space.
-	Color color;
-	Stats::Level currentLevel;
-	Stats::Tier currentTier;
+	Color color{Colors::BLACK};
+	f64 angle{};
+	Vec3 gridPosition;
 
-	void updateAngle(const Enemy &target);
+	Stats::TimeMs cooldownMs{};
+	Stats::TimeMs defaultCooldownMs{};
+	Stats::HealthPoints shotDamage{};
+	Stats::Range range{};
 
-	[[nodiscard]] std::optional<Enemy *>
-	targetEnemy(const std::vector<Enemy> &enemies) const;
+	Stats::Level currentLevel{Stats::Level::L1};
+	Stats::Tier currentTier{Stats::Tier::A};
 
 	void drawRange(const Vec3 &selectedGridPosition) const;
 	void drawShot() const;
+	void updateAngle(const Enemy &target);
 	void updateStats();
+
+	[[nodiscard]] std::optional<Enemy *>
+	targetEnemy(const std::vector<Enemy> &enemies) const;
 };
 
 } // namespace TowerDefense

@@ -1,6 +1,7 @@
 #ifndef INCLUDE_INCLUDE_TYPES_HPP_
 #define INCLUDE_INCLUDE_TYPES_HPP_
 
+#include <cstddef>
 #include <cstdint>
 
 using f80 = long double;
@@ -16,5 +17,7 @@ using u8  = uint8_t;
 using u16 = uint16_t;
 using u32 = uint32_t;
 using u64 = uint64_t;
+
+using usize = size_t;
 
 #endif // INCLUDE_INCLUDE_TYPES_HPP_

@@ -1,7 +1,8 @@
 #ifndef INCLUDE_3D_CORE_HPP_
 #define INCLUDE_3D_CORE_HPP_
 
-#include <cstdint>
+#include "Vec3.hpp"
+#include "types.hpp"
 
 namespace Primitives3D {
 
@@ -11,7 +12,8 @@ void Cube();
 
 } // namespace Unit
 
-inline void Cube(/* TODO: Args */);
+void Cube(const f32 x, const f32 y, const f32 z);
+void Cube(const Vec3 &pos);
 
 } // namespace Primitives3D
 

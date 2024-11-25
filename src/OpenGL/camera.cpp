@@ -1,23 +1,29 @@
 #include "OpenGL/camera.hpp"
 
 #include "Math.hpp"
+#include "Vec3.hpp"
+#include "types.hpp"
 
 #include <GL/gl.h>
 #include <cmath>
 
 namespace OpenGL {
 
-void Perspective(GLfloat theta, GLfloat alpha, GLfloat beta)
+void Perspective(const f32 theta, const f32 alpha, const f32 beta)
 {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	GLfloat tg       = tan(Math::degreesToRadians(theta));
-	GLfloat d        = (1 / 2.0) / tg;
-	GLfloat nearClip = d / alpha;
-	GLfloat farClip  = d * beta;
-	GLfloat ymax     = nearClip * tg;
-	GLfloat xmax     = (1.f / 1.f) * ymax;
-	glFrustum(-xmax, xmax, ymax, -ymax, nearClip, farClip);
+	glPushAttrib(GL_TRANSFORM_BIT);
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		const f64 tg       = tan(Math::degreesToRadians(theta));
+		const f64 d        = (1 / 2.) / tg;
+		const f64 nearClip = d / alpha;
+		const f64 farClip  = d * beta;
+		const f64 ymax     = nearClip * tg;
+		const f64 xmax     = (1.f / 1.f) * ymax;
+		glFrustum(-xmax, xmax, ymax, -ymax, nearClip, farClip);
+	}
+	glPopAttrib();
 }
 
 namespace Camera {
@@ -31,7 +37,7 @@ void LookAt(const Vec3 &camera, const Vec3 &target, const Vec3 &up)
 	const auto [Vx, Vy, Vz] = V.getCoordinates();
 	const auto [Nx, Ny, Nz] = N.getCoordinates();
 
-	const double camTransformMatrix[4][4] = {
+	const f64 camTransformMatrix[4][4] = {
 	    {            Ux,             Vx,             Nx, 0},
 	    {            Uy,             Vy,             Ny, 0},
 	    {            Uz,             Vz,             Nz, 0},

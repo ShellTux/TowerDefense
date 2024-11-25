@@ -1,15 +1,17 @@
 #ifndef INCLUDE_MATH_CONSTANTS_HPP_
 #define INCLUDE_MATH_CONSTANTS_HPP_
 
+#include "types.hpp"
+
 #include <GL/gl.h>
 
 namespace Math {
 
-constexpr double PI   = 3.14159265358979323846;
-constexpr GLfloat PIf = 3.14159265358979323846f;
+constexpr f64 PI  = 3.14159265358979323846;
+constexpr f32 PIf = 3.14159265358979323846f;
 
-double radiansToDegrees(const double radians);
-double degreesToRadians(const double degrees);
+f64 radiansToDegrees(const f64 radians);
+f64 degreesToRadians(const f64 degrees);
 
 } // namespace Math
 

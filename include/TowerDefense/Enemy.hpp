@@ -6,8 +6,6 @@
 #include "Vec3.hpp"
 #include "types.hpp"
 
-#include <cassert>
-#include <cstdint>
 #include <ostream>
 #include <tuple>
 #include <vector>
@@ -17,23 +15,21 @@ namespace TowerDefense {
 class Enemy {
       public:
 	Enemy(const Stats::Tier &tier, const std::vector<Vec3> &gridPath)
-	    : position(0)
-	    , gridPath(gridPath)
-	    , color(Colors::RED)
+	    : gridPath(gridPath)
 	{
 		updateStats(tier);
 	}
 
 	Enemy(const Stats::Tier &tier,
 	      const std::vector<Vec3> &gridPath,
-	      const double position)
+	      const f64 position)
 	    : Enemy(tier, gridPath)
 	{
 		this->position = position;
 	}
 
 	static Enemy Random(const std::vector<Vec3> &path,
-	                    const double position = 0);
+	                    const f64 position = 0);
 
 	Enemy(Enemy &&)                 = default;
 	Enemy(const Enemy &)            = default;
@@ -50,23 +46,28 @@ class Enemy {
 		return os;
 	}
 
-	[[nodiscard]] double getPosition() const;
-	[[nodiscard]] double getSpeedUpMs() const;
-	[[nodiscard]] uint8_t getHealth() const;
-	[[nodiscard]] uint8_t getPoints() const;
 	void draw() const;
+	void update(const Stats::TimeMs deltaTimeMs);
 
-	void update(const Stats::CooldownMs deltaTimeMs);
 	Stats::HealthPoints loseHP(const Stats::HealthPoints damagePoints);
 
+	[[nodiscard]] f64 getPosition() const;
+	[[nodiscard]] Stats::HealthPoints getHealth() const;
+	[[nodiscard]] Stats::HealthPoints getPoints() const;
+	[[nodiscard]] Stats::Speed getSpeedUpMs() const;
+	[[nodiscard]] std::tuple<Vec3, Vec3, Vec3> getLookAt() const;
 	[[nodiscard]] Vec3 getGridPosition() const;
 	[[nodiscard]] Vec3 getNextGridPosition() const;
 
-	[[nodiscard]] std::tuple<Vec3, Vec3, Vec3> getLookAt() const;
-
       private:
-	void drawHealth() const;
+	Color color{Colors::BLACK};
+	f64 position{};
+	Stats::HealthPoints fullHealth{10};
+	Stats::HealthPoints health{10};
+	Stats::Speed speedUpMs{};
+	std::vector<Vec3> gridPath;
 
+	void drawHealth() const;
 	void updateStats(const Stats::Tier &tier);
 
 	[[nodiscard]] std::tuple<Vec3, Vec3, f64>

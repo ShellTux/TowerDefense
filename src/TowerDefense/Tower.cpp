@@ -2,10 +2,10 @@
 
 #include "Color.hpp"
 #include "Primitives/3D/core.hpp"
+#include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 
 #include <GL/gl.h>
-#include <cstdint>
 
 namespace TowerDefense {
 
@@ -14,12 +14,12 @@ Vec3 Tower::getGridPosition() const
 	return gridPosition;
 }
 
-uint8_t Tower::getHealth() const
+Stats::HealthPoints Tower::getHealth() const
 {
 	return health;
 }
 
-uint8_t Tower::damage(const uint8_t damage)
+Stats::HealthPoints Tower::damage(const Stats::HealthPoints damage)
 {
 	health -= damage;
 	return health;
@@ -40,7 +40,7 @@ void Tower::draw() const
 		glColor3ubv(Colors::AQUA.data());
 
 		glTranslated(posX, posY, 0);
-		glScalef(.9, .9, 2);
+		glScalef(.9, .9, 1);
 		Primitives3D::Unit::Cube();
 
 		drawHealth();
