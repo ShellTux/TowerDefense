@@ -109,12 +109,16 @@ void App::drawField()
 				                    (view + 1) * Math::PI / 2);
 			} break;
 			case 4: {
+				OpenGL::Perspective(60, 45, 45);
+				camera = {f64(cols) * .5, f64(rows) * .55, 5};
+			} break;
+			case 5: {
 				camera = Vec3::Polar2D(orbitCenter,
 				                       f64(cols + rows) * .5,
 				                       orbitAngle);
 			} break;
 			default: {
-				const u32 enemyIndex = view - 5;
+				const u32 enemyIndex = view - 6;
 				const std::optional<TowerDefense::Enemy> enemy
 				    = field.getEnemy(enemyIndex);
 
