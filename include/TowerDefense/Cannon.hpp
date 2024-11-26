@@ -2,6 +2,7 @@
 #define INCLUDE_CANNON_BASE_HPP_
 
 #include "Color.hpp"
+#include "Texture.hpp"
 #include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
@@ -9,6 +10,7 @@
 
 #include <optional>
 #include <ostream>
+#include <unordered_map>
 #include <vector>
 
 namespace TowerDefense {
@@ -70,6 +72,12 @@ class Cannon {
 
 	Stats::Level currentLevel{Stats::Level::L1};
 	Stats::Tier currentTier{Stats::Tier::A};
+
+	std::unordered_map<Stats::Tier, Texture> textures{
+	    {Stats::Tier::A,    Texture("assets/red-cannon.png")},
+	    {Stats::Tier::B, Texture("assets/orange-cannon.png")},
+	    {Stats::Tier::C, Texture("assets/purple-cannon.png")},
+	};
 
 	void drawRange(const Vec3 &selectedGridPosition) const;
 	void drawShot() const;

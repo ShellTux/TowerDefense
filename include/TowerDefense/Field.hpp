@@ -1,6 +1,7 @@
 #ifndef INCLUDE_TOWERDEFENSE_FIELD_HPP_
 #define INCLUDE_TOWERDEFENSE_FIELD_HPP_
 
+#include "Texture.hpp"
 #include "TowerDefense/Cannon.hpp"
 #include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
@@ -12,6 +13,8 @@
 #include <chrono>
 #include <optional>
 #include <ostream>
+#include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -157,6 +160,12 @@ class Field {
 	u32 rows{0};
 	u32 wave{1};
 	Vec3 selectedGridPosition{0, 0};
+
+	std::unordered_map<std::string, Texture> textures{
+	    {"HUD1",    Texture("assets/red-cannon.png")},
+	    {"HUD2", Texture("assets/orange-cannon.png")},
+	    {"HUD3", Texture("assets/purple-cannon.png")},
+	};
 
 	static constexpr GLbitfield drawGlMask
 	    = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_LIGHTING_BIT
