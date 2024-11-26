@@ -4,7 +4,7 @@ CXXFLAGS += -Wno-error=unused-variable
 CXXFLAGS += -Wno-error=unused-but-set-variable
 CXXFLAGS += -I$(shell realpath include)
 
-LDFLAGS = -lGL -lGLU -lglfw
+LDFLAGS = -lm -lGL -lGLU -lglfw
 
 all: td
 
