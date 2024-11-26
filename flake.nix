@@ -29,6 +29,7 @@
 				gcc
 				gcc
 				gdb
+				gf
 				glfw
 				glm
 				libGLU

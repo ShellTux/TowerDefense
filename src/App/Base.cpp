@@ -131,30 +131,31 @@ void App::printStats() const
 	std::cout << "Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
 	std::cout << "Selected Position: " << field.getSelectedPosition()
 	          << std::endl;
-	std::cout << "Remaining Cannons: "
-	          << static_cast<int>(field.getRemainingCannons()) << std::endl;
-	std::cout << "Cannons: " << field.getCannonsSize() << std::endl;
+	std::cout << "Cannons: " << field.getCannonsSize() << "/"
+	          << static_cast<int>(field.getRemainingCannons()
+	                              + field.getCannonsSize())
+	          << std::endl;
 	std::cout << "Enemies: " << field.getEnemiesSize() << std::endl;
 	std::cout << "---------------------------------" << std::endl;
 	std::cout << std::endl;
 
 #define TOWER_DEFENSE_KEYS                                                     \
 	"---------------------Tower Defense Keys---------------------------\n" \
-	"W/Up           Move selected position Up\n"                           \
-	"S/Down         Move selected position Down\n"                         \
-	"A/Left         Move selected position Left\n"                         \
-	"D/Right        Move selected position Right\n"                        \
-	"1              Place Cannon at selected position of tier A\n"         \
-	"2              Place Cannon at selected position of tier B\n"         \
-	"3              Place Cannon at selected position of tier C\n"         \
-	"4/U            Upgrade Cannon at selected position\n"                 \
-	"I              Print Info at selected position (debug mode).\n"       \
-	"C              Toggle between cull face modes (opengl debug mode).\n" \
-	"T              Toggle between polygon modes (opengl debug mode).\n"   \
-	"V              Switch between views\n"                                \
-	"M              Focus Minimap\n"                                       \
-	"P              Pause Game\n"                                          \
-	"R              Reset view and minimap focus to default\n"             \
+	"WASD               Move selected position\n"                          \
+	"Up,Left,Down,Right Move selected position\n"                          \
+	"1,2,3              Place Cannon at selected position of tier A,B,C "  \
+	"(respectively)\n"                                                     \
+	"4/U                Upgrade Cannon at selected position\n"             \
+	"I                  Print Info at selected position (debug mode).\n"   \
+	"C                  Toggle between cull face modes (opengl debug "     \
+	"mode).\n"                                                             \
+	"T                  Toggle between polygon modes (opengl debug "       \
+	"mode).\n"                                                             \
+	"L                  Switch between lighting modes.\n"                  \
+	"V                  Switch between views\n"                            \
+	"M                  Focus Minimap\n"                                   \
+	"P                  Pause Game\n"                                      \
+	"R                  Reset view and minimap focus to default\n"         \
 	"------------------------------------------------------------------"
 
 	std::cout << TOWER_DEFENSE_KEYS << std::endl;
