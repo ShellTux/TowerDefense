@@ -308,9 +308,6 @@ void Field::drawFloor() const
 		return;
 	}
 
-	const auto [selectedI, selectedJ, _]
-	    = selectedGridPosition.getCoordinates();
-
 	glPushAttrib(drawGlMask);
 	{
 		glPushMatrix();
