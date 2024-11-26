@@ -1,6 +1,7 @@
 #include "TowerDefense/Enemy.hpp"
 
 #include "Color.hpp"
+#include "OpenGL/Material.hpp"
 #include "Primitives/3D/core.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
@@ -8,6 +9,7 @@
 
 #include <GL/gl.h>
 #include <algorithm>
+#include <array>
 #include <cstdlib>
 #include <tuple>
 #include <vector>
@@ -67,6 +69,7 @@ void Enemy::draw() const
 	glPushAttrib(drawGlMask);
 	{
 		glColor3ubv(color.data());
+		OpenGL::Material::Apply(material);
 
 		glTranslated(posX, posY, 0);
 		glScalef(.9, .9, 1);
@@ -88,6 +91,8 @@ void Enemy::drawHealth() const
 	glPushAttrib(drawGlMask);
 	{
 		glColor3ubv(Colors::GREEN.data());
+
+		OpenGL::Material::Apply(OpenGL::Material::Material::Emerald);
 
 		glTranslated(0, 0, .5);
 		glScaled(.8 * getHealthRatio(), .2, .2);
@@ -165,6 +170,19 @@ void Enemy::updateStats(const Stats::Tier &tier)
 	speedUpMs = enemyStats.speedUpMs;
 	health = fullHealth = enemyStats.health;
 	color               = enemyStats.color;
+
+	using OpenGL::Material;
+	switch (tier) {
+	case Stats::Tier::A: {
+		material = Material::Type::Ruby;
+	} break;
+	case Stats::Tier::B: {
+		material = Material::Type::Bronze;
+	} break;
+	case Stats::Tier::C: {
+		material = Material::Type::Jade;
+	} break;
+	}
 }
 
 std::tuple<Vec3, Vec3, Vec3> Enemy::getLookAt() const

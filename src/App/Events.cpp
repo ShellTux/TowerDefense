@@ -99,6 +99,9 @@ void App::KeyPress(const int key)
 			gameSpeed = 1;
 		}
 	} break;
+	case GLFW_KEY_L: {
+		lighting = (lighting + 1) % 2;
+	} break;
 	}
 }
 

@@ -17,6 +17,7 @@ void Unit::Circle()
 
 	glBegin(GL_POLYGON);
 	{
+		glNormal3d(0, 0, 1);
 		for (f64 angle = 0; angle < 2 * Math::PI; angle += deltaAngle) {
 			glVertex2d(radius * cos(angle), radius * sin(angle));
 		}
@@ -30,6 +31,7 @@ void Unit::Square()
 
 	glBegin(GL_QUADS);
 	{
+		glNormal3d(0, 0, 1);
 		glVertex2f(-p, p);
 		glVertex2f(-p, -p);
 		glVertex2f(p, -p);
@@ -45,6 +47,7 @@ void Unit::Grid(const u32 rows, const u32 cols)
 
 	glBegin(GL_QUADS);
 	{
+		glNormal3d(0, 0, 1);
 		for (u32 row = 0; row < rows; ++row) {
 			for (u32 col = 0; col < cols; ++col) {
 				const f32 x1 = -.5f + f32(col) * cellWidth;

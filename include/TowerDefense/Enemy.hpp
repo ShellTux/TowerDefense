@@ -2,6 +2,7 @@
 #define INCLUDE_ENEMY_BASE_HPP_
 
 #include "Color.hpp"
+#include "OpenGL/Material.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 #include "types.hpp"
@@ -68,6 +69,8 @@ class Enemy {
 	Stats::HealthPoints health{10};
 	Stats::Speed speedUpMs{};
 	std::vector<Vec3> gridPath;
+
+	OpenGL::Material::Type material{};
 
 	static constexpr GLbitfield drawGlMask
 	    = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_LIGHTING_BIT

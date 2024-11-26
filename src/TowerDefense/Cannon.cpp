@@ -2,6 +2,7 @@
 
 #include "Color.hpp"
 #include "Math.hpp"
+#include "OpenGL/Material.hpp"
 #include "Primitives/2D/core.hpp"
 #include "Primitives/3D/core.hpp"
 #include "TowerDefense/Enemy.hpp"
@@ -10,6 +11,7 @@
 #include "types.hpp"
 
 #include <GL/gl.h>
+#include <array>
 #include <cmath>
 #include <iostream>
 #include <optional>
@@ -30,6 +32,8 @@ void Cannon::draw(const Vec3 &selectedGridPosition) const
 	glPushAttrib(glMask);
 	{
 		glColor3ubv(color.data());
+
+		OpenGL::Material::Apply(material);
 
 		glTranslated(posX, posY, 0);
 		glRotated(angle, 0, 0, 1);
@@ -120,6 +124,18 @@ void Cannon::updateStats()
 	range             = cannonStats.range;
 	defaultCooldownMs = cannonStats.cooldownMs;
 	color             = cannonStats.color;
+
+	switch (currentTier) {
+	case Stats::Tier::A: {
+		material = OpenGL::Material::Ruby;
+	} break;
+	case Stats::Tier::B: {
+		material = OpenGL::Material::Bronze;
+	} break;
+	case Stats::Tier::C: {
+		material = OpenGL::Material::Jade;
+	} break;
+	}
 }
 
 void Cannon::updateAngle(const Enemy &target)
@@ -165,13 +181,8 @@ void Cannon::drawRange(const Vec3 &selectedGridPosition) const
 		return;
 	}
 
-	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
-	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
-	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
-	                                     | GL_VIEWPORT_BIT;
-
 	glPushMatrix();
-	glPushAttrib(glMask);
+	glPushAttrib(drawGlMask);
 	{
 		glColor3ubv(color.data());
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

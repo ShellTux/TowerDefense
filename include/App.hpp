@@ -5,6 +5,7 @@
 #include "TowerDefense/Stats.hpp"
 #include "types.hpp"
 
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <chrono>
 #include <cstdlib>
@@ -48,11 +49,15 @@ class App {
 	f64 orbitAngle     = 0;
 	u8 gameSpeed       = 1;
 	u8 maxGameSpeed    = 16;
+	u8 lighting        = 0;
 
 	Clock::time_point lastFrameTime         = Clock::now();
 	TowerDefense::Stats::TimeMs deltaTimeMs = 0;
 
 	TowerDefense::Field field;
+
+	static constexpr GLbitfield glMask = GL_VIEWPORT_BIT | GL_TRANSFORM_BIT
+	                                     | GL_POLYGON_BIT | GL_LIGHTING_BIT;
 
 	void setup();
 	void update();

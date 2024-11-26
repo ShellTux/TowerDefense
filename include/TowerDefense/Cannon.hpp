@@ -2,12 +2,14 @@
 #define INCLUDE_CANNON_BASE_HPP_
 
 #include "Color.hpp"
+#include "OpenGL/Material.hpp"
 #include "Texture.hpp"
 #include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 #include "types.hpp"
 
+#include <GL/gl.h>
 #include <optional>
 #include <ostream>
 #include <unordered_map>
@@ -64,6 +66,7 @@ class Cannon {
 	Color color{Colors::BLACK};
 	f64 angle{};
 	Vec3 gridPosition;
+	OpenGL::Material::Type material{};
 
 	Stats::TimeMs cooldownMs{};
 	Stats::TimeMs defaultCooldownMs{};
@@ -78,6 +81,11 @@ class Cannon {
 	    {Stats::Tier::B, Texture("assets/orange-cannon.png")},
 	    {Stats::Tier::C, Texture("assets/purple-cannon.png")},
 	};
+
+	static constexpr GLbitfield drawGlMask
+	    = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_LIGHTING_BIT
+	      | GL_POLYGON_BIT | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
+	      | GL_VIEWPORT_BIT;
 
 	void drawRange(const Vec3 &selectedGridPosition) const;
 	void drawShot() const;

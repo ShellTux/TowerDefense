@@ -17,36 +17,42 @@ void Cube()
 	glBegin(GL_QUADS);
 	{
 		// NOTE: Above
+		glNormal3d(0, 1, 0);
 		glVertex3f(-p, -p, -p);
 		glVertex3f(-p, -p, p);
 		glVertex3f(p, -p, p);
 		glVertex3f(p, -p, -p);
 
 		// NOTE: Below
+		glNormal3d(0, -1, 0);
 		glVertex3f(-p, p, -p);
 		glVertex3f(p, p, -p);
 		glVertex3f(p, p, p);
 		glVertex3f(-p, p, p);
 
 		// NOTE: Left
+		glNormal3d(-1, 0, 0);
 		glVertex3f(-p, -p, -p);
 		glVertex3f(-p, p, -p);
 		glVertex3f(-p, p, p);
 		glVertex3f(-p, -p, p);
 
 		// NOTE: Right
+		glNormal3d(1, 0, 0);
 		glVertex3f(p, -p, p);
 		glVertex3f(p, p, p);
 		glVertex3f(p, p, -p);
 		glVertex3f(p, -p, -p);
 
 		// NOTE: Behind
+		glNormal3d(0, 0, -1);
 		glVertex3f(p, -p, -p);
 		glVertex3f(p, p, -p);
 		glVertex3f(-p, p, -p);
 		glVertex3f(-p, -p, -p);
 
 		// NOTE: Front
+		glNormal3d(0, 0, 1);
 		glVertex3f(-p, -p, p);
 		glVertex3f(-p, p, p);
 		glVertex3f(p, p, p);

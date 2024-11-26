@@ -1,6 +1,7 @@
 #include "TowerDefense/Field.hpp"
 
 #include "Color.hpp"
+#include "OpenGL/Material.hpp"
 #include "Primitives/2D/core.hpp"
 #include "Primitives/3D/core.hpp"
 #include "TowerDefense/Cannon.hpp"
@@ -313,6 +314,8 @@ void Field::drawFloor() const
 		glPushMatrix();
 		{
 			glColor3ubv(Colors::MINT.data());
+			OpenGL::Material::Apply(OpenGL::Material::Type::Gold);
+
 			glTranslated(-.5 + cols * .5, -.5 + rows * .5, -.01);
 
 			glScaled(cols, rows, 1);
@@ -341,6 +344,8 @@ void Field::drawEnemyPath() const
 	glPushAttrib(drawGlMask);
 	{
 		glColor3ubv(Colors::BROWN.data());
+		OpenGL::Material::Apply(OpenGL::Material::Type::Copper);
+
 		glLineWidth(10);
 
 		glTranslated(0, 0, .05);

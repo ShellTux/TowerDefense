@@ -7,11 +7,9 @@
 #include "types.hpp"
 
 #include <GL/gl.h>
+#include <array>
 #include <cmath>
 #include <optional>
-
-static constexpr int glMask
-    = GL_VIEWPORT_BIT | GL_TRANSFORM_BIT | GL_POLYGON_BIT;
 
 struct Rect {
 	int x;
@@ -54,8 +52,28 @@ void App::drawMinimap()
 
 void App::drawField()
 {
+	static constexpr std::array<f32, 4> lightDirection = {0, 0, 1, 0};
+	static constexpr std::array<f32, 4> ambientColor   = {.1, .1, .1, 1};
+	static constexpr std::array<f32, 4> diffuseColor   = {1, 1, 1, 1};
+
 	glPushAttrib(glMask);
 	{
+		switch (lighting) {
+		case 0:
+			break;
+		case 1: {
+			glEnable(GL_LIGHTING);
+			glEnable(GL_LIGHT0);
+			glLightfv(GL_LIGHT0,
+			          GL_POSITION,
+			          lightDirection.data());
+
+			glLightfv(GL_LIGHT0, GL_AMBIENT, ambientColor.data());
+
+			glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseColor.data());
+		} break;
+		}
+
 		glPushMatrix();
 		{
 			const i32 p1 = i32(width) / 8;
@@ -137,7 +155,6 @@ void App::drawHUD()
 void App::setup()
 {
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
 }
 
 void App::update()
