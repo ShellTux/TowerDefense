@@ -631,7 +631,7 @@ void Field::drawPcb(const u32 i, const u32 j) const
 					Primitives3D::Unit::Cube();
 				} break;
 				case CSlot: {
-					Primitives2D::Unit::Square();
+					Primitives2D::Unit::Circle();
 				} break;
 				case CWall:
 				case CCannon:
