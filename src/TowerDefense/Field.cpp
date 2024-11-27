@@ -283,7 +283,7 @@ void Field::drawHUD() const
 	glPushAttrib(drawGlMask);
 	glEnable(GL_TEXTURE);
 	glEnable(GL_BLEND);
-	for (usize i = 0; i < 3; ++i) {
+	for (usize i = 0; i < 4; ++i) {
 		glPushMatrix();
 		{
 			static Texture tex = textures.at(Hud1);
@@ -297,6 +297,9 @@ void Field::drawHUD() const
 			} break;
 			case 2: {
 				tex = textures.at(Hud3);
+			} break;
+			case 3: {
+				tex = textures.at(Hud4);
 			} break;
 			}
 

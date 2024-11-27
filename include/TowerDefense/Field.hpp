@@ -165,12 +165,14 @@ class Field {
 		Hud1,
 		Hud2,
 		Hud3,
+		Hud4,
 	};
 
 	std::unordered_map<HUD, Texture> textures{
 	    {Hud1,    Texture("assets/red-cannon.png")},
 	    {Hud2, Texture("assets/orange-cannon.png")},
 	    {Hud3, Texture("assets/purple-cannon.png")},
+	    {Hud4,       Texture("assets/upgrade.png")},
 	};
 
 	static constexpr GLbitfield drawGlMask
