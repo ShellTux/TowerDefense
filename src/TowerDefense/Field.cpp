@@ -86,7 +86,7 @@ Field::Field(const std::vector<std::vector<u32>> &map)
 
 	static constexpr u32 enemiesN = 100;
 	for (u32 i = 0; i < enemiesN; ++i) {
-		enemies.push_back(Enemy::Random(enemyPath, -.1 * i));
+		enemies.push_back(Enemy::Random(enemyPath, -.2 - .3 * i));
 	}
 
 	tower = Tower(towerPos);
