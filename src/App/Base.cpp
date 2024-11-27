@@ -1,4 +1,5 @@
 #include "App.hpp"
+#include "Math.hpp"
 #include "TowerDefense/Field.hpp"
 #include "types.hpp"
 
@@ -136,6 +137,9 @@ void App::printStats() const
 	                              + field.getCannonsSize())
 	          << std::endl;
 	std::cout << "Enemies: " << field.getEnemiesSize() << std::endl;
+	std::cout << "Orbit Angle: "
+	          << i32(Math::radiansToDegrees(orbitAngle)) % 360 << "º"
+	          << std::endl;
 	std::cout << "---------------------------------" << std::endl;
 	std::cout << std::endl;
 
