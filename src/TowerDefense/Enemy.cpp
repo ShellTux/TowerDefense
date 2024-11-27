@@ -71,9 +71,9 @@ void Enemy::draw() const
 		glColor3ubv(color.data());
 		OpenGL::Material::Apply(material);
 
-		glTranslated(posX, posY, 0);
-		glScalef(.9, .9, 1);
-		Primitives3D::Unit::Cube();
+		glTranslated(posX, posY, -.2);
+		glScalef(.9, .9, .6);
+		Primitives3D::Unit::Cilinder();
 
 		drawHealth();
 	}
