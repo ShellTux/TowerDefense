@@ -12,7 +12,7 @@ void Unit::Circle()
 {
 	using std::cos, std::sin, Math::PIf;
 
-	static constexpr f64 radius = .5;
+	static constexpr f64 radius = p;
 	const f64 deltaAngle        = 2 * Math::PI / resolution;
 
 	glBegin(GL_POLYGON);
@@ -27,8 +27,6 @@ void Unit::Circle()
 
 void Unit::Square()
 {
-	static constexpr f32 p = .5f;
-
 	glBegin(GL_QUADS);
 	{
 		glNormal3d(0, 0, 1);

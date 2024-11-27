@@ -8,6 +8,10 @@ namespace Primitives3D {
 
 namespace Unit {
 
+static constexpr f64 p          = .5;
+static constexpr f64 radius     = p;
+static constexpr f64 resolution = Primitives2D::resolution;
+
 void Cube();
 
 } // namespace Unit

@@ -5,6 +5,7 @@
 
 namespace Primitives2D {
 
+static constexpr f64 p          = .5;
 static constexpr u64 resolution = 50;
 
 namespace Unit {
