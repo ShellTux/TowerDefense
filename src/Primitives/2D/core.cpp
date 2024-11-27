@@ -32,9 +32,17 @@ void Unit::Square()
 	glBegin(GL_QUADS);
 	{
 		glNormal3d(0, 0, 1);
+
+		glTexCoord2f(0, 0);
 		glVertex2f(-p, p);
+
+		glTexCoord2f(0, 1);
 		glVertex2f(-p, -p);
+
+		glTexCoord2f(1, 1);
 		glVertex2f(p, -p);
+
+		glTexCoord2f(1, 0);
 		glVertex2f(p, p);
 	}
 	glEnd();
