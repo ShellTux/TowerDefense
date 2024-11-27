@@ -48,4 +48,6 @@ std::ostream &operator<<(std::ostream &os, const Color &color);
 
 } // namespace Colors
 
+void glColor(const u32 color);
+
 #endif // INCLUDE_INCLUDE_COLOR_HPP_
