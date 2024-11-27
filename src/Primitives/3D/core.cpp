@@ -1,5 +1,6 @@
 #include "Primitives/3D/core.hpp"
 
+#include "Primitives/2D/core.hpp"
 #include "Vec3.hpp"
 #include "types.hpp"
 
@@ -12,8 +13,34 @@ namespace Unit {
 
 void Cube()
 {
-	static constexpr f32 p = .5;
+#if PRIMITIVES2D_USE
+	glPushMatrix();
+	{
+		for (int i = 0; i < 4; ++i) {
+			glRotated(90, 0, 1, 0);
 
+			glPushMatrix();
+			{
+				glTranslated(0, 0, p);
+				Primitives2D::Unit::Square();
+			}
+			glPopMatrix();
+		}
+
+		glRotated(90, 1, 0, 0);
+		for (int i = 0; i < 2; ++i) {
+			glRotated(180, 1, 0, 0);
+
+			glPushMatrix();
+			{
+				glTranslated(0, 0, p);
+				Primitives2D::Unit::Square();
+			}
+			glPopMatrix();
+		}
+	}
+	glPopMatrix();
+#else
 	glBegin(GL_QUADS);
 	{
 		// NOTE: Above
@@ -59,6 +86,7 @@ void Cube()
 		glVertex3f(p, -p, p);
 	}
 	glEnd();
+#endif
 }
 
 } // namespace Unit

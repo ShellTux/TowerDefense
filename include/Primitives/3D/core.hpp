@@ -1,8 +1,11 @@
 #ifndef INCLUDE_3D_CORE_HPP_
 #define INCLUDE_3D_CORE_HPP_
 
+#include "Primitives/2D/core.hpp"
 #include "Vec3.hpp"
 #include "types.hpp"
+
+#define PRIMITIVES2D_USE 1
 
 namespace Primitives3D {
 
