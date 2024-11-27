@@ -150,7 +150,7 @@ class Field {
 	bool bDrawFloor{true};
 	bool bDrawTower{true};
 	Map map;
-	Stats::HealthPoints points = 100;
+	Stats::HealthPoints points = 500;
 	std::vector<Cannon> cannons;
 	std::vector<Enemy> enemies;
 	std::vector<Vec3> enemyPath;
