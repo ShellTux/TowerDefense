@@ -4,6 +4,7 @@
 #include "OpenGL/Material.hpp"
 #include "Primitives/2D/core.hpp"
 #include "Primitives/3D/core.hpp"
+#include "Texture.hpp"
 #include "TowerDefense/Cannon.hpp"
 #include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
@@ -13,7 +14,6 @@
 
 #include <GL/gl.h>
 #include <algorithm>
-#include <array>
 #include <cstdlib>
 #include <iostream>
 #include <map>
@@ -280,27 +280,36 @@ void Field::drawHUD() const
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	static constexpr std::array<Color, 5> a = {
-	    Colors::WHITE,
-	    Colors::RED,
-	    Colors::ORANGE,
-	    Colors::PURPLE,
-	    Colors::YELLOW,
-	};
-
-	for (size_t i = 0; i < a.size(); ++i) {
-		const Color &color = a.at(i);
-
-		glPushAttrib(drawGlMask);
+	glPushAttrib(drawGlMask);
+	glEnable(GL_TEXTURE);
+	glEnable(GL_BLEND);
+	for (usize i = 0; i < 3; ++i) {
 		glPushMatrix();
 		{
-			glColor3ubv(color.data());
-			glTranslatef(GLfloat(i), 0, 0);
-			Primitives2D::Unit::Circle();
+			static Texture tex = textures.at(Hud1);
+
+			switch (i) {
+			case 0: {
+				tex = textures.at(Hud1);
+			} break;
+			case 1: {
+				tex = textures.at(Hud2);
+			} break;
+			case 2: {
+				tex = textures.at(Hud3);
+			} break;
+			}
+
+			tex.Bind();
+			{
+				glTranslated(f64(i), 0, 0);
+				Primitives2D::Unit::Square();
+			}
+			tex.UnBind();
 		}
 		glPopMatrix();
-		glPopAttrib();
 	}
+	glPopAttrib();
 }
 
 void Field::drawFloor() const

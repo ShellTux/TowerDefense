@@ -161,10 +161,16 @@ class Field {
 	u32 wave{1};
 	Vec3 selectedGridPosition{0, 0};
 
-	std::unordered_map<std::string, Texture> textures{
-	    {"HUD1",    Texture("assets/red-cannon.png")},
-	    {"HUD2", Texture("assets/orange-cannon.png")},
-	    {"HUD3", Texture("assets/purple-cannon.png")},
+	enum HUD : u8 {
+		Hud1,
+		Hud2,
+		Hud3,
+	};
+
+	std::unordered_map<HUD, Texture> textures{
+	    {Hud1,    Texture("assets/red-cannon.png")},
+	    {Hud2, Texture("assets/orange-cannon.png")},
+	    {Hud3, Texture("assets/purple-cannon.png")},
 	};
 
 	static constexpr GLbitfield drawGlMask
