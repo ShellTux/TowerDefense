@@ -642,7 +642,7 @@ void Field::drawSelected() const
 	glPushAttrib(drawGlMask);
 	glPushMatrix();
 	{
-		glColor3ubv(Colors::YELLOW.data());
+		glColor3ubv(Colors::PINK.data());
 
 		glTranslated(posX, posY, .01);
 
