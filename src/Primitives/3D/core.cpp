@@ -1,15 +1,54 @@
 #include "Primitives/3D/core.hpp"
 
+#include "Math.hpp"
 #include "Primitives/2D/core.hpp"
 #include "Vec3.hpp"
 #include "types.hpp"
 
 #include <GL/gl.h>
 #include <cassert>
+#include <cmath>
 
 namespace Primitives3D {
 
 namespace Unit {
+
+void Cilinder()
+{
+	glPushMatrix();
+	{
+		glTranslated(0, 0, p);
+		Primitives2D::Unit::Circle();
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslated(0, 0, -p);
+		Primitives2D::Unit::Circle();
+	}
+	glPopMatrix();
+
+	const f64 deltaAngle = 0.1;
+
+	// NOTE: Draw the Tube
+	glBegin(GL_QUAD_STRIP);
+	{
+		for (f64 angle = 0; angle < 2 * Math::PI; angle += deltaAngle) {
+			const f64 c = cos(angle);
+			const f64 s = sin(angle);
+
+			const f64 x = radius * c;
+			const f64 y = radius * s;
+			glNormal3d(c, s, 0);
+			glVertex3d(x, y, p);
+			glVertex3d(x, y, -p);
+		}
+		glVertex3f(radius, 0, p);
+		glVertex3f(radius, 0, -p);
+	}
+	glEnd();
+}
 
 void Cube()
 {

@@ -15,6 +15,7 @@ static constexpr f64 p          = .5;
 static constexpr f64 radius     = p;
 static constexpr f64 resolution = Primitives2D::resolution;
 
+void Cilinder();
 void Cube();
 
 } // namespace Unit
