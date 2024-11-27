@@ -198,21 +198,21 @@ void Cannon::drawRange(const Vec3 &selectedGridPosition) const
 
 void Cannon::drawShot() const
 {
+	static constexpr f64 maxRatio = .5;
+
 	const f64 ratio = (f64) cooldownMs / defaultCooldownMs;
-	if (ratio < .92) {
+	if (ratio < maxRatio) {
 		return;
 	}
 
-
-	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
-	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
-	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
-	                                     | GL_VIEWPORT_BIT;
+	Color c = Colors::SALMON;
+	c[3]    = u8(0xFF * (1 - (1 - ratio) / (1 - maxRatio)));
+	std::cout << static_cast<int>(c[3]) << std::endl;
 
 	glPushMatrix();
-	glPushAttrib(glMask);
+	glPushAttrib(drawGlMask);
 	{
-		glColor3ubv(Colors::SALMON.data());
+		glColor4ubv(c.data());
 
 		glScaled(range * .25, .2, .2);
 		glTranslated(1, 0, 0);
