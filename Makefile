@@ -49,7 +49,7 @@ clean:
 
 .PHONY: archive
 archive: README.pdf
-	git archive --verbose --output=CG_LEI_2024_PROJETO_META_01_2018280716.zip $(^:%=--add-file=%) HEAD
+	for d in src include ; do (cd "$$d" && zip --recurse-paths ../CG_LEI_2024_PROJETO_META_01_2018280716.zip . --exclude '**/*.o' --exclude '*.o') ; done
 
 .PHONY: .clangd
 .clangd:
