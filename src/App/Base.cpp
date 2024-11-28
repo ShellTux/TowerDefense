@@ -52,6 +52,7 @@ App::App(const std::string &title,
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, FramebufferCallback);
 	glfwSetKeyCallback(window, KeyCallback);
+	glfwSetScrollCallback(window, ScrollCallback);
 
 	allApps[window] = this;
 }
@@ -122,6 +123,15 @@ void App::KeyCallback(GLFWwindow *window,
 		app->KeyRelease(key);
 	} break;
 	}
+}
+
+void App::ScrollCallback(GLFWwindow *window,
+                         const double xoffset,
+                         const double yoffset)
+{
+	App *app = allApps.at(window);
+	assert(app != nullptr);
+	app->MouseScroll(xoffset, yoffset);
 }
 
 void App::printStats() const

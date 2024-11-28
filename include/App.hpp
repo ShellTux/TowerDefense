@@ -78,10 +78,14 @@ class App {
 	                        const int scancode,
 	                        const int action,
 	                        const int mods);
+	static void ScrollCallback(GLFWwindow *window,
+	                           const double xoffset,
+	                           const double yoffset);
 
 
 	void KeyPress(const int key);
 	void KeyRelease(const int key);
+	void MouseScroll(const f64 xoffset, const f64 yoffset);
 };
 
 #endif // INCLUDE_APP_BASE_HPP_

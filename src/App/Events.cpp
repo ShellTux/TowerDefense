@@ -1,6 +1,7 @@
 #include "App.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
+#include "types.hpp"
 
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
@@ -108,4 +109,8 @@ void App::KeyPress(const int key)
 void App::KeyRelease(const int key)
 {
 	(void) key;
+}
+
+void App::MouseScroll(const f64 xoffset, const f64 yoffset)
+{
 }
