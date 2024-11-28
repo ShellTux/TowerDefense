@@ -2,6 +2,7 @@ CXX       = clang++
 CXXFLAGS += -Wall -Wextra -Werror -std=c++17
 CXXFLAGS += -Wno-error=unused-variable
 CXXFLAGS += -Wno-error=unused-but-set-variable
+CXXFLAGS += -DNOOF
 CXXFLAGS += -I$(shell realpath include)
 
 LDFLAGS = -lGL -lGLU -lglfw
@@ -11,6 +12,7 @@ all: td
 TARGET = td
 SRC = \
       ./src/main.cpp \
+      ./src/types.cpp \
       ./src/Math.cpp \
       ./src/Color.cpp \
       ./src/Vec3.cpp \
@@ -43,7 +45,7 @@ clean:
 
 .PHONY: archive
 archive: README.pdf
-	git archive --verbose --output=CG_LEI_2024_PROJETO_META_01_2018280716.zip $(^:%=--add-file=%) HEAD
+	for d in src include ; do (cd "$$d" && zip --recurse-paths ../CG_LEI_2024_PROJETO_META_01_2018280716.zip . --exclude '**/*.o' --exclude '*.o') ; done
 
 .PHONY: .clangd
 .clangd:
