@@ -23,8 +23,6 @@ class Vec3 {
 	static Vec3 Normalize(const Vec3 &a);
 	static Vec3 RandomUnitVec3();
 	static Vec3 Polar2D(const f64 angle);
-	static Vec3
-	Polar2D(const Vec3 &center, const f64 radius, const f64 angle);
 	static f64 AngleBetween(const Vec3 &a, const Vec3 &b);
 
 	bool operator!=(const Vec3 &other) const;
