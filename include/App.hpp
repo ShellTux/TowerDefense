@@ -47,6 +47,7 @@ class App {
 		Look &operator=(const Look &) = default;
 		Look &operator=(Look &&)      = default;
 		Look &operator+=(const usize i);
+		~Look() = default;
 
 		friend std::ostream &operator<<(std::ostream &os,
 		                                const Look &look)
