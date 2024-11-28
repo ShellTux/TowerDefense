@@ -10,10 +10,10 @@ namespace Primitives2D {
 
 void Unit::Circle(const uint32_t resolution, const bool fill)
 {
-	using std::cos, std::sin, Math::PIf;
+	using std::cos, std::sin;
 
 	static constexpr GLfloat radius = .5f;
-	const GLfloat deltaAngle        = 2 * PIf / resolution;
+	const GLfloat deltaAngle        = 2 * Math::PId / resolution;
 
 	glBegin(fill ? GL_TRIANGLE_FAN : GL_LINE_LOOP);
 	{
@@ -21,7 +21,7 @@ void Unit::Circle(const uint32_t resolution, const bool fill)
 			glVertex2f(0, 0);
 		}
 
-		for (GLfloat angle  = 0; angle < 2 * Math::PI;
+		for (GLfloat angle  = 0; angle < 2 * Math::PId;
 		     angle         += deltaAngle) {
 			const GLfloat x = radius * cos(angle);
 			const GLfloat y = radius * sin(angle);
