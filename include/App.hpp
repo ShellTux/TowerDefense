@@ -105,6 +105,8 @@ class App {
 	};
 
 	enum class Key {
+		KeyNone,
+
 		KeyQ,
 		KeyW,
 		KeyE,
