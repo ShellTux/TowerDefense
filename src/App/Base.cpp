@@ -429,89 +429,13 @@ App::Look &App::Look::reset()
 App::Key App::FromGLFWKey(const i32 key)
 {
 	switch (key) {
-	case GLFW_KEY_Q:
-		return Key::KeyQ;
-	case GLFW_KEY_W:
-		return Key::KeyW;
-	case GLFW_KEY_E:
-		return Key::KeyE;
-	case GLFW_KEY_R:
-		return Key::KeyR;
-	case GLFW_KEY_T:
-		return Key::KeyT;
-	case GLFW_KEY_Y:
-		return Key::KeyY;
-	case GLFW_KEY_U:
-		return Key::KeyU;
-	case GLFW_KEY_I:
-		return Key::KeyI;
-	case GLFW_KEY_O:
-		return Key::KeyO;
-	case GLFW_KEY_P:
-		return Key::KeyP;
-	case GLFW_KEY_A:
-		return Key::KeyA;
-	case GLFW_KEY_S:
-		return Key::KeyS;
-	case GLFW_KEY_D:
-		return Key::KeyD;
-	case GLFW_KEY_F:
-		return Key::KeyF;
-	case GLFW_KEY_G:
-		return Key::KeyG;
-	case GLFW_KEY_H:
-		return Key::KeyH;
-	case GLFW_KEY_J:
-		return Key::KeyJ;
-	case GLFW_KEY_K:
-		return Key::KeyK;
-	case GLFW_KEY_L:
-		return Key::KeyL;
-	case GLFW_KEY_Z:
-		return Key::KeyZ;
-	case GLFW_KEY_X:
-		return Key::KeyX;
-	case GLFW_KEY_C:
-		return Key::KeyC;
-	case GLFW_KEY_V:
-		return Key::KeyV;
-	case GLFW_KEY_B:
-		return Key::KeyB;
-	case GLFW_KEY_N:
-		return Key::KeyN;
-	case GLFW_KEY_M:
-		return Key::KeyM;
-
-		/*case GLFW_KEY_Up:*/
-		/*	return Key::KeyUp;*/
-		/*case GLFW_KEY_Down:*/
-		/*	return Key::KeyDown;*/
-		/*case GLFW_KEY_Left:*/
-		/*	return Key::KeyLeft;*/
-		/*case GLFW_KEY_Right:*/
-		/*	return Key::KeyRight;*/
-
-	case GLFW_KEY_0:
-		return Key::Key0;
-	case GLFW_KEY_1:
-		return Key::Key1;
-	case GLFW_KEY_2:
-		return Key::Key2;
-	case GLFW_KEY_3:
-		return Key::Key3;
-	case GLFW_KEY_4:
-		return Key::Key4;
-	case GLFW_KEY_5:
-		return Key::Key5;
-	case GLFW_KEY_6:
-		return Key::Key6;
-	case GLFW_KEY_7:
-		return Key::Key7;
-	case GLFW_KEY_8:
-		return Key::Key8;
-	case GLFW_KEY_9:
-		return Key::Key9;
+	#define KEY(ENUM, GLFW_KEY, OF_KEY) \
+	case GLFW_KEY:                      \
+		return App::Key::ENUM;
+		KEYS
+	#undef KEY
 	}
+
 
 	return Key::Key0;
 }

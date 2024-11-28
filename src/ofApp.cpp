@@ -8,78 +8,11 @@
 static App::Key AppKeyFromOFKey(const i32 key)
 {
 	switch (key) {
-	case 's': {
-		return App::Key::KeyS;
-	} break;
-	case 'w': {
-		return App::Key::KeyW;
-	} break;
-	case 'a': {
-		return App::Key::KeyA;
-	} break;
-	case 'd': {
-		return App::Key::KeyD;
-	} break;
-
-		/*case 0 * Down: {*/
-		/*	return App::Key::KeyDown;*/
-		/*} break;*/
-		/*case 0 * Up: {*/
-		/*	return App::Key::KeyUp;*/
-		/*} break;*/
-		/*case 0 * Left: {*/
-		/*	return App::Key::KeyLeft;*/
-		/*} break;*/
-		/*case 0 * R: {*/
-		/*	return App::Key::KeyRight;*/
-		/*} break;*/
-
-	case '1': {
-		return App::Key::Key1;
-	} break;
-	case '2': {
-		return App::Key::Key2;
-	} break;
-	case '3': {
-		return App::Key::Key3;
-	} break;
-	case 'u': {
-		return App::Key::KeyU;
-	} break;
-	case '4': {
-		return App::Key::Key4;
-	} break;
-	case 'i': {
-		return App::Key::KeyI;
-	} break;
-
-	case 'c': {
-		return App::Key::KeyC;
-	}; break;
-	case 't': {
-		return App::Key::KeyT;
-	} break;
-	case 'v': {
-		return App::Key::KeyV;
-	} break;
-	case 'm': {
-		return App::Key::KeyM;
-	} break;
-	case 'r': {
-		return App::Key::KeyR;
-	} break;
-	case 'x': {
-		return App::Key::KeyX;
-	} break;
-	case 'l': {
-		return App::Key::KeyL;
-	} break;
-	case 'k': {
-		return App::Key::KeyK;
-	} break;
-	case 'j': {
-		return App::Key::KeyJ;
-	} break;
+#define KEY(ENUM, GLFW_KEY, OF_KEY) \
+	case OF_KEY:                \
+		return App::Key::ENUM;
+		KEYS_OF_IMPLEMENTED
+#undef KEY
 	}
 
 	return App::Key::KeyNone;

@@ -122,6 +122,17 @@ void App::KeyPress(const Key key)
 		selectedEnemyIndex
 		    = static_cast<i64>(selectedEnemyIndex.value_or(-1)) + 1;
 	} break;
+	case Key::KeyKPSubtract: {
+		if (view.radius < 30) {
+			view.radius += 1;
+		}
+	} break;
+	case Key::KeyKPAdd: {
+		if (view.radius > 1) {
+			view.radius -= 1;
+		}
+	} break;
+
 	case Key::KeyQ:
 	case Key::KeyE:
 	case Key::KeyY:
@@ -138,8 +149,82 @@ void App::KeyPress(const Key key)
 	case Key::Key6:
 	case Key::Key7:
 	case Key::Key8:
-	case Key::Key9: {
-	} break;
+	case Key::Key9:
+	case Key::KeySpace:
+	case Key::KeyApostrophe:
+	case Key::KeyComma:
+	case Key::KeyPeriod:
+	case Key::KeySemicolon:
+	case Key::KeyEqual:
+	case Key::KeyLeftBracket:
+	case Key::KeyBackslash:
+	case Key::KeyRightBracket:
+	case Key::KeyEscape:
+	case Key::KeyEnter:
+	case Key::KeyTab:
+	case Key::KeyBackspace:
+	case Key::KeyInsert:
+	case Key::KeyDelete:
+	case Key::KeyPageUp:
+	case Key::KeyPageDown:
+	case Key::KeyHome:
+	case Key::KeyEnd:
+	case Key::KeyCapsLock:
+	case Key::KeyScrollLock:
+	case Key::KeyNumLock:
+	case Key::KeyPrintScreen:
+	case Key::KeyPause:
+	case Key::KeyF1:
+	case Key::KeyF2:
+	case Key::KeyF3:
+	case Key::KeyF4:
+	case Key::KeyF5:
+	case Key::KeyF6:
+	case Key::KeyF7:
+	case Key::KeyF8:
+	case Key::KeyF9:
+	case Key::KeyF10:
+	case Key::KeyF11:
+	case Key::KeyF12:
+	case Key::KeyF13:
+	case Key::KeyF14:
+	case Key::KeyF15:
+	case Key::KeyF16:
+	case Key::KeyF17:
+	case Key::KeyF18:
+	case Key::KeyF19:
+	case Key::KeyF20:
+	case Key::KeyF21:
+	case Key::KeyF22:
+	case Key::KeyF23:
+	case Key::KeyF24:
+	case Key::KeyF25:
+	case Key::KeyKPDecimal:
+	case Key::KeyKPDivide:
+	case Key::KeyKPMultiply:
+	case Key::KeyKPEnter:
+	case Key::KeyKPEqual:
+	case Key::KeyLeftShift:
+	case Key::KeyLeftControl:
+	case Key::KeyLeftAlt:
+	case Key::KeyRightShift:
+	case Key::KeyRightControl:
+	case Key::KeyRightAlt:
+	case Key::KeyRightSuper:
+	case Key::KeyGraveAccent:
+	case Key::KeyKP0:
+	case Key::KeyKP1:
+	case Key::KeyKP2:
+	case Key::KeyKP3:
+	case Key::KeyKP4:
+	case Key::KeyKP5:
+	case Key::KeyKP6:
+	case Key::KeyKP7:
+	case Key::KeyKP8:
+	case Key::KeyKP9:
+	case Key::KeyLEFT_SUPER:
+	case Key::KeyMenu:
+		break;
 	}
 }
 
