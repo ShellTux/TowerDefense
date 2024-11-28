@@ -34,7 +34,7 @@ void Cilinder()
 	// NOTE: Draw the Tube
 	glBegin(GL_QUAD_STRIP);
 	{
-		for (f64 angle = 0; angle < 2 * Math::PI; angle += deltaAngle) {
+		for (f64 angle = 0; angle < 2 * Math::PId; angle += deltaAngle) {
 			const f64 c = cos(angle);
 			const f64 s = sin(angle);
 

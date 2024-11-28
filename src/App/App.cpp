@@ -87,7 +87,7 @@ void App::drawField()
 				            {.5 * f64(cols), .5 * f64(rows)},
 				            f64(cols + rows) * .5,
 				            orbitAngle,
-				            Math::PI / 6);
+				            Math::PId / 6);
 			} else {
 				const std::optional<TowerDefense::Enemy> enemy
 				    = field.getEnemy(
@@ -105,7 +105,7 @@ void App::drawField()
 					    {.5 * f64(cols), .5 * f64(rows)},
 					    f64(cols + rows) * .5,
 					    orbitAngle,
-					    Math::PI / 6);
+					    Math::PId / 6);
 				}
 			}
 
@@ -138,8 +138,8 @@ void App::update()
 	updateTime();
 
 	orbitAngle += .01;
-	while (orbitAngle >= 2 * Math::PI) {
-		orbitAngle -= 2 * Math::PI;
+	while (orbitAngle >= 2 * Math::PId) {
+		orbitAngle -= 2 * Math::PId;
 	}
 
 	for (u8 i = 0; i < gameSpeed * static_cast<u8>(!pause); ++i) {

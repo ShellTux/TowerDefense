@@ -292,41 +292,41 @@ void App::Look::lookAt(const std::optional<Vec3> &pos,
 		switch (value) {
 		case Front3rd: {
 			camera = realPos
-			         + Vec3::Polar3D(3 * Math::PI / 2, Math::PI / 4)
+			         + Vec3::Polar3D(3 * Math::PId / 2, Math::PId / 4)
 			               * r;
 		} break;
 		case Left3rd: {
 			camera = realPos
-			         + Vec3::Polar3D(Math::PI, Math::PI / 4) * r;
+			         + Vec3::Polar3D(Math::PId, Math::PId / 4) * r;
 		} break;
 		case Back3rd: {
 			camera
 			    = realPos
-			      + Vec3::Polar3D(Math::PI / 2, Math::PI / 4) * r;
+			      + Vec3::Polar3D(Math::PId / 2, Math::PId / 4) * r;
 		} break;
 		case Right3rd: {
-			camera = realPos + Vec3::Polar3D(0, Math::PI / 4) * r;
+			camera = realPos + Vec3::Polar3D(0, Math::PId / 4) * r;
 		} break;
 		case Above3rd: {
 			camera = realPos
-			         + Vec3::Polar3D(3 * Math::PI / 2, Math::PI / 4)
+			         + Vec3::Polar3D(3 * Math::PId / 2, Math::PId / 4)
 			               * r;
 		} break;
 		case Below3rd: {
 			camera
 			    = realPos
-			      + Vec3::Polar3D(3 * Math::PI / 2, -Math::PI / 4)
+			      + Vec3::Polar3D(3 * Math::PId / 2, -Math::PId / 4)
 			            * r;
 		} break;
 		case OrbitHorizontal3rd: {
 			camera
 			    = realPos
-			      + Vec3::Polar3D(azimuthalAngle, Math::PI / 4) * r;
+			      + Vec3::Polar3D(azimuthalAngle, Math::PId / 4) * r;
 		} break;
 		case OrbitVertical3rd: {
 			camera
 			    = realPos
-			      + Vec3::Polar3D(3 * Math::PI / 2, polarAngle) * r;
+			      + Vec3::Polar3D(3 * Math::PId / 2, polarAngle) * r;
 		} break;
 		case FreeView3rd: {
 			camera
@@ -365,30 +365,30 @@ void App::Look::lookAt(const std::optional<Vec3> &pos,
 	case Front3rd: {
 		camera
 		    = orbitCenter
-		      + Vec3::Polar3D(Math::PI / 2, polarAngle) * orbitRadius;
+		      + Vec3::Polar3D(Math::PId / 2, polarAngle) * orbitRadius;
 	} break;
 	case Left3rd: {
 		camera = orbitCenter
-		         + Vec3::Polar3D(2 * Math::PI / 2, polarAngle)
+		         + Vec3::Polar3D(2 * Math::PId / 2, polarAngle)
 		               * orbitRadius;
 	} break;
 	case Back3rd: {
 		camera = orbitCenter
-		         + Vec3::Polar3D(3 * Math::PI / 2, polarAngle)
+		         + Vec3::Polar3D(3 * Math::PId / 2, polarAngle)
 		               * orbitRadius;
 	} break;
 	case Right3rd: {
 		camera
 		    = orbitCenter
-		      + Vec3::Polar3D(2 * Math::PI, polarAngle) * orbitRadius;
+		      + Vec3::Polar3D(2 * Math::PId, polarAngle) * orbitRadius;
 	} break;
 	case Above3rd: {
 		camera = orbitCenter
-		         + Vec3::Polar3D(0, Math::PI / 2) * orbitRadius;
+		         + Vec3::Polar3D(0, Math::PId / 2) * orbitRadius;
 	} break;
 	case Below3rd: {
 		camera = orbitCenter
-		         + Vec3::Polar3D(0, 3 * Math::PI / 2) * orbitRadius;
+		         + Vec3::Polar3D(0, 3 * Math::PId / 2) * orbitRadius;
 	} break;
 	case OrbitHorizontal3rd: {
 		camera
@@ -420,7 +420,7 @@ App::Look &App::Look::reset()
 {
 	value             = Front3rd;
 	freeViewAzimuthal = 0;
-	freeViewPolar     = Math::PI / 4;
+	freeViewPolar     = Math::PId / 4;
 
 	return *this;
 }

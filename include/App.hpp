@@ -100,7 +100,7 @@ class App {
 
 		Type value{Front3rd};
 		f64 freeViewAzimuthal{};
-		f64 freeViewPolar{Math::PI / 4};
+		f64 freeViewPolar{Math::PId / 4};
 	};
 
 	enum class Key {
