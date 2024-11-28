@@ -163,3 +163,9 @@ void App::draw()
 
 	printStats();
 }
+
+void App::updateDimensions(const u32 width, const u32 height)
+{
+	this->width  = width;
+	this->height = height;
+}
