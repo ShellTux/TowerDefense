@@ -160,6 +160,9 @@ class App {
 	    const u32 fieldCols,
 	    const u8 fieldWaves);
 
+	App()
+	    : App("", 600, 600, 10, 10, 10)
+	{}
 	App(App &&)                 = default;
 	App(const App &)            = default;
 	App &operator=(App &&)      = default;
