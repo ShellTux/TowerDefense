@@ -548,6 +548,9 @@ void Field::printInfoAtSelectedPosition() const
 	case CWall: {
 		std::cout << "Wall: " << selectedGridPosition << std::endl;
 	} break;
+	default: {
+		std::cout << selectedGridPosition << std::endl;
+	} break;
 	}
 #endif
 }

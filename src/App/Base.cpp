@@ -130,15 +130,15 @@ void App::printStats() const
 	          << field.getTower().getHealthRatio() * 100 << "%"
 	          << std::endl;
 	std::cout << "Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
-	std::cout << "Selected Position: " << field.getSelectedPosition()
-	          << std::endl;
+	std::cout << "Selected Position: ";
+	field.printInfoAtSelectedPosition();
 	std::cout << "Cannons: " << field.getCannonsSize() << "/"
 	          << static_cast<int>(field.getRemainingCannons()
 	                              + field.getCannonsSize())
 	          << std::endl;
 	std::cout << "Enemies: " << field.getEnemiesSize() << std::endl;
 	std::cout << "Orbit Angle: "
-	          << i32(Math::radiansToDegrees(orbitAngle)) % 360 << "º"
+	          << Math::radiansToDegrees(orbitAngle) << "º"
 	          << std::endl;
 	std::cout << "---------------------------------" << std::endl;
 	std::cout << std::endl;

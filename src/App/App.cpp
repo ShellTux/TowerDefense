@@ -164,7 +164,11 @@ void App::setup()
 void App::update()
 {
 	updateTime();
+
 	orbitAngle += .01;
+	while (orbitAngle >= 2 * Math::PI) {
+		orbitAngle -= 2 * Math::PI;
+	}
 
 	for (u8 i = 0; i < gameSpeed * static_cast<u8>(!pause); ++i) {
 		field.update(deltaTimeMs);
