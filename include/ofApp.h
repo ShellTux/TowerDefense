@@ -1,7 +1,10 @@
 #pragma once
 
-#include "App.hpp"
+// clang-format off
 #include "ofMain.h"
+// clang-format on
+
+#include "App.hpp"
 #include "types.hpp"
 
 class ofApp : public ofBaseApp {

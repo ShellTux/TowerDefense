@@ -14,8 +14,8 @@ int main()
 	return 0;
 }
 #else
-	#include "ofApp.h"
 	#include "ofMain.h"
+	#include "ofApp.h"
 
 int main()
 {
