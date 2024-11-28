@@ -2,6 +2,7 @@ CXX       = clang++
 CXXFLAGS += -Wall -Wextra -Werror -std=c++17
 CXXFLAGS += -Wno-error=unused-variable
 CXXFLAGS += -Wno-error=unused-but-set-variable
+CXXFLAGS += -DNOOF
 CXXFLAGS += -I$(shell realpath include)
 
 LDFLAGS = -lm -lGL -lGLU -lglfw

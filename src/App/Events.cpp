@@ -4,12 +4,15 @@
 #include "types.hpp"
 
 #include <GL/gl.h>
-#include <GLFW/glfw3.h>
 #include <optional>
 
-void App::KeyPress(const int key)
+#ifdef NOOF
+	#include <GLFW/glfw3.h>
+#endif
+
+void App::KeyPress(const Key key)
 {
-	if (key == GLFW_KEY_P) {
+	if (key == Key::KeyP) {
 		if (pause) {
 			lastFrameTime = Clock::now();
 		}
@@ -18,41 +21,44 @@ void App::KeyPress(const int key)
 	}
 
 	switch (key) {
-	case GLFW_KEY_S:
-	case GLFW_KEY_DOWN: {
+	case Key::KeyNone:
+		return;
+
+	case Key::KeyS:
+	case Key::KeyDown: {
 		field.moveSelectedPosition(Vec3(1, 0));
 	} break;
-	case GLFW_KEY_W:
-	case GLFW_KEY_UP: {
+	case Key::KeyW:
+	case Key::KeyUp: {
 		field.moveSelectedPosition(Vec3(-1, 0));
 	} break;
-	case GLFW_KEY_A:
-	case GLFW_KEY_LEFT: {
+	case Key::KeyA:
+	case Key::KeyLeft: {
 		field.moveSelectedPosition(Vec3(0, -1));
 	} break;
-	case GLFW_KEY_D:
-	case GLFW_KEY_RIGHT: {
+	case Key::KeyD:
+	case Key::KeyRight: {
 		field.moveSelectedPosition(Vec3(0, 1));
 	} break;
 
-	case GLFW_KEY_1: {
+	case Key::Key1: {
 		field.placeCannon(TowerDefense::Stats::Tier::A);
 	} break;
-	case GLFW_KEY_2: {
+	case Key::Key2: {
 		field.placeCannon(TowerDefense::Stats::Tier::B);
 	} break;
-	case GLFW_KEY_3: {
+	case Key::Key3: {
 		field.placeCannon(TowerDefense::Stats::Tier::C);
 	} break;
-	case GLFW_KEY_U:
-	case GLFW_KEY_4: {
+	case Key::KeyU:
+	case Key::Key4: {
 		field.upgradeCannon();
 	} break;
-	case GLFW_KEY_I: {
+	case Key::KeyI: {
 		field.printInfoAtSelectedPosition();
 	} break;
 
-	case GLFW_KEY_C: {
+	case Key::KeyC: {
 		cull = (cull + 1) % 4;
 		switch (cull) {
 		case 0: {
@@ -72,7 +78,7 @@ void App::KeyPress(const int key)
 		} break;
 		}
 	}; break;
-	case GLFW_KEY_T: {
+	case Key::KeyT: {
 		polygonMode = (polygonMode + 1) % 2;
 
 		switch (polygonMode) {
@@ -85,26 +91,26 @@ void App::KeyPress(const int key)
 		}
 
 	} break;
-	case GLFW_KEY_V: {
+	case Key::KeyV: {
 		view += 1;
 	} break;
-	case GLFW_KEY_M: {
+	case Key::KeyM: {
 		focusMinimap = !focusMinimap;
 	} break;
-	case GLFW_KEY_R: {
+	case Key::KeyR: {
 		view.reset();
 		focusMinimap = false;
 	} break;
-	case GLFW_KEY_X: {
+	case Key::KeyX: {
 		gameSpeed *= 2;
 		if (gameSpeed > maxGameSpeed) {
 			gameSpeed = 1;
 		}
 	} break;
-	case GLFW_KEY_L: {
+	case Key::KeyL: {
 		lighting = (lighting + 1) % 2;
 	} break;
-	case GLFW_KEY_K: {
+	case Key::KeyK: {
 		if (selectedView.has_value()) {
 			selectedView = std::nullopt;
 			break;
@@ -112,14 +118,32 @@ void App::KeyPress(const int key)
 
 		selectedView = field.getSelectedPosition() + Vec3(0, 0, .5);
 	} break;
-	case GLFW_KEY_J: {
+	case Key::KeyJ: {
 		selectedEnemyIndex
 		    = static_cast<i64>(selectedEnemyIndex.value_or(-1)) + 1;
+	} break;
+	case Key::KeyQ:
+	case Key::KeyE:
+	case Key::KeyY:
+	case Key::KeyO:
+	case Key::KeyP:
+	case Key::KeyF:
+	case Key::KeyG:
+	case Key::KeyH:
+	case Key::KeyZ:
+	case Key::KeyB:
+	case Key::KeyN:
+	case Key::Key0:
+	case Key::Key5:
+	case Key::Key6:
+	case Key::Key7:
+	case Key::Key8:
+	case Key::Key9: {
 	} break;
 	}
 }
 
-void App::KeyRelease(const int key)
+void App::KeyRelease(const Key key)
 {
 	(void) key;
 }

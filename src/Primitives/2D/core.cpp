@@ -10,15 +10,15 @@ namespace Primitives2D {
 
 void Unit::Circle()
 {
-	using std::cos, std::sin, Math::PIf;
+	using std::cos, std::sin, Math::PId;
 
 	static constexpr f64 radius = p;
-	const f64 deltaAngle        = 2 * Math::PI / resolution;
+	const f64 deltaAngle        = 2 * PId / resolution;
 
 	glBegin(GL_POLYGON);
 	{
 		glNormal3d(0, 0, 1);
-		for (f64 angle = 0; angle < 2 * Math::PI; angle += deltaAngle) {
+		for (f64 angle = 0; angle < 2 * PId; angle += deltaAngle) {
 			glVertex2d(radius * cos(angle), radius * sin(angle));
 		}
 	}

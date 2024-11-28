@@ -39,7 +39,7 @@ Vec3 Vec3::RandomUnitVec3()
 	const f64 v = dis(gen);
 
 
-	const f64 theta = 2 * Math::PI * u;
+	const f64 theta = 2 * Math::PId * u;
 	const f64 phi   = acos(2 * v - 1);
 
 
