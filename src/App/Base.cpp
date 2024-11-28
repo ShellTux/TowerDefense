@@ -287,52 +287,55 @@ void App::Look::lookAt(const std::optional<Vec3> &pos,
 		} break;
 		}
 
-		static constexpr f64 r = 3;
 		// NOTE: Camera
 		switch (value) {
 		case Front3rd: {
-			camera = realPos
-			         + Vec3::Polar3D(3 * Math::PId / 2, Math::PId / 4)
-			               * r;
+			camera
+			    = realPos
+			      + Vec3::Polar3D(3 * Math::PId / 2, Math::PId / 4)
+			            * radius;
 		} break;
 		case Left3rd: {
 			camera = realPos
-			         + Vec3::Polar3D(Math::PId, Math::PId / 4) * r;
+			         + Vec3::Polar3D(Math::PId, Math::PId / 4)
+			               * radius;
 		} break;
 		case Back3rd: {
-			camera
-			    = realPos
-			      + Vec3::Polar3D(Math::PId / 2, Math::PId / 4) * r;
+			camera = realPos
+			         + Vec3::Polar3D(Math::PId / 2, Math::PId / 4)
+			               * radius;
 		} break;
 		case Right3rd: {
-			camera = realPos + Vec3::Polar3D(0, Math::PId / 4) * r;
+			camera = realPos
+			         + Vec3::Polar3D(0, Math::PId / 4) * radius;
 		} break;
 		case Above3rd: {
-			camera = realPos
-			         + Vec3::Polar3D(3 * Math::PId / 2, Math::PId / 4)
-			               * r;
+			camera
+			    = realPos
+			      + Vec3::Polar3D(3 * Math::PId / 2, Math::PId / 4)
+			            * radius;
 		} break;
 		case Below3rd: {
 			camera
 			    = realPos
 			      + Vec3::Polar3D(3 * Math::PId / 2, -Math::PId / 4)
-			            * r;
+			            * radius;
 		} break;
 		case OrbitHorizontal3rd: {
-			camera
-			    = realPos
-			      + Vec3::Polar3D(azimuthalAngle, Math::PId / 4) * r;
+			camera = realPos
+			         + Vec3::Polar3D(azimuthalAngle, Math::PId / 4)
+			               * radius;
 		} break;
 		case OrbitVertical3rd: {
-			camera
-			    = realPos
-			      + Vec3::Polar3D(3 * Math::PId / 2, polarAngle) * r;
+			camera = realPos
+			         + Vec3::Polar3D(3 * Math::PId / 2, polarAngle)
+			               * radius;
 		} break;
 		case FreeView3rd: {
 			camera
 			    = realPos
 			      + Vec3::Polar3D(freeViewAzimuthal, freeViewPolar)
-			            * r;
+			            * radius;
 		} break;
 		case FirstView: {
 			camera = realPos + Vec3::Polar2D(targetAngle);
