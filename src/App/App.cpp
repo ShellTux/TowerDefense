@@ -76,9 +76,7 @@ void App::drawField()
 
 		glPushMatrix();
 		{
-			const i32 p1 = i32(width) / 8;
-			const i32 p2 = i32(height) / 8;
-			glViewport(p1, p2, 6 * p1, 6 * p2);
+			glViewport(0, 0, width, height);
 
 			OpenGL::Perspective(30, 45, 45);
 
