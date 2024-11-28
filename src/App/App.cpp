@@ -80,61 +80,35 @@ void App::drawField()
 
 			OpenGL::Perspective(30, 45, 45);
 
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
+			const auto &[rows, cols] = field.getMapDimensions();
 
-			const auto [rows, cols] = field.getMapDimensions();
-
-			static const Vec3 orbitCenter
-			    = {.5 * f64(cols), .5 * f64(rows), 3};
-
-			static Vec3 camera;
-			static Vec3 target;
-			static Vec3 up;
-
-			camera = {f64(cols) / 2., 1.5 * f64(rows), 3};
-			target = {f64(cols) / 2., f64(rows) / 2., 0};
-			up     = {0, 0, -1};
-
-			switch (view) {
-			case 0:
-			case 1:
-			case 2:
-			case 3: {
-				camera
-				    = Vec3::Polar2D(orbitCenter,
-				                    f64(rows + cols) * .5,
-				                    (view + 1) * Math::PI / 2);
-			} break;
-			case 4: {
-				OpenGL::Perspective(60, 45, 45);
-				camera = {f64(cols) * .5, f64(rows) * .55, 5};
-			} break;
-			case 5: {
-				camera = Vec3::Polar2D(orbitCenter,
-				                       f64(cols + rows) * .5,
-				                       orbitAngle);
-			} break;
-			default: {
-				const u32 enemyIndex = view - 6;
+			if (!selectedEnemyIndex.has_value()) {
+				view.lookAt(selectedView,
+				            {.5 * f64(cols), .5 * f64(rows)},
+				            f64(cols + rows) * .5,
+				            orbitAngle,
+				            Math::PI / 6);
+			} else {
 				const std::optional<TowerDefense::Enemy> enemy
-				    = field.getEnemy(enemyIndex);
+				    = field.getEnemy(
+				        selectedEnemyIndex.value());
 
 				if (!enemy.has_value()
 				    || enemy->getPosition() < 0) {
-					view = 0;
+					selectedEnemyIndex = std::nullopt;
+					selectedView       = std::nullopt;
+					view.reset();
+				} else {
+					selectedView = enemy->getPathInfo().pos;
+					view.lookAt(
+					    selectedView,
+					    {.5 * f64(cols), .5 * f64(rows)},
+					    f64(cols + rows) * .5,
+					    orbitAngle,
+					    Math::PI / 6);
 				}
-
-				const auto &[c, t, u] = enemy->getLookAt();
-				camera                = c;
-				target                = t;
-				up                    = u;
-
-				glCullFace(GL_FRONT);
-			} break;
 			}
 
-			OpenGL::Camera::LookAt(camera, target, up);
 			field.draw();
 		}
 		glPopMatrix();

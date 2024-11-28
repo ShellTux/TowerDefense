@@ -5,6 +5,7 @@
 
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
+#include <optional>
 
 void App::KeyPress(const int key)
 {
@@ -85,13 +86,13 @@ void App::KeyPress(const int key)
 
 	} break;
 	case GLFW_KEY_V: {
-		view++;
+		view += 1;
 	} break;
 	case GLFW_KEY_M: {
 		focusMinimap = !focusMinimap;
 	} break;
 	case GLFW_KEY_R: {
-		view         = 0;
+		view.reset();
 		focusMinimap = false;
 	} break;
 	case GLFW_KEY_X: {
@@ -103,6 +104,18 @@ void App::KeyPress(const int key)
 	case GLFW_KEY_L: {
 		lighting = (lighting + 1) % 2;
 	} break;
+	case GLFW_KEY_K: {
+		if (selectedView.has_value()) {
+			selectedView = std::nullopt;
+			break;
+		}
+
+		selectedView = field.getSelectedPosition() + Vec3(0, 0, .5);
+	} break;
+	case GLFW_KEY_J: {
+		selectedEnemyIndex
+		    = static_cast<i64>(selectedEnemyIndex.value_or(-1)) + 1;
+	} break;
 	}
 }
 
@@ -113,4 +126,6 @@ void App::KeyRelease(const int key)
 
 void App::MouseScroll(const f64 xoffset, const f64 yoffset)
 {
+	view.freeViewAzimuthal += xoffset;
+	view.freeViewPolar     += yoffset;
 }

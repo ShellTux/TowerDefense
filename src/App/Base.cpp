@@ -1,6 +1,8 @@
 #include "App.hpp"
 #include "Math.hpp"
+#include "OpenGL/camera.hpp"
 #include "TowerDefense/Field.hpp"
+#include "Vec3.hpp"
 #include "types.hpp"
 
 #include <GL/gl.h>
@@ -10,6 +12,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <optional>
 #include <string>
 #include <thread>
 
@@ -152,8 +155,18 @@ void App::printStats() const
 	                              + field.getCannonsSize())
 	          << std::endl;
 	std::cout << "Enemies: " << field.getEnemiesSize() << std::endl;
-	std::cout << "Orbit Angle: "
-	          << Math::radiansToDegrees(orbitAngle) << "º"
+	std::cout << "Orbit Angle: ";
+	std::cout << Math::radiansToDegrees(orbitAngle);
+	std::cout << "º" << std::endl;
+	std::cout << "view: " << view << std::endl;
+	std::cout << "selected view: ";
+	if (selectedView.has_value()) {
+		std::cout << selectedView.value() << std::endl;
+	} else {
+		std::cout << "none" << std::endl;
+	}
+	std::cout << "selected enemy index: "
+	          << static_cast<int>(selectedEnemyIndex.value_or(-1))
 	          << std::endl;
 	std::cout << "---------------------------------" << std::endl;
 	std::cout << std::endl;
@@ -179,4 +192,218 @@ void App::printStats() const
 
 	std::cout << TOWER_DEFENSE_KEYS << std::endl;
 #undef TOWER_DEFENSE_KEYS
+}
+
+App::Look &App::Look::operator+=(const usize i)
+{
+	for (usize j = 0; j < i; ++j) {
+		switch (value) {
+		case Front3rd: {
+			value = Left3rd;
+		} break;
+		case Left3rd: {
+			value = Back3rd;
+		} break;
+		case Back3rd: {
+			value = Right3rd;
+		} break;
+		case Right3rd: {
+			value = Above3rd;
+		} break;
+		case Above3rd: {
+			value = Below3rd;
+		} break;
+		case Below3rd: {
+			value = OrbitHorizontal3rd;
+		} break;
+		case OrbitHorizontal3rd: {
+			value = OrbitVertical3rd;
+		} break;
+		case OrbitVertical3rd: {
+			value = FreeView3rd;
+		} break;
+		case FreeView3rd: {
+			value = FirstView;
+		} break;
+		case FirstView:
+			value = Front3rd;
+			break;
+		}
+	}
+
+	return *this;
+}
+
+void App::Look::lookAt(const std::optional<Vec3> &pos,
+                       const Vec3 orbitCenter,
+                       const f64 orbitRadius,
+                       const f64 azimuthalAngle,
+                       const f64 polarAngle)
+{
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	static Vec3 camera;
+	static Vec3 target;
+	static Vec3 up = {0, 0, -1};
+
+	if (pos.has_value()) {
+		const Vec3 realPos               = pos->transpose2D();
+		static constexpr f64 targetAngle = 0;
+
+		// NOTE: Target
+		switch (value) {
+		case Front3rd:
+		case Left3rd:
+		case Back3rd:
+		case Right3rd:
+		case Above3rd:
+		case Below3rd:
+		case OrbitHorizontal3rd:
+		case OrbitVertical3rd:
+		case FreeView3rd: {
+			target = realPos;
+		} break;
+		case FirstView: {
+			target = realPos - Vec3(0, 0, -.5)
+			         + Vec3::Polar2D(targetAngle) * 2;
+		} break;
+		}
+
+		static constexpr f64 r = 3;
+		// NOTE: Camera
+		switch (value) {
+		case Front3rd: {
+			camera = realPos
+			         + Vec3::Polar3D(3 * Math::PI / 2, Math::PI / 4)
+			               * r;
+		} break;
+		case Left3rd: {
+			camera = realPos
+			         + Vec3::Polar3D(Math::PI, Math::PI / 4) * r;
+		} break;
+		case Back3rd: {
+			camera
+			    = realPos
+			      + Vec3::Polar3D(Math::PI / 2, Math::PI / 4) * r;
+		} break;
+		case Right3rd: {
+			camera = realPos + Vec3::Polar3D(0, Math::PI / 4) * r;
+		} break;
+		case Above3rd: {
+			camera = realPos
+			         + Vec3::Polar3D(3 * Math::PI / 2, Math::PI / 4)
+			               * r;
+		} break;
+		case Below3rd: {
+			camera
+			    = realPos
+			      + Vec3::Polar3D(3 * Math::PI / 2, -Math::PI / 4)
+			            * r;
+		} break;
+		case OrbitHorizontal3rd: {
+			camera
+			    = realPos
+			      + Vec3::Polar3D(azimuthalAngle, Math::PI / 4) * r;
+		} break;
+		case OrbitVertical3rd: {
+			camera
+			    = realPos
+			      + Vec3::Polar3D(3 * Math::PI / 2, polarAngle) * r;
+		} break;
+		case FreeView3rd: {
+			camera
+			    = realPos
+			      + Vec3::Polar3D(freeViewAzimuthal, freeViewPolar)
+			            * r;
+		} break;
+		case FirstView: {
+			camera = realPos + Vec3::Polar2D(targetAngle);
+		} break;
+		}
+
+		OpenGL::Camera::LookAt(camera, target, up);
+		return;
+	}
+
+	// NOTE: Target
+	switch (value) {
+	case Front3rd:
+	case Left3rd:
+	case Back3rd:
+	case Right3rd:
+	case Above3rd:
+	case Below3rd:
+	case OrbitHorizontal3rd:
+	case OrbitVertical3rd:
+	case FreeView3rd: {
+		target = orbitCenter;
+	} break;
+	case FirstView:
+		break;
+	}
+
+	// NOTE: Camera
+	switch (value) {
+	case Front3rd: {
+		camera
+		    = orbitCenter
+		      + Vec3::Polar3D(Math::PI / 2, polarAngle) * orbitRadius;
+	} break;
+	case Left3rd: {
+		camera = orbitCenter
+		         + Vec3::Polar3D(2 * Math::PI / 2, polarAngle)
+		               * orbitRadius;
+	} break;
+	case Back3rd: {
+		camera = orbitCenter
+		         + Vec3::Polar3D(3 * Math::PI / 2, polarAngle)
+		               * orbitRadius;
+	} break;
+	case Right3rd: {
+		camera
+		    = orbitCenter
+		      + Vec3::Polar3D(2 * Math::PI, polarAngle) * orbitRadius;
+	} break;
+	case Above3rd: {
+		camera = orbitCenter
+		         + Vec3::Polar3D(0, Math::PI / 2) * orbitRadius;
+	} break;
+	case Below3rd: {
+		camera = orbitCenter
+		         + Vec3::Polar3D(0, 3 * Math::PI / 2) * orbitRadius;
+	} break;
+	case OrbitHorizontal3rd: {
+		camera
+		    = orbitCenter
+		      + Vec3::Polar3D(azimuthalAngle, polarAngle) * orbitRadius;
+	} break;
+	case OrbitVertical3rd: {
+		// TODO: Vertical Orbit
+		camera
+		    = orbitCenter
+		      + Vec3::Polar3D(polarAngle, azimuthalAngle) * orbitRadius;
+	} break;
+	case FreeView3rd: {
+		camera
+		    = orbitCenter
+		      + (pos.has_value()
+		             ? Vec3::Polar3D(azimuthalAngle, polarAngle)
+		             : Vec3::Polar3D(freeViewAzimuthal, freeViewPolar))
+		            * orbitRadius;
+	} break;
+	case FirstView: {
+	} break;
+	}
+
+	OpenGL::Camera::LookAt(camera, target, up);
+}
+
+App::Look &App::Look::reset()
+{
+	value             = Front3rd;
+	freeViewAzimuthal = 0;
+	freeViewPolar     = Math::PI / 4;
+
+	return *this;
 }
