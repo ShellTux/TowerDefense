@@ -9,9 +9,7 @@
 
 #include <GL/gl.h>
 #include <algorithm>
-#include <array>
 #include <cstdlib>
-#include <tuple>
 #include <vector>
 
 namespace TowerDefense {
@@ -63,7 +61,7 @@ void Enemy::draw() const
 		return;
 	}
 
-	const auto [posY, posX, _] = getGridPosition().getCoordinates();
+	const auto &[posY, posX, _] = pathInfo.pos.getCoordinates();
 
 	glPushMatrix();
 	glPushAttrib(drawGlMask);
@@ -73,6 +71,7 @@ void Enemy::draw() const
 
 		glTranslated(posX, posY, -.2);
 		glScalef(.9, .9, .6);
+		glRotated(pathInfo.angle, 0, 0, 1);
 		Primitives3D::Unit::Cilinder();
 
 		drawHealth();
@@ -105,6 +104,8 @@ void Enemy::drawHealth() const
 void Enemy::update(const Stats::TimeMs deltaTimeMs)
 {
 	position += speedUpMs * f32(deltaTimeMs) * 2;
+
+	updatePathAndLookAt();
 }
 
 Stats::HealthPoints Enemy::loseHP(const Stats::HealthPoints damagePoints)
@@ -113,54 +114,14 @@ Stats::HealthPoints Enemy::loseHP(const Stats::HealthPoints damagePoints)
 	return health;
 }
 
-std::tuple<Vec3, Vec3, f64> Enemy::getInterpolatingGridPositions() const
+struct Enemy::LookAt Enemy::getLookAt() const
 {
-	if (gridPath.empty()) {
-		return {};
-	}
-
-	using std::clamp, std::min;
-
-	const f64 clampedPosition = clamp(position, 0.0, 1.0);
-
-	const usize totalPoints     = gridPath.size();
-	const f64 distanceAlongPath = clampedPosition * f64(totalPoints - 1);
-
-	const usize startIdx = static_cast<usize>(distanceAlongPath);
-	const usize endIdx   = min(startIdx + 1, totalPoints - 1);
-
-	const Vec3 &startPoint = gridPath.at(startIdx);
-	const Vec3 &endPoint   = gridPath.at(endIdx);
-
-	const f64 segmentProgress
-	    = getPosition() < 0
-	          ? (getPosition() * f64(totalPoints - 1)) - f64(startIdx)
-	          : distanceAlongPath - f64(startIdx);
-
-	return {startPoint, endPoint, segmentProgress};
+	return lookAt;
 }
 
-Vec3 Enemy::getGridPosition() const
+struct Enemy::PathInfo Enemy::getPathInfo() const
 {
-	if (gridPath.empty()) {
-		return {};
-	}
-
-	const auto &[startPoint, endPoint, ratio]
-	    = getInterpolatingGridPositions();
-
-	return startPoint * (1 - ratio) + endPoint * ratio;
-}
-
-Vec3 Enemy::getNextGridPosition() const
-{
-	if (gridPath.empty()) {
-		return {};
-	}
-
-	const auto &[_, endPoint, _1] = getInterpolatingGridPositions();
-
-	return endPoint;
+	return pathInfo;
 }
 
 void Enemy::updateStats(const Stats::Tier &tier)
@@ -185,24 +146,63 @@ void Enemy::updateStats(const Stats::Tier &tier)
 	}
 }
 
-std::tuple<Vec3, Vec3, Vec3> Enemy::getLookAt() const
+Enemy &Enemy::updatePathAndLookAt()
 {
-	const static f64 z = .5;
+	if (gridPath.empty()) {
+		return *this;
+	}
 
-	const Vec3 pos     = getGridPosition();
-	const Vec3 nextPos = getNextGridPosition();
-	const Vec3 dir     = (nextPos - pos).normalize();
+	using std::clamp, std::min;
 
-	static constexpr f64 r            = .5;
-	const auto &[cameraI, cameraJ, _] = (pos + dir * r).getCoordinates();
-	const auto &[targetI, targetJ, _1]
-	    = (pos + dir * (r + 1)).getCoordinates();
+	const f64 clampedPosition = clamp(position, 0.0, 1.0);
 
-	const Vec3 camera    = Vec3(cameraJ, cameraI, z);
-	const Vec3 target    = Vec3(targetJ, targetI, z);
-	static const Vec3 up = {0, 0, -1};
+	const usize totalPoints     = gridPath.size();
+	const f64 distanceAlongPath = clampedPosition * f64(totalPoints - 1);
 
-	return {camera, target, up};
+	const usize startIdx = static_cast<usize>(distanceAlongPath);
+	const usize endIdx   = min(startIdx + 1, totalPoints - 1);
+
+	const Vec3 &startPoint = gridPath.at(startIdx);
+	const Vec3 &endPoint   = gridPath.at(endIdx);
+
+	const f64 segmentProgress
+	    = getPosition() < 0
+	          ? (getPosition() * f64(totalPoints - 1)) - f64(startIdx)
+	          : distanceAlongPath - f64(startIdx);
+
+	const Vec3 &interpolatedPoint
+	    = startPoint + (endPoint - startPoint) * segmentProgress;
+
+	const f64 angle = Vec3::AngleBetween(startPoint, endPoint);
+
+	const Vec3 direction = Vec3::Polar2D(angle);
+
+	pathInfo = (struct PathInfo){
+	    .start = startPoint,
+	    .pos   = interpolatedPoint,
+	    .next  = endPoint,
+	    .ratio = segmentProgress,
+
+	    .direction = direction,
+	    .angle     = angle,
+	};
+
+	static constexpr f64 z = .5;
+	static constexpr f64 r = .5;
+
+	const Vec3 camera = pathInfo.start + pathInfo.direction * r;
+	const Vec3 target = pathInfo.start + pathInfo.direction * (r + 1);
+
+	const auto &[cY, cX, _cK] = camera.getCoordinates();
+	const auto &[tY, tX, _tK] = target.getCoordinates();
+
+	lookAt = (struct LookAt){
+	    .camera = Vec3(cX, cY, z),
+	    .target = Vec3(tX, tY, z),
+	    .up     = {0, 0, -1},
+	};
+
+	return *this;
 }
 
 } // namespace TowerDefense

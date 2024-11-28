@@ -11,7 +11,6 @@
 #include "types.hpp"
 
 #include <GL/gl.h>
-#include <array>
 #include <cmath>
 #include <iostream>
 #include <optional>
@@ -140,8 +139,8 @@ void Cannon::updateStats()
 
 void Cannon::updateAngle(const Enemy &target)
 {
-	const auto [deltaY, deltaX, _]
-	    = (target.getGridPosition() - gridPosition).getCoordinates();
+	const Vec3 delta = target.getPathInfo().pos - gridPosition;
+	const auto &[deltaY, deltaX, _] = delta.getCoordinates();
 
 	angle = Math::radiansToDegrees(std::atan2(deltaY, deltaX));
 }
@@ -153,8 +152,8 @@ Cannon::targetEnemy(const std::vector<Enemy> &enemies) const
 
 	const f64 rangeSq = range * range;
 	for (const Enemy &enemy : enemies) {
-		const f64 distanceSq
-		    = (enemy.getGridPosition() - gridPosition).magnitudeSq();
+		const Vec3 enemyPos  = enemy.getPathInfo().pos;
+		const f64 distanceSq = (enemyPos - gridPosition).magnitudeSq();
 
 		if (distanceSq >= rangeSq) {
 			continue;

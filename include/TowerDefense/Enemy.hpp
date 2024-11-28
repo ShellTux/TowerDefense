@@ -9,13 +9,28 @@
 
 #include <GL/gl.h>
 #include <ostream>
-#include <tuple>
 #include <vector>
 
 namespace TowerDefense {
 
 class Enemy {
       public:
+	struct PathInfo {
+		Vec3 start;
+		Vec3 pos;
+		Vec3 next;
+		f64 ratio;
+
+		Vec3 direction;
+		f64 angle;
+	};
+
+	struct LookAt {
+		Vec3 camera;
+		Vec3 target;
+		Vec3 up;
+	};
+
 	Enemy(const Stats::Tier &tier, const std::vector<Vec3> &gridPath)
 	    : gridPath(gridPath)
 	{
@@ -58,9 +73,8 @@ class Enemy {
 	[[nodiscard]] Stats::HealthPoints getHealth() const;
 	[[nodiscard]] Stats::HealthPoints getPoints() const;
 	[[nodiscard]] Stats::Speed getSpeedUpMs() const;
-	[[nodiscard]] std::tuple<Vec3, Vec3, Vec3> getLookAt() const;
-	[[nodiscard]] Vec3 getGridPosition() const;
-	[[nodiscard]] Vec3 getNextGridPosition() const;
+	[[nodiscard]] struct LookAt getLookAt() const;
+	[[nodiscard]] struct PathInfo getPathInfo() const;
 
       private:
 	Color color{Colors::BLACK};
@@ -69,6 +83,8 @@ class Enemy {
 	Stats::HealthPoints health{10};
 	Stats::Speed speedUpMs{};
 	std::vector<Vec3> gridPath;
+	struct PathInfo pathInfo {};
+	struct LookAt lookAt {};
 
 	OpenGL::Material::Type material{};
 
@@ -80,8 +96,7 @@ class Enemy {
 	void drawHealth() const;
 	void updateStats(const Stats::Tier &tier);
 
-	[[nodiscard]] std::tuple<Vec3, Vec3, f64>
-	getInterpolatingGridPositions() const;
+	Enemy &updatePathAndLookAt();
 };
 
 } // namespace TowerDefense
