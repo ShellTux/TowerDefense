@@ -57,6 +57,13 @@ Vec3 Vec3::Polar2D(const f64 angle)
 	return {cos(angle), sin(angle)};
 }
 
+Vec3 Vec3::Polar3D(const f64 azimuthalAngle, const f64 polarAngle)
+{
+	using std::cos, std::sin;
+
+	return {cos(azimuthalAngle), sin(azimuthalAngle), sin(polarAngle)};
+}
+
 f64 Vec3::AngleBetween(const Vec3 &a, const Vec3 &b)
 {
 	const f64 dotProduct = Dot(a, b);
