@@ -3,7 +3,9 @@
 #include "TowerDefense/Field.hpp"
 #include "types.hpp"
 
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
+#include <cassert>
 #include <chrono>
 #include <cstdlib>
 #include <ctime>
@@ -89,9 +91,12 @@ void App::FramebufferCallback(GLFWwindow *window,
                               const int width,
                               const int height)
 {
-	(void) window;
-	(void) width;
-	(void) height;
+	glViewport(0, 0, width, height);
+
+	App *app = App::allApps.at(window);
+	assert(app != nullptr);
+	app->width  = width;
+	app->height = height;
 }
 
 void App::KeyCallback(GLFWwindow *window,
