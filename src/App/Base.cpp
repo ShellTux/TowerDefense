@@ -6,17 +6,20 @@
 #include "types.hpp"
 
 #include <GL/gl.h>
-#include <GLFW/glfw3.h>
 #include <cassert>
-#include <chrono>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 #include <optional>
 #include <string>
-#include <thread>
+
+#ifdef NOOF
+	#include <GLFW/glfw3.h>
+	#include <chrono>
+	#include <thread>
 
 App::WindowMap App::allApps{};
+#endif
 
 App::App(const std::string &title,
          const u32 width,
@@ -24,11 +27,15 @@ App::App(const std::string &title,
          const u32 fieldRows,
          const u32 fieldCols,
          const u8 fieldWaves)
-    : field(TowerDefense::Field::Generate(fieldRows, fieldCols, fieldWaves))
+    : width(width)
+    , height(height)
+    , windowTitle(title)
+    , field(TowerDefense::Field::Generate(fieldRows, fieldCols, fieldWaves))
 {
 	using std::srand, std::time;
 	srand(static_cast<unsigned int>(time(nullptr)));
 
+#ifdef NOOF
 	glfwSetErrorCallback(ErrorCallback);
 
 	if (glfwInit() == GLFW_FALSE) {
@@ -44,9 +51,6 @@ App::App(const std::string &title,
 	                          nullptr,
 	                          nullptr);
 
-	this->width  = width;
-	this->height = height;
-
 	if (window == nullptr) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
@@ -58,17 +62,21 @@ App::App(const std::string &title,
 	glfwSetScrollCallback(window, ScrollCallback);
 
 	allApps[window] = this;
+#endif
 }
 
 App::~App()
 {
+#ifdef NOOF
 	allApps.erase(window);
 	glfwDestroyWindow(window);
 	glfwTerminate();
+#endif
 }
 
 void App::loop()
 {
+#ifdef NOOF
 	setup();
 
 	using std::chrono::milliseconds;
@@ -84,8 +92,10 @@ void App::loop()
 		using std::this_thread::sleep_for;
 		sleep_for(deltaTimeMs);
 	}
+#endif
 }
 
+#ifdef NOOF
 void App::ErrorCallback(const int errorCode, const char *description)
 {
 	std::cerr << "Error(" << errorCode << "): " << description << std::endl;
@@ -113,17 +123,17 @@ void App::KeyCallback(GLFWwindow *window,
 	(void) scancode;
 	(void) mods;
 
-#ifdef DEBUG
+	#ifdef DEBUG
 	std::cout << "Key Pressed: " << glfwGetKeyName(key, 0) << std::endl;
-#endif
+	#endif
 
 	switch (action) {
 	case GLFW_PRESS:
 	case GLFW_REPEAT: {
-		app->KeyPress(key);
+		app->KeyPress(FromGLFWKey(key));
 	} break;
 	case GLFW_RELEASE: {
-		app->KeyRelease(key);
+		app->KeyRelease(FromGLFWKey(key));
 	} break;
 	}
 }
@@ -136,6 +146,7 @@ void App::ScrollCallback(GLFWwindow *window,
 	assert(app != nullptr);
 	app->MouseScroll(xoffset, yoffset);
 }
+#endif
 
 void App::printStats() const
 {
@@ -171,24 +182,30 @@ void App::printStats() const
 	std::cout << "---------------------------------" << std::endl;
 	std::cout << std::endl;
 
-#define TOWER_DEFENSE_KEYS                                                     \
-	"---------------------Tower Defense Keys---------------------------\n" \
-	"WASD               Move selected position\n"                          \
-	"Up,Left,Down,Right Move selected position\n"                          \
-	"1,2,3              Place Cannon at selected position of tier A,B,C "  \
-	"(respectively)\n"                                                     \
-	"4/U                Upgrade Cannon at selected position\n"             \
-	"I                  Print Info at selected position (debug mode).\n"   \
-	"C                  Toggle between cull face modes (opengl debug "     \
-	"mode).\n"                                                             \
-	"T                  Toggle between polygon modes (opengl debug "       \
-	"mode).\n"                                                             \
-	"L                  Switch between lighting modes.\n"                  \
-	"V                  Switch between views\n"                            \
-	"M                  Focus Minimap\n"                                   \
-	"P                  Pause Game\n"                                      \
-	"R                  Reset view and minimap focus to default\n"         \
-	"------------------------------------------------------------------"
+#define TOWER_DEFENSE_KEYS                                             \
+	"---------------------Tower Defense "                          \
+	"Keys---------------------------\n"                            \
+	"WASD               Move selected position\n"                  \
+	"Up,Left,Down,Right Move selected position\n"                  \
+	"1,2,3              Place Cannon at selected position of "     \
+	"tier A,B,C "                                                  \
+	"(respectively)\n"                                             \
+	"4/U                Upgrade Cannon at selected position\n"     \
+	"I                  Print Info at selected position (debug "   \
+	"mode).\n"                                                     \
+	"C                  Toggle between cull face modes (opengl "   \
+	"debug "                                                       \
+	"mode).\n"                                                     \
+	"T                  Toggle between polygon modes (opengl "     \
+	"debug "                                                       \
+	"mode).\n"                                                     \
+	"L                  Switch between lighting modes.\n"          \
+	"V                  Switch between views\n"                    \
+	"M                  Focus Minimap\n"                           \
+	"P                  Pause Game\n"                              \
+	"R                  Reset view and minimap focus to default\n" \
+	"------------------------------------------------------------" \
+	"------"
 
 	std::cout << TOWER_DEFENSE_KEYS << std::endl;
 #undef TOWER_DEFENSE_KEYS
@@ -407,3 +424,95 @@ App::Look &App::Look::reset()
 
 	return *this;
 }
+
+#ifdef NOOF
+App::Key App::FromGLFWKey(const i32 key)
+{
+	switch (key) {
+	case GLFW_KEY_Q:
+		return Key::KeyQ;
+	case GLFW_KEY_W:
+		return Key::KeyW;
+	case GLFW_KEY_E:
+		return Key::KeyE;
+	case GLFW_KEY_R:
+		return Key::KeyR;
+	case GLFW_KEY_T:
+		return Key::KeyT;
+	case GLFW_KEY_Y:
+		return Key::KeyY;
+	case GLFW_KEY_U:
+		return Key::KeyU;
+	case GLFW_KEY_I:
+		return Key::KeyI;
+	case GLFW_KEY_O:
+		return Key::KeyO;
+	case GLFW_KEY_P:
+		return Key::KeyP;
+	case GLFW_KEY_A:
+		return Key::KeyA;
+	case GLFW_KEY_S:
+		return Key::KeyS;
+	case GLFW_KEY_D:
+		return Key::KeyD;
+	case GLFW_KEY_F:
+		return Key::KeyF;
+	case GLFW_KEY_G:
+		return Key::KeyG;
+	case GLFW_KEY_H:
+		return Key::KeyH;
+	case GLFW_KEY_J:
+		return Key::KeyJ;
+	case GLFW_KEY_K:
+		return Key::KeyK;
+	case GLFW_KEY_L:
+		return Key::KeyL;
+	case GLFW_KEY_Z:
+		return Key::KeyZ;
+	case GLFW_KEY_X:
+		return Key::KeyX;
+	case GLFW_KEY_C:
+		return Key::KeyC;
+	case GLFW_KEY_V:
+		return Key::KeyV;
+	case GLFW_KEY_B:
+		return Key::KeyB;
+	case GLFW_KEY_N:
+		return Key::KeyN;
+	case GLFW_KEY_M:
+		return Key::KeyM;
+
+		/*case GLFW_KEY_Up:*/
+		/*	return Key::KeyUp;*/
+		/*case GLFW_KEY_Down:*/
+		/*	return Key::KeyDown;*/
+		/*case GLFW_KEY_Left:*/
+		/*	return Key::KeyLeft;*/
+		/*case GLFW_KEY_Right:*/
+		/*	return Key::KeyRight;*/
+
+	case GLFW_KEY_0:
+		return Key::Key0;
+	case GLFW_KEY_1:
+		return Key::Key1;
+	case GLFW_KEY_2:
+		return Key::Key2;
+	case GLFW_KEY_3:
+		return Key::Key3;
+	case GLFW_KEY_4:
+		return Key::Key4;
+	case GLFW_KEY_5:
+		return Key::Key5;
+	case GLFW_KEY_6:
+		return Key::Key6;
+	case GLFW_KEY_7:
+		return Key::Key7;
+	case GLFW_KEY_8:
+		return Key::Key8;
+	case GLFW_KEY_9:
+		return Key::Key9;
+	}
+
+	return Key::Key0;
+}
+#endif
