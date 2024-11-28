@@ -24,6 +24,7 @@ class ofApp : public ofBaseApp {
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
+	void mouseScrolled(ofMouseEventArgs &mouseEvent);
 
 	void initApp(const std::string &title,
 	             const u32 fieldRows,

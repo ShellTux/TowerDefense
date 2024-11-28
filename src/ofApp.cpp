@@ -175,6 +175,11 @@ void ofApp::mouseExited(int x, int y)
 	(void) y;
 }
 
+void ofApp::mouseScrolled(ofMouseEventArgs &mouseEvent)
+{
+	app.MouseScroll(mouseEvent.scrollX, mouseEvent.scrollY);
+}
+
 void ofApp::windowResized(int w, int h)
 {
 	(void) w;
