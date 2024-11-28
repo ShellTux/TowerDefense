@@ -21,6 +21,9 @@ void App::KeyPress(const Key key)
 	}
 
 	switch (key) {
+	case Key::KeyNone:
+		return;
+
 	case Key::KeyS:
 	case Key::KeyDown: {
 		field.moveSelectedPosition(Vec3(1, 0));
