@@ -255,7 +255,7 @@ void App::Look::lookAt(const std::optional<Vec3> &pos,
                        const Vec3 orbitCenter,
                        const f64 orbitRadius,
                        const f64 azimuthalAngle,
-                       const f64 polarAngle)
+                       const f64 polarAngle) const
 {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
