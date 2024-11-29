@@ -20,15 +20,10 @@ namespace TowerDefense {
 
 void Cannon::draw(const Vec3 &selectedGridPosition) const
 {
-	static constexpr GLbitfield glMask = GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT
-	                                     | GL_LIGHTING_BIT | GL_POLYGON_BIT
-	                                     | GL_TEXTURE_BIT | GL_TRANSFORM_BIT
-	                                     | GL_VIEWPORT_BIT;
-
 	const auto [posY, posX, _] = gridPosition.getCoordinates();
 
 	glPushMatrix();
-	glPushAttrib(glMask);
+	glPushAttrib(drawGlMask);
 	{
 		glColor3ubv(color.data());
 
