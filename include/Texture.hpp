@@ -4,6 +4,7 @@
 #include "AssetManager.hpp"
 #include "types.hpp"
 
+#include <GL/gl.h>
 #include <filesystem>
 
 class Texture {
@@ -21,7 +22,7 @@ class Texture {
       private:
 	AssetManager::ImageAsset asset;
 
-	u32 renderId{};
+	GLuint renderId{};
 };
 
 #endif // INCLUDE_INCLUDE_TEXTURE_HPP_
