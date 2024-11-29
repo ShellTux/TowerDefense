@@ -173,7 +173,12 @@ Enemy &Enemy::updatePathAndLookAt()
 	const Vec3 &interpolatedPoint
 	    = startPoint + (endPoint - startPoint) * segmentProgress;
 
-	const f64 angle = Vec3::AngleBetween(startPoint, endPoint);
+
+	const f64 angle = startPoint == Vec3(0, 0)
+	                      ? Vec3::AngleBetween({1, 0}, endPoint)
+	                      : (endPoint == Vec3(0, 0)
+	                             ? Vec3::AngleBetween({1, 0}, startPoint)
+	                             : 0);
 
 	const Vec3 direction = Vec3::Polar2D(angle);
 
