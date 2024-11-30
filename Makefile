@@ -37,7 +37,7 @@ $(TARGET): $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.pdf: %.md
-	pandoc $(PANDOC_OPTS) --from=markdown-implicit_figures --output=$@ $<
+	-pandoc $(PANDOC_OPTS) --from=markdown-implicit_figures --output=$@ $<
 
 .PHONY: run
 run: $(TARGET)
