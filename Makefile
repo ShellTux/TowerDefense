@@ -47,9 +47,12 @@ run: $(TARGET)
 clean:
 	find . -type f -iname "*.o" -exec rm "{}" \;
 
+ARCHIVE = CG_LEI_2024_PROJETO_META_01_2018280716.zip
+
 .PHONY: archive
 archive: README.pdf
-	for d in src include ; do (cd "$$d" && zip --recurse-paths ../CG_LEI_2024_PROJETO_META_01_2018280716.zip . --exclude '**/*.o' --exclude '*.o') ; done
+	rm --force $(ARCHIVE)
+	for d in src include ; do (cd "$$d" && zip --recurse-paths ../$(ARCHIVE) . --exclude '**/*.o' --exclude '*.o') ; done
 
 .PHONY: .clangd
 .clangd:
