@@ -275,7 +275,7 @@ class App {
 
 	void printStats() const;
 
-	std::string &getTitle() const;
+	[[nodiscard]] std::string &getTitle() const;
 
       private:
 #ifdef NOOF
