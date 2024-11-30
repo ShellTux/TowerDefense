@@ -34,7 +34,7 @@ void Texture::ReloadAll()
 {
 	std::cout << "Reloading all textures" << std::endl;
 
-	for (auto &[path, texture] : GlobalTextures) {
+	for (const auto &[path, texture] : GlobalTextures) {
 		texture.reload();
 	}
 
@@ -95,7 +95,15 @@ void Texture::reload() const
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
+	glTexImage2D(GL_TEXTURE_2D,
+	             0,
+	             GL_RGBA8,
+	             image.width,
+	             image.height,
+	             0,
+	             GL_RGBA,
+	             GL_UNSIGNED_BYTE,
+	             image.data);
 
 	Unbind();
 }
