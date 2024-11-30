@@ -281,34 +281,29 @@ void Field::drawHUD() const
 	glLoadIdentity();
 
 	glPushAttrib(drawGlMask);
-	glEnable(GL_TEXTURE);
-	glEnable(GL_BLEND);
+	glEnable(GL_TEXTURE_2D);
 	for (usize i = 0; i < 4; ++i) {
 		glPushMatrix();
 		{
-			static Texture tex = textures.at(Hud1);
-
 			switch (i) {
 			case 0: {
-				tex = textures.at(Hud1);
+				Texture::Get("assets/red-cannon.png").Bind();
 			} break;
 			case 1: {
-				tex = textures.at(Hud2);
+				Texture::Get("assets/orange-cannon.png").Bind();
 			} break;
 			case 2: {
-				tex = textures.at(Hud3);
+				Texture::Get("assets/purple-cannon.png").Bind();
 			} break;
 			case 3: {
-				tex = textures.at(Hud4);
+				Texture::Get("assets/upgrade.png").Bind();
 			} break;
 			}
 
-			tex.Bind();
-			{
-				glTranslated(f64(i), 0, 0);
-				Primitives2D::Unit::Square();
-			}
-			tex.UnBind();
+			glTranslated(f64(i), 0, 0);
+			Primitives2D::Unit::Square();
+
+			Texture::UnBind();
 		}
 		glPopMatrix();
 	}

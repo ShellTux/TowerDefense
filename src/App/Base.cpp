@@ -1,6 +1,7 @@
 #include "App.hpp"
 #include "Math.hpp"
 #include "OpenGL/camera.hpp"
+#include "Texture.hpp"
 #include "TowerDefense/Field.hpp"
 #include "Vec3.hpp"
 #include "types.hpp"
@@ -17,6 +18,8 @@
 	#include <GLFW/glfw3.h>
 	#include <chrono>
 	#include <thread>
+
+bool texturesNeedReload = false;
 
 App::WindowMap App::allApps{};
 #endif
@@ -63,6 +66,14 @@ App::App(const std::string &title,
 
 	allApps[window] = this;
 #endif
+
+	texturesNeedReload = true;
+	Texture::Loads({
+	    "assets/red-cannon.png",
+	    "assets/orange-cannon.png",
+	    "assets/purple-cannon.png",
+	    "assets/upgrade.png",
+	});
 }
 
 App::~App()
