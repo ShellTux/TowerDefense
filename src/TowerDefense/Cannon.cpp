@@ -201,7 +201,6 @@ void Cannon::drawShot() const
 
 	Color c = Colors::SALMON;
 	c[3]    = u8(0xFF * (1 - (1 - ratio) / (1 - maxRatio)));
-	std::cout << static_cast<int>(c[3]) << std::endl;
 
 	glPushMatrix();
 	glPushAttrib(drawGlMask);
