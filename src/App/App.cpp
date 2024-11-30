@@ -76,7 +76,7 @@ void App::drawField()
 
 		glPushMatrix();
 		{
-			glViewport(0, 0, width, height);
+			glViewport(0, 0, i32(width), i32(height));
 
 			OpenGL::Perspective(30, 45, 45);
 
