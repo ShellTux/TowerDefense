@@ -29,6 +29,9 @@ class Material {
 		Turquoise,
 		WhitePlastic,
 		YellowPlastic,
+		Red,
+		Orange,
+		Purple,
 	};
 
 	struct Specs {

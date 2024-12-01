@@ -152,9 +152,35 @@ struct Material::Specs Material::getSpecs(const Material::Type &type)
 		    32
                 };
 
-	default:
-		throw std::invalid_argument("Unknown Material type");
+	case Red: {
+		return {
+		    {  1, 0, 0, 1},
+		    {  1, 0, 0, 1},
+		    {0.5, 0, 0, 1},
+		    32
+                };
+	} break;
+
+	case Orange: {
+		return {
+		    {  1,  0.5, 0, 1},
+		    {  1,  0.5, 0, 1},
+		    {0.5, 0.25, 0, 1},
+		    32
+                };
+	} break;
+
+	case Purple: {
+		return {
+		    {  1,   0,   1, 1},
+		    {  1,   0,   1, 1},
+		    {0.3, 0.1, 0.3, 1},
+		    32
+                };
+	} break;
 	}
+
+	throw std::invalid_argument("Unknown Material type");
 
 	return {};
 }

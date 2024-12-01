@@ -121,13 +121,13 @@ void Cannon::updateStats()
 
 	switch (currentTier) {
 	case Stats::Tier::A: {
-		material = OpenGL::Material::Ruby;
+		material = OpenGL::Material::Red;
 	} break;
 	case Stats::Tier::B: {
-		material = OpenGL::Material::Bronze;
+		material = OpenGL::Material::Orange;
 	} break;
 	case Stats::Tier::C: {
-		material = OpenGL::Material::Jade;
+		material = OpenGL::Material::Purple;
 	} break;
 	}
 }
