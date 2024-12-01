@@ -135,13 +135,13 @@ void Enemy::updateStats(const Stats::Tier &tier)
 	using OpenGL::Material;
 	switch (tier) {
 	case Stats::Tier::A: {
-		material = Material::Type::Ruby;
+		material = Material::Type::Red;
 	} break;
 	case Stats::Tier::B: {
-		material = Material::Type::Bronze;
+		material = Material::Type::Orange;
 	} break;
 	case Stats::Tier::C: {
-		material = Material::Type::Jade;
+		material = Material::Type::Purple;
 	} break;
 	}
 }
