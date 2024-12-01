@@ -18,8 +18,16 @@ void Unit::Circle()
 	glBegin(GL_POLYGON);
 	{
 		glNormal3d(0, 0, 1);
+
 		for (f64 angle = 0; angle < 2 * PId; angle += deltaAngle) {
-			glVertex2d(radius * cos(angle), radius * sin(angle));
+			const f64 x = radius * cos(angle);
+			const f64 y = radius * sin(angle);
+
+			const f64 texCoordX = (x / radius) * 0.5 + 0.5;
+			const f64 texCoordY = (y / radius) * 0.5 + 0.5;
+
+			glTexCoord2d(texCoordX, texCoordY);
+			glVertex2d(x, y);
 		}
 	}
 	glEnd();
@@ -48,27 +56,23 @@ void Unit::Square()
 
 void Unit::Grid(const u32 rows, const u32 cols)
 {
-	const f32 cellWidth  = 1.0f / f32(cols);
-	const f32 cellHeight = 1.0f / f32(rows);
+	const f64 cellWidth  = 1. / f64(cols);
+	const f64 cellHeight = 1. / f64(rows);
 
-	glBegin(GL_QUADS);
-	{
-		glNormal3d(0, 0, 1);
-		for (u32 row = 0; row < rows; ++row) {
-			for (u32 col = 0; col < cols; ++col) {
-				const f32 x1 = -.5f + f32(col) * cellWidth;
-				const f32 x2 = x1 + cellWidth;
-				const f32 y1 = -.5f + f32(row) * cellHeight;
-				const f32 y2 = y1 + cellHeight;
+	for (u32 row = 0; row < rows; ++row) {
+		for (u32 col = 0; col < cols; ++col) {
+			const f64 x = -.5 + cellWidth * (f64(col) + .5);
+			const f64 y = .5 - cellHeight * (f64(row) + .5);
 
-				glVertex2f(x1, y1);
-				glVertex2f(x1, y2);
-				glVertex2f(x2, y2);
-				glVertex2f(x2, y1);
+			glPushMatrix();
+			{
+				glTranslated(x, y, 0);
+				glScaled(cellWidth, cellHeight, 1);
+				Square();
 			}
+			glPopMatrix();
 		}
 	}
-	glEnd();
 }
 
 } // namespace Primitives2D
