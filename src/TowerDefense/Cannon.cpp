@@ -147,6 +147,10 @@ Cannon::targetEnemy(const std::vector<Enemy> &enemies) const
 
 	const f64 rangeSq = range * range;
 	for (const Enemy &enemy : enemies) {
+		if (enemy.getPosition() < 0) {
+			continue;
+		}
+
 		const Vec3 enemyPos  = enemy.getPathInfo().pos;
 		const f64 distanceSq = (enemyPos - gridPosition).magnitudeSq();
 
