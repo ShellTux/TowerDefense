@@ -73,6 +73,8 @@ App::App(const std::string &title,
 	    "assets/orange-cannon.png",
 	    "assets/purple-cannon.png",
 	    "assets/upgrade.png",
+	    "assets/pcb-circuit-1.png",
+	    "assets/pcb-circuit-slot.png",
 	});
 }
 

@@ -318,17 +318,20 @@ void Field::drawFloor() const
 
 	glPushAttrib(drawGlMask);
 	{
+		glEnable(GL_TEXTURE_2D);
+
+		Texture::Get("assets/pcb-circuit-1.png").Bind();
+		OpenGL::Material::Apply(OpenGL::Material::Type::Gold);
+
 		glPushMatrix();
 		{
-			glColor3ubv(Colors::MINT.data());
-			OpenGL::Material::Apply(OpenGL::Material::Type::Gold);
-
 			glTranslated(-.5 + cols * .5, -.5 + rows * .5, -.01);
-
 			glScaled(cols, rows, 1);
 			Primitives2D::Unit::Grid(rows, cols);
 		}
 		glPopMatrix();
+
+		Texture::UnBind();
 
 		for (u32 i = 0; i < rows; ++i) {
 			for (u32 j = 0; j < cols; ++j) {
@@ -590,6 +593,7 @@ void Field::drawPcb(const u32 i, const u32 j) const
 	}
 
 	glPushAttrib(drawGlMask);
+	glEnable(GL_TEXTURE_2D);
 	{
 		switch (cell) {
 		case CPcb1: {
@@ -602,44 +606,40 @@ void Field::drawPcb(const u32 i, const u32 j) const
 			glColor3ubv(Colors::YELLOW.data());
 		} break;
 		case CSlot: {
-			glColor3ub(35, 212, 224);
+			Texture::Get("assets/pcb-circuit-slot.png").Bind();
 		} break;
 		case CWall:
 		case CCannon:
 			break;
-		}
-
-		if (cell < CWall) {
+		default:
 			glColor3ubv(Colors::GRAY.data());
+			break;
 		}
 
 		glPushMatrix();
 		{
 			glTranslated(j, i, 0);
 
-			do {
-				if (cell < CWall) {
-					Primitives2D::Unit::Square();
-					break;
-				}
-
-				switch (cell) {
-				case CPcb1:
-				case CPcb2:
-				case CPcb3: {
-					glTranslated(0, 0, .2);
-					glScaled(.8, .8, .2);
-					Primitives3D::Unit::Cube();
-				} break;
-				case CSlot: {
-					Primitives2D::Unit::Circle();
-				} break;
-				case CWall:
-				case CCannon:
-					break;
-				}
-			} while (false);
+			switch (cell) {
+			case CPcb1:
+			case CPcb2:
+			case CPcb3: {
+				glTranslated(0, 0, .2);
+				glScaled(.8, .8, .2);
+				Primitives3D::Unit::Cube();
+			} break;
+			case CSlot: {
+				Primitives2D::Unit::Circle();
+			} break;
+			case CWall:
+			case CCannon:
+				break;
+			default:
+				Primitives2D::Unit::Square();
+			}
 		}
+
+		Texture::UnBind();
 	}
 	glPopMatrix();
 	glPopAttrib();
