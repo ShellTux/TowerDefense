@@ -6,6 +6,14 @@
 #include <GL/gl.h>
 #include <cmath>
 
+#define DRAW_ARRAYS_IMPLEMENTATION
+
+#ifdef DRAW_ARRAYS_IMPLEMENTATION
+	#include <array>
+	#include <vector>
+#endif
+
+
 namespace Primitives2D {
 
 void Unit::Circle()
@@ -14,6 +22,45 @@ void Unit::Circle()
 
 	static constexpr f64 radius = p;
 	const f64 deltaAngle        = 2 * PId / resolution;
+
+#ifdef DRAW_ARRAYS_IMPLEMENTATION
+	static std::vector<f64> vertices{};
+
+	if (vertices.size() == 0) {
+		vertices.reserve(resolution * 5);
+
+		for (f64 angle  = 0; angle < 2 * Math::PId;
+		     angle     += deltaAngle) {
+			f64 x = radius * cos(angle);
+			f64 y = radius * sin(angle);
+
+			vertices.push_back(x);
+			vertices.push_back(y);
+			vertices.push_back(0);
+
+			f64 texX = (x / radius) * 0.5 + 0.5;
+			f64 texY = (y / radius) * 0.5 + 0.5;
+
+			vertices.push_back(texX);
+			vertices.push_back(texY);
+		}
+	}
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	{
+		glVertexPointer(3, GL_DOUBLE, 5 * sizeof(f64), vertices.data());
+		glTexCoordPointer(2,
+		                  GL_DOUBLE,
+		                  5 * sizeof(f64),
+		                  vertices.data() + 3);
+
+		glNormal3d(0, 0, 1);
+		glDrawArrays(GL_POLYGON, 0, resolution);
+	}
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+#else
 
 	glBegin(GL_POLYGON);
 	{
@@ -31,10 +78,39 @@ void Unit::Circle()
 		}
 	}
 	glEnd();
+#endif
 }
 
 void Unit::Square()
 {
+#ifdef DRAW_ARRAYS_IMPLEMENTATION
+	static constexpr std::array<f64, 32> vertices = {
+	    // Position             // Normal          // Texture Coordinates
+	    -p, p,  0, 0, 0, 1, 0, 0, // Top left
+	    -p, -p, 0, 0, 0, 1, 0, 1, // Bottom left
+	    p,  -p, 0, 0, 0, 1, 1, 1, // Bottom right
+	    p,  p,  0, 0, 0, 1, 1, 0  // Top right
+	};
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	{
+		glVertexPointer(3, GL_DOUBLE, 8 * sizeof(f64), vertices.data());
+		glNormalPointer(GL_DOUBLE,
+		                8 * sizeof(f64),
+		                vertices.data() + 3);
+		glTexCoordPointer(2,
+		                  GL_DOUBLE,
+		                  8 * sizeof(f64),
+		                  vertices.data() + 6);
+
+		glDrawArrays(GL_QUADS, 0, 4);
+	}
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+#else
 	glBegin(GL_QUADS);
 	{
 		glNormal3d(0, 0, 1);
@@ -52,6 +128,7 @@ void Unit::Square()
 		glVertex2f(p, p);
 	}
 	glEnd();
+#endif
 }
 
 void Unit::Grid(const u32 rows, const u32 cols)

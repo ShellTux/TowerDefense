@@ -72,7 +72,7 @@ void Enemy::draw() const
 		glTranslated(posX, posY, -.2);
 		glScalef(.9, .9, .6);
 		glRotated(pathInfo.angle, 0, 0, 1);
-		Primitives3D::Unit::Cilinder();
+		Primitives3D::Unit::Cylinder();
 
 		drawHealth();
 	}

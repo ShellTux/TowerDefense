@@ -5,8 +5,6 @@
 #include "Vec3.hpp"
 #include "types.hpp"
 
-#define PRIMITIVES2D_USE 1
-
 namespace Primitives3D {
 
 namespace Unit {
@@ -15,7 +13,7 @@ static constexpr f64 p          = .5;
 static constexpr f64 radius     = p;
 static constexpr f64 resolution = Primitives2D::resolution;
 
-void Cilinder();
+void Cylinder();
 void Cube();
 
 } // namespace Unit
