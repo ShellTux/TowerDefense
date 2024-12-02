@@ -598,12 +598,16 @@ void Field::drawPcb(const u32 i, const u32 j) const
 		switch (cell) {
 		case CPcb1: {
 			glColor3ubv(Colors::GREEN.data());
+			OpenGL::Material::Apply(OpenGL::Material::GreenPlastic);
 		} break;
 		case CPcb2: {
 			glColor3ubv(Colors::PURPLE.data());
+			OpenGL::Material::Apply(OpenGL::Material::Purple);
 		} break;
 		case CPcb3: {
 			glColor3ubv(Colors::YELLOW.data());
+			OpenGL::Material::Apply(
+			    OpenGL::Material::YellowPlastic);
 		} break;
 		case CSlot: {
 			Texture::Get("assets/pcb-circuit-slot.png").Bind();
