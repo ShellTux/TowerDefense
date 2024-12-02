@@ -19,7 +19,7 @@ OBJModel::OBJModel(const std::filesystem::path &path)
 	LoadFromFile(path);
 }
 
-void OBJModel::LoadFromFile(const std::string &filename)
+void OBJModel::LoadFromFile(const std::filesystem::path &filename)
 {
 	std::ifstream file(filename);
 	if (!file) {
@@ -40,7 +40,7 @@ void OBJModel::LoadFromFile(const std::string &filename)
 			std::string mtlFileName;
 
 			iss >> keyword >> mtlFileName;
-			LoadMaterialFile(mtlFileName);
+			LoadMaterialFile(filename.parent_path() / mtlFileName);
 		} else if (StartWith(line, "v ")) {
 			Vec3 pos{};
 			std::istringstream iss(line);
@@ -110,7 +110,7 @@ i32 OBJModel::getVertexCount() const
 	return static_cast<i32>(mVertexData.size() / 9);
 }
 
-void OBJModel::LoadMaterialFile(const std::string &filename)
+void OBJModel::LoadMaterialFile(const std::filesystem::path &filename)
 {
 	std::ifstream file(filename);
 	if (!file) {

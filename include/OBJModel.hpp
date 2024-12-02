@@ -68,7 +68,7 @@ class OBJModel {
 	[[nodiscard]] std::vector<f32> getVertexData() const;
 	[[nodiscard]] i32 getVertexCount() const;
 
-	void LoadFromFile(const std::string &filename);
+	void LoadFromFile(const std::filesystem::path &filename);
 
       private:
 	std::map<std::string, Color> mMaterialMap;
@@ -78,7 +78,7 @@ class OBJModel {
 
 	static std::map<std::filesystem::path, OBJModel> GlobalModels;
 
-	void LoadMaterialFile(const std::string &filename);
+	void LoadMaterialFile(const std::filesystem::path &filename);
 	bool StartWith(const std::string &line, const char *text);
 	void addVertexData(const i32 vIdx,
 	                   const i32 nIdx,
