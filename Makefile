@@ -19,6 +19,7 @@ SRC = \
       ./src/Math.cpp \
       ./src/Color.cpp \
       ./src/Vec3.cpp \
+      ./src/OBJModel.cpp \
       ./src/Primitives/3D/core.cpp \
       ./src/Primitives/2D/core.cpp \
       ./src/OpenGL/camera.cpp \

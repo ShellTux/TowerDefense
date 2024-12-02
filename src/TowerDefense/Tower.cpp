@@ -1,6 +1,7 @@
 #include "TowerDefense/Tower.hpp"
 
 #include "Color.hpp"
+#include "OBJModel.hpp"
 #include "Primitives/3D/core.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
@@ -47,7 +48,11 @@ void Tower::draw() const
 
 		glTranslated(posX, posY, 0);
 		glScalef(.9, .9, 1);
+#if 1
 		Primitives3D::Unit::Cube();
+#else
+		OBJModel::Get("models/monkey.obj").draw();
+#endif
 
 		drawHealth();
 	}
