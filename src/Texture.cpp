@@ -32,7 +32,9 @@ void Texture::UnBind()
 
 void Texture::ReloadAll()
 {
+#ifdef DEBUG
 	std::cout << "Reloading all textures" << std::endl;
+#endif
 
 	for (const auto &[path, texture] : GlobalTextures) {
 		texture.reload();
@@ -40,7 +42,9 @@ void Texture::ReloadAll()
 
 	texturesNeedReload = false;
 
+#ifdef DEBUG
 	std::cout << "Global Textures: " << GlobalTextures << std::endl;
+#endif
 }
 
 void Texture::Load(const std::filesystem::path &path)
@@ -49,7 +53,9 @@ void Texture::Load(const std::filesystem::path &path)
 		return;
 	}
 
+#ifdef DEBUG
 	std::cout << "Loading new texture: " << path << std::endl;
+#endif
 	GlobalTextures[path] = Texture(path);
 }
 

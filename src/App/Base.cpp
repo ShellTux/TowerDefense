@@ -163,7 +163,8 @@ void App::ScrollCallback(GLFWwindow *window,
 
 void App::printStats() const
 {
-	std::cout << "\033[2J\033[H";
+	std::cout << "\033[H";
+
 	std::cout << "-------Tower Defense Stats-------" << std::endl;
 	std::cout << "\033[5m" << "\033[35m" << "Wave " << field.getWave()
 	          << "\033[0m" << std::endl;
@@ -172,26 +173,13 @@ void App::printStats() const
 	          << field.getTower().getHealthRatio() * 100 << "%"
 	          << std::endl;
 	std::cout << "Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
-	std::cout << "Selected Position: ";
-	field.printInfoAtSelectedPosition();
-	std::cout << "Cannons: " << field.getCannonsSize() << "/"
-	          << static_cast<int>(field.getRemainingCannons()
-	                              + field.getCannonsSize())
+	std::cout << "Selected Position: " << field.infoAtSelectedPosition()
 	          << std::endl;
-	std::cout << "Enemies: " << field.getEnemiesSize() << std::endl;
-	std::cout << "Orbit Angle: ";
-	std::cout << Math::radiansToDegrees(orbitAngle);
-	std::cout << "º" << std::endl;
-	std::cout << "view: " << view << std::endl;
-	std::cout << "selected view: ";
-	if (selectedView.has_value()) {
-		std::cout << selectedView.value() << std::endl;
-	} else {
-		std::cout << "none" << std::endl;
-	}
-	std::cout << "selected enemy index: "
-	          << static_cast<int>(selectedEnemyIndex.value_or(-1))
+	std::cout << "(Enemies/Cannons/Cannons Max): " << field.getEnemiesSize()
+	          << "/" << field.getCannonsSize() << "/"
+	          << field.getCannonsSize() + field.getRemainingCannons()
 	          << std::endl;
+	std::cout << "View: " << view << " " << selectedView << std::endl;
 	std::cout << "---------------------------------" << std::endl;
 	std::cout << std::endl;
 

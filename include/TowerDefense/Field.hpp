@@ -120,6 +120,7 @@ class Field {
 	void drawHUD() const;
 	void printInfoAtSelectedPosition() const;
 
+	[[nodiscard]] std::string infoAtSelectedPosition() const;
 	[[nodiscard]] Cell &getCell(const u32 row, const u32 col);
 	[[nodiscard]] Cell getCell(const u32 row, const u32 col) const;
 	[[nodiscard]] Cell &getCell(const Vec3 &pos);

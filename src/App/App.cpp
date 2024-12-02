@@ -9,6 +9,7 @@
 #include <GL/gl.h>
 #include <array>
 #include <cmath>
+#include <iostream>
 #include <optional>
 
 struct Rect {
@@ -130,6 +131,8 @@ void App::drawHUD()
 
 void App::setup()
 {
+	std::cout << "\033[2J\033[H";
+
 	glEnable(GL_DEPTH_TEST);
 }
 

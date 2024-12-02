@@ -18,6 +18,8 @@
 #include <iostream>
 #include <map>
 #include <optional>
+#include <sstream>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -526,31 +528,40 @@ Field::Cell &Field::getCell(const Vec3 &pos)
 
 void Field::printInfoAtSelectedPosition() const
 {
+	std::cout << infoAtSelectedPosition();
+}
+
+std::string Field::infoAtSelectedPosition() const
+{
+	std::ostringstream info{};
+
 #ifndef RELEASE
 	switch (getCell(selectedGridPosition)) {
 	case CPcb1: {
-		std::cout << "PCB1: " << selectedGridPosition << std::endl;
+		info << "PCB1: " << selectedGridPosition;
 	} break;
 	case CPcb2: {
-		std::cout << "PCB2: " << selectedGridPosition << std::endl;
+		info << "PCB2: " << selectedGridPosition;
 	} break;
 	case CPcb3: {
-		std::cout << "PCB3: " << selectedGridPosition << std::endl;
+		info << "PCB3: " << selectedGridPosition;
 	} break;
 	case CSlot: {
-		std::cout << "Slot: " << selectedGridPosition << std::endl;
+		info << "Slot: " << selectedGridPosition;
 	} break;
 	case CCannon: {
-		std::cout << getCannonAt(selectedGridPosition) << std::endl;
+		info << getCannonAt(selectedGridPosition);
 	} break;
 	case CWall: {
-		std::cout << "Wall: " << selectedGridPosition << std::endl;
+		info << "Wall: " << selectedGridPosition;
 	} break;
 	default: {
-		std::cout << selectedGridPosition << std::endl;
+		info << selectedGridPosition;
 	} break;
 	}
 #endif
+
+	return info.str();
 }
 
 std::optional<Cannon> Field::getCannonAt(const Vec3 &pos) const

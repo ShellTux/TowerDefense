@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <optional>
 #include <tuple>
 
 class Vec3 {
@@ -46,6 +47,18 @@ class Vec3 {
 	friend std::ostream &operator<<(std::ostream &os, const Vec3 &vec)
 	{
 		os << "Vec3(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
+		return os;
+	}
+
+	friend std::ostream &operator<<(std::ostream &os,
+	                                const std::optional<Vec3> &vec)
+	{
+		if (vec.has_value()) {
+			os << vec.value();
+		} else {
+			os << "Vec3(None)";
+		}
+
 		return os;
 	}
 
