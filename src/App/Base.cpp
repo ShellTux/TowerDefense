@@ -181,35 +181,28 @@ void App::printStats() const
 	os << "Tower Health(%): " << field.getTower().getHealthRatio() * 100
 	   << "%" << std::endl;
 	os << "[X] Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
-	os << "Selected Position: " << field.infoAtSelectedPosition()
+	os << "[I] Selected Position: " << field.infoAtSelectedPosition()
 	   << std::endl;
 	os << "(Enemies/Cannons/Cannons Max): " << field.getEnemiesSize() << "/"
 	   << field.getCannonsSize() << "/"
 	   << field.getCannonsSize() + field.getRemainingCannons() << std::endl;
 	os << "[V] Camera: " << camera << std::endl;
 	os << "[C] Cull: " << cull << std::endl;
+	os << "[T] PolygonMode: " << polygonMode << std::endl;
 	os << "---------------------------------" << std::endl;
 	os << std::endl;
 
 	static const char *const TOWER_DEFENSE_KEYS
-	    = "---------------------Tower Defense "
-	      "Keys---------------------------\n"
-	      "WASD/↑←↓→          Move selected position\n"        
-	      "1,2,3              Place Cannon at selected position of tier "
-	      "A,B,C "
+	    = "---------------------Tower Defense Keys-----------------------\n"
+	      "WASD/↑←↓→    Move selected position\n"        
+	      "1,2,3        Place Cannon at selected position of tier A,B,C "
 	      "(respectively)\n"
-	      "4/U                Upgrade Cannon at selected position\n"
-	      "I                  Print Info at selected position (debug "
-	      "mode).\n"
-	      "T                  Toggle between polygon modes (opengl "
-	      "debug "
-	      "mode).\n"
-	      "L                  Switch between lighting modes.\n"
-	      "M                  Focus Minimap\n"
-	      "P                  Pause Game\n"
-	      "R                  Reset view and minimap focus to default\n"
-	      "------------------------------------------------------------"
-	      "------";
+	      "4/U          Upgrade Cannon at selected position\n"
+	      "L            Switch between lighting modes.\n"
+	      "M            Focus Minimap\n"
+	      "P            Pause Game\n"
+	      "R            Reset view and minimap focus to default\n"
+	      "-------------------------------------------------------------";
 
 	os << TOWER_DEFENSE_KEYS << std::endl;
 
