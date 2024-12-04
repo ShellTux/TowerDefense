@@ -1,5 +1,5 @@
-CC  ?= clang
-CXX ?= clang++
+CC  = clang
+CXX = clang++
 
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -Wno-error=unused-variable
@@ -37,7 +37,9 @@ SRC = \
       ./src/TowerDefense/Cannon.cpp \
       ./src/TowerDefense/Tower.cpp \
       ./src/TowerDefense/Field.cpp
-OBJ := $(SRC:.cpp=.o)
+OBJ := $(SRC)
+OBJ := $(OBJ:.c=.o)
+OBJ := $(OBJ:.cpp=.o)
 
 $(TARGET): $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
