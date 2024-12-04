@@ -44,23 +44,9 @@ class Vec3 {
 	Vec3 operator*(f64 scalar) const;
 	Vec3 operator/(f64 scalar) const;
 
-	friend std::ostream &operator<<(std::ostream &os, const Vec3 &vec)
-	{
-		os << "Vec3(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
-		return os;
-	}
-
+	friend std::ostream &operator<<(std::ostream &os, const Vec3 &vec);
 	friend std::ostream &operator<<(std::ostream &os,
-	                                const std::optional<Vec3> &vec)
-	{
-		if (vec.has_value()) {
-			os << vec.value();
-		} else {
-			os << "Vec3(None)";
-		}
-
-		return os;
-	}
+	                                const std::optional<Vec3> &vec);
 
 	[[nodiscard]] f64 dot(const Vec3 &other) const;
 	[[nodiscard]] f64 magnitude() const;

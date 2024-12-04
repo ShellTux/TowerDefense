@@ -12,6 +12,20 @@ extern bool texturesNeedReload;
 
 std::unordered_map<std::filesystem::path, Texture> Texture::GlobalTextures = {};
 
+std::ostream &
+operator<<(std::ostream &os,
+           const std::unordered_map<std::filesystem::path, Texture> &textures)
+{
+	os << "{" << std::endl;
+	for (const auto &[path, texture] : textures) {
+		os << "  - " << texture.getPath() << " ("
+		   << texture.getRenderId() << ")" << std::endl;
+	}
+	os << "}";
+
+	return os;
+}
+
 Texture::Texture(const std::filesystem::path &path)
     : path(path)
 {

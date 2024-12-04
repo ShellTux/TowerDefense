@@ -30,32 +30,8 @@ class Field {
 		CCannon,
 	};
 
-	friend std::ostream &operator<<(std::ostream &os, const enum Cell &cell)
-	{
-		switch (cell) {
-		case Field::CWall: {
-			os << "W";
-		} break;
-		case Field::CSlot: {
-			os << "\033[33m";
-			os << "S";
-		} break;
-		case Field::CCannon: {
-			os << "\033[33m";
-			os << "C";
-		} break;
-		case Field::CPcb1:
-		case Field::CPcb2:
-		case Field::CPcb3: {
-			os << "\033[34m";
-			os << "P";
-		} break;
-		}
-
-		os << "\033[0m";
-
-		return os;
-	}
+	friend std::ostream &operator<<(std::ostream &os,
+	                                const enum Cell &cell);
 
 	using Map    = std::vector<std::vector<Cell>>;
 	using u32Map = std::vector<std::vector<u32>>;
@@ -69,38 +45,10 @@ class Field {
 	Field &operator=(const Field &) = default;
 	~Field()                        = default;
 
+	friend std::ostream &operator<<(std::ostream &os, const Field &field);
+
 	static u32Map GenerateMap(const u32 rows, const u32 cols);
 	static Field Generate(const u32 rows, const u32 cols, const u8 waves);
-
-	friend std::ostream &operator<<(std::ostream &os, const Field &field)
-	{
-		os << "Field {" << std::endl;
-
-		const usize rows = field.map.size();
-		const usize cols = field.map.at(0).size();
-		for (usize i = 0; i < rows; ++i) {
-			for (usize j = 0; j < cols; ++j) {
-				const Cell c = field.map.at(i).at(j);
-				if (j > 0) {
-					os << " ";
-				}
-
-				if (c < CPcb1) {
-					os << static_cast<int>(c);
-					continue;
-				}
-
-				os << c;
-			}
-			os << std::endl;
-		}
-
-		os << std::endl << field.getTower();
-		os << std::endl << "points: " << field.getPoints();
-		os << std::endl << "}";
-
-		return os;
-	}
 
 	Field &addPoints(const Stats::HealthPoints &points);
 	void moveSelectedPosition(const Vec3 &movement);

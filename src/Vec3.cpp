@@ -4,6 +4,8 @@
 #include "types.hpp"
 
 #include <cmath>
+#include <optional>
+#include <ostream>
 #include <random>
 #include <stdexcept>
 #include <tuple>
@@ -25,6 +27,23 @@ Vec3::Vec3(const f64 x, const f64 y, const f64 z)
     , y(y)
     , z(z)
 {}
+
+std::ostream &operator<<(std::ostream &os, const Vec3 &vec)
+{
+	os << "Vec3(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
+	return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const std::optional<Vec3> &vec)
+{
+	if (vec.has_value()) {
+		os << vec.value();
+	} else {
+		os << "Vec3(None)";
+	}
+
+	return os;
+}
 
 Vec3 Vec3::RandomUnitVec3()
 {

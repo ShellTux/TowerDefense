@@ -25,6 +25,63 @@
 
 namespace TowerDefense {
 
+std::ostream &operator<<(std::ostream &os, const enum Field::Cell &cell)
+{
+	switch (cell) {
+	case Field::CWall: {
+		os << "W";
+	} break;
+	case Field::CSlot: {
+		os << "\033[33m";
+		os << "S";
+	} break;
+	case Field::CCannon: {
+		os << "\033[33m";
+		os << "C";
+	} break;
+	case Field::CPcb1:
+	case Field::CPcb2:
+	case Field::CPcb3: {
+		os << "\033[34m";
+		os << "P";
+	} break;
+	}
+
+	os << "\033[0m";
+
+	return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const Field &field)
+{
+	os << "Field {" << std::endl;
+
+	const usize rows = field.map.size();
+	const usize cols = field.map.at(0).size();
+	for (usize i = 0; i < rows; ++i) {
+		for (usize j = 0; j < cols; ++j) {
+			const enum Field::Cell c = field.map.at(i).at(j);
+			if (j > 0) {
+				os << " ";
+			}
+
+			if (c < Field::CPcb1) {
+				os << static_cast<int>(c);
+				continue;
+			}
+
+			os << c;
+		}
+		os << std::endl;
+	}
+
+	os << std::endl << field.getTower();
+	os << std::endl << "points: " << field.getPoints();
+	os << std::endl << "}";
+
+	return os;
+}
+
 Field::Field(const std::vector<std::vector<u32>> &map)
     : cols(map.at(0).size())
     , rows(map.size())

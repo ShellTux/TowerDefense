@@ -8,8 +8,16 @@
 #include "types.hpp"
 
 #include <GL/gl.h>
+#include <ostream>
 
 namespace TowerDefense {
+
+std::ostream &operator<<(std::ostream &os, const Tower &tower)
+{
+	os << "Tower: " << tower.getGridPosition()
+	   << ", health: " << static_cast<int>(tower.getHealth());
+	return os;
+}
 
 Vec3 Tower::getGridPosition() const
 {

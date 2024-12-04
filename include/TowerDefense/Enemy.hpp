@@ -54,14 +54,7 @@ class Enemy {
 	Enemy &operator=(const Enemy &) = default;
 	~Enemy()                        = default;
 
-	friend std::ostream &operator<<(std::ostream &os, const Enemy &enemy)
-	{
-		os << "Enemy: " << enemy.getPosition()
-		   << ", speed: " << enemy.getSpeedUpMs()
-		   << ", health: " << static_cast<int>(enemy.getHealth())
-		   << ", points: " << static_cast<int>(enemy.getPoints());
-		return os;
-	}
+	friend std::ostream &operator<<(std::ostream &os, const Enemy &enemy);
 
 	void draw() const;
 	void update(const Stats::TimeMs deltaTimeMs);

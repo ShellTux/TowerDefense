@@ -29,12 +29,7 @@ class Tower {
 	Tower &operator=(const Tower &) = default;
 	~Tower()                        = default;
 
-	friend std::ostream &operator<<(std::ostream &os, const Tower &tower)
-	{
-		os << "Tower: " << tower.getGridPosition()
-		   << ", health: " << static_cast<int>(tower.getHealth());
-		return os;
-	}
+	friend std::ostream &operator<<(std::ostream &os, const Tower &tower);
 
 	void draw() const;
 

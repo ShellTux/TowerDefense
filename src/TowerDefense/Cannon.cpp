@@ -18,6 +18,27 @@
 
 namespace TowerDefense {
 
+std::ostream &operator<<(std::ostream &os, const Cannon &cannon)
+{
+	os << "Cannon: " << cannon.gridPosition << ", angle: " << cannon.angle
+	   << ", cooldown: " << static_cast<int>(cannon.cooldownMs)
+	   << ", shotDamage: " << static_cast<int>(cannon.shotDamage) << ", "
+	   << cannon.currentTier << ", " << cannon.currentLevel;
+	return os;
+}
+
+std::ostream &operator<<(std::ostream &os,
+                         const std::optional<Cannon> &cannonOpt)
+{
+	if (!cannonOpt.has_value()) {
+		os << "No Cannon";
+		return os;
+	}
+
+	os << cannonOpt.value();
+	return os;
+}
+
 void Cannon::draw(const Vec3 &selectedGridPosition) const
 {
 	const auto [posY, posX, _] = gridPosition.getCoordinates();

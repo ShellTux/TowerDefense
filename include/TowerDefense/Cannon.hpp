@@ -30,27 +30,9 @@ class Cannon {
 	Cannon &operator=(const Cannon &) = default;
 	~Cannon()                         = default;
 
-	friend std::ostream &operator<<(std::ostream &os, const Cannon &cannon)
-	{
-		os << "Cannon: " << cannon.gridPosition
-		   << ", angle: " << cannon.angle
-		   << ", cooldown: " << static_cast<int>(cannon.cooldownMs)
-		   << ", shotDamage: " << static_cast<int>(cannon.shotDamage)
-		   << ", " << cannon.currentTier << ", " << cannon.currentLevel;
-		return os;
-	}
-
+	friend std::ostream &operator<<(std::ostream &os, const Cannon &cannon);
 	friend std::ostream &operator<<(std::ostream &os,
-	                                const std::optional<Cannon> &cannonOpt)
-	{
-		if (!cannonOpt.has_value()) {
-			os << "No Cannon";
-			return os;
-		}
-
-		os << cannonOpt.value();
-		return os;
-	}
+	                                const std::optional<Cannon> &cannonOpt);
 
 	void draw(const Vec3 &selectedGridPosition) const;
 	void update(const Stats::TimeMs deltaTimeMs,

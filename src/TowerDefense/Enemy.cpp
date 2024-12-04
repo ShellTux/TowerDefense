@@ -10,9 +10,19 @@
 #include <GL/gl.h>
 #include <algorithm>
 #include <cstdlib>
+#include <ostream>
 #include <vector>
 
 namespace TowerDefense {
+
+std::ostream &operator<<(std::ostream &os, const Enemy &enemy)
+{
+	os << "Enemy: " << enemy.getPosition()
+	   << ", speed: " << enemy.getSpeedUpMs()
+	   << ", health: " << static_cast<int>(enemy.getHealth())
+	   << ", points: " << static_cast<int>(enemy.getPoints());
+	return os;
+}
 
 f64 Enemy::getHealthRatio() const
 {

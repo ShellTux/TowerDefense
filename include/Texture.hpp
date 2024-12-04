@@ -60,19 +60,10 @@ class Texture {
 
 	static std::unordered_map<std::filesystem::path, Texture>
 	    GlobalTextures;
+
 	friend std::ostream &operator<<(
 	    std::ostream &os,
-	    const std::unordered_map<std::filesystem::path, Texture> &textures)
-	{
-		os << "{" << std::endl;
-		for (const auto &[path, texture] : textures) {
-			os << "  - " << texture.getPath() << " ("
-			   << texture.getRenderId() << ")" << std::endl;
-		}
-		os << "}";
-
-		return os;
-	}
+	    const std::unordered_map<std::filesystem::path, Texture> &textures);
 
 	void Bind(const u8 slot = 0) const;
 	void Unbind() const;
