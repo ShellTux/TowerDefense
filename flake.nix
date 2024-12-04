@@ -41,6 +41,7 @@
 			];
 
 			LD_LIBRARY_PATH = libPath + "/run/opengl-driver/lib:/run/opengl-driver-32/lib";
+			MAKEFLAGS = "--file=Makefile";
 		};
 	};
 }
