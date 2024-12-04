@@ -1,6 +1,7 @@
 #ifndef INCLUDE_INCLUDE_OBJMODEL_HPP_
 #define INCLUDE_INCLUDE_OBJMODEL_HPP_
 
+#include "Vec3.hpp"
 #include "types.hpp"
 
 #include <filesystem>
@@ -12,22 +13,9 @@
 class OBJModel {
       public:
 	struct Color {
-		f32 r;
-		f32 g;
-		f32 b;
-	};
-	struct Vec3 {
-		f32 x;
-		f32 y;
-		f32 z;
-
-		friend std::ostream &operator<<(std::ostream &os,
-		                                const Vec3 &vec)
-		{
-			os << "(" << vec.x << ", " << vec.y << ", " << vec.z
-			   << ")";
-			return os;
-		}
+		f64 r;
+		f64 g;
+		f64 b;
 	};
 
 	OBJModel()                            = default;
@@ -37,42 +25,21 @@ class OBJModel {
 	OBJModel &operator=(const OBJModel &) = default;
 	~OBJModel()                           = default;
 
-	friend std::ostream &operator<<(std::ostream &os, const OBJModel &model)
-	{
-		os << "{" << std::endl;
-
-		{
-			for (const auto &[material, color] :
-			     model.mMaterialMap) {
-				os << material << ": " << color.r << ", "
-				   << color.g << ", " << color.b << std::endl;
-			}
-		}
-
-		{
-			os << "vertices: ";
-			for (const auto &vertex : model.mVertexData) {
-				os << vertex << " ";
-			}
-			os << std::endl;
-		}
-
-		os << "}";
-		return os;
-	}
+	friend std::ostream &operator<<(std::ostream &os,
+	                                const OBJModel &model);
 
 	static OBJModel &Get(const std::filesystem::path &path);
 
 	void draw() const;
 
-	[[nodiscard]] std::vector<f32> getVertexData() const;
+	[[nodiscard]] std::vector<f64> getVertexData() const;
 	[[nodiscard]] i32 getVertexCount() const;
 
 	void LoadFromFile(const std::filesystem::path &filename);
 
       private:
 	std::map<std::string, Color> mMaterialMap;
-	std::vector<f32> mVertexData;
+	std::vector<f64> mVertexData;
 
 	OBJModel(const std::filesystem::path &path);
 

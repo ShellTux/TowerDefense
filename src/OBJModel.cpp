@@ -1,5 +1,6 @@
 #include "OBJModel.hpp"
 
+#include "Vec3.hpp"
 #include "types.hpp"
 
 #include <GL/gl.h>
@@ -17,6 +18,29 @@ std::map<std::filesystem::path, OBJModel> OBJModel::GlobalModels = {};
 OBJModel::OBJModel(const std::filesystem::path &path)
 {
 	LoadFromFile(path);
+}
+
+std::ostream &operator<<(std::ostream &os, const OBJModel &model)
+{
+	os << "{" << std::endl;
+
+	{
+		for (const auto &[material, color] : model.mMaterialMap) {
+			os << material << ": " << color.r << ", " << color.g
+			   << ", " << color.b << std::endl;
+		}
+	}
+
+	{
+		os << "vertices: ";
+		for (const auto &vertex : model.mVertexData) {
+			os << vertex << " ";
+		}
+		os << std::endl;
+	}
+
+	os << "}";
+	return os;
 }
 
 void OBJModel::LoadFromFile(const std::filesystem::path &filename)
@@ -42,17 +66,23 @@ void OBJModel::LoadFromFile(const std::filesystem::path &filename)
 			iss >> keyword >> mtlFileName;
 			LoadMaterialFile(filename.parent_path() / mtlFileName);
 		} else if (StartWith(line, "v ")) {
-			Vec3 pos{};
+			f64 x = 0;
+			f64 y = 0;
+			f64 z = 0;
+
 			std::istringstream iss(line);
 			iss.ignore(2);
-			iss >> pos.x >> pos.y >> pos.z;
-			vertices.push_back(pos);
+			iss >> x >> y >> z;
+			vertices.emplace_back(x, y, z);
 		} else if (StartWith(line, "vn ")) {
-			Vec3 n{};
+			f64 nX = 0;
+			f64 nY = 0;
+			f64 nZ = 0;
+
 			std::istringstream iss(line);
 			iss.ignore(3);
-			iss >> n.x >> n.y >> n.z;
-			normals.push_back(n);
+			iss >> nX >> nY >> nZ;
+			normals.emplace_back(nX, nY, nZ);
 		} else if (StartWith(line, "usemtl")) {
 			std::istringstream iss(line);
 			std::string keyword;
@@ -100,7 +130,7 @@ void OBJModel::LoadFromFile(const std::filesystem::path &filename)
 	}
 }
 
-std::vector<f32> OBJModel::getVertexData() const
+std::vector<f64> OBJModel::getVertexData() const
 {
 	return mVertexData;
 }
@@ -163,24 +193,25 @@ void OBJModel::addVertexData(const i32 vIdx,
                              const std::vector<Vec3> &normals)
 {
 	Color c = mMaterialMap.at(mtl);
-	Vec3 p  = vertices[vIdx - 1];
-	Vec3 n  = normals[nIdx - 1];
 
-	mVertexData.push_back(p.x);
-	mVertexData.push_back(p.y);
-	mVertexData.push_back(p.z);
+	const auto &[pX, pY, pZ] = vertices[vIdx - 1].getCoordinates();
+	const auto &[nX, nY, nZ] = normals[nIdx - 1].getCoordinates();
+
+	mVertexData.push_back(pX);
+	mVertexData.push_back(pY);
+	mVertexData.push_back(pZ);
 	mVertexData.push_back(c.r);
 	mVertexData.push_back(c.g);
 	mVertexData.push_back(c.b);
-	mVertexData.push_back(n.x);
-	mVertexData.push_back(n.y);
-	mVertexData.push_back(n.z);
+	mVertexData.push_back(nX);
+	mVertexData.push_back(nY);
+	mVertexData.push_back(nZ);
 }
 
 void OBJModel::draw() const
 {
 #if 1
-	const std::vector<f32> &vertices = getVertexData();
+	const std::vector<f64> &vertices = getVertexData();
 
 	glPushAttrib(GL_COLOR_BUFFER_BIT);
 	glBegin(GL_TRIANGLES);
@@ -188,20 +219,23 @@ void OBJModel::draw() const
 		glColor3ub(255, 0, 255);
 
 		for (int i = 0; i < getVertexCount(); ++i) {
-			const int index          = i * 9;
-			const struct Vec3 pos    = {vertices[index + 0],
-			                            vertices[index + 1],
-			                            vertices[index + 2]};
+			const int index = i * 9;
+
+			const f64 &pX = vertices[index + 0];
+			const f64 &pY = vertices[index + 1];
+			const f64 &pZ = vertices[index + 2];
+
 			const struct Color color = {vertices[index + 3],
 			                            vertices[index + 4],
 			                            vertices[index + 5]};
-			const struct Vec3 normal = {vertices[index + 6],
-			                            vertices[index + 7],
-			                            vertices[index + 8]};
 
-			glColor3f(color.r, color.g, color.b);
-			glNormal3f(normal.x, normal.y, normal.z);
-			glVertex3f(pos.x, pos.y, pos.z);
+			const f64 &nX = vertices[index + 6];
+			const f64 &nY = vertices[index + 7];
+			const f64 &nZ = vertices[index + 8];
+
+			glColor3d(color.r, color.g, color.b);
+			glNormal3d(nX, nY, nZ);
+			glVertex3d(pX, pY, pZ);
 		}
 	}
 	glEnd();
