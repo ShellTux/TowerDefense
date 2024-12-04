@@ -463,6 +463,12 @@ void Field::update(const Stats::TimeMs deltaTimeMs)
 		        return true;
 	        });
 
+	std::sort(enemiesF.begin(),
+	          enemiesF.end(),
+	          [](const Enemy &a, const Enemy &b) {
+		          return a.getPosition() > b.getPosition();
+	          });
+
 	enemies = enemiesF;
 }
 
