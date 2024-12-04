@@ -180,14 +180,14 @@ void App::printStats() const
 	os << "Points: " << field.getPoints() << std::endl;
 	os << "Tower Health(%): " << field.getTower().getHealthRatio() * 100
 	   << "%" << std::endl;
-	os << "Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
+	os << "[X] Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
 	os << "Selected Position: " << field.infoAtSelectedPosition()
 	   << std::endl;
 	os << "(Enemies/Cannons/Cannons Max): " << field.getEnemiesSize() << "/"
 	   << field.getCannonsSize() << "/"
 	   << field.getCannonsSize() + field.getRemainingCannons() << std::endl;
-	os << "Camera: " << camera << std::endl;
-	os << "Cull: " << cull << std::endl;
+	os << "[V] Camera: " << camera << std::endl;
+	os << "[C] Cull: " << cull << std::endl;
 	os << "---------------------------------" << std::endl;
 	os << std::endl;
 
@@ -201,14 +201,10 @@ void App::printStats() const
 	      "4/U                Upgrade Cannon at selected position\n"
 	      "I                  Print Info at selected position (debug "
 	      "mode).\n"
-	      "C                  Toggle between cull face modes (opengl "
-	      "debug "
-	      "mode).\n"
 	      "T                  Toggle between polygon modes (opengl "
 	      "debug "
 	      "mode).\n"
 	      "L                  Switch between lighting modes.\n"
-	      "V                  Switch between views\n"
 	      "M                  Focus Minimap\n"
 	      "P                  Pause Game\n"
 	      "R                  Reset view and minimap focus to default\n"
