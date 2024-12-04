@@ -1,8 +1,8 @@
 #ifndef INCLUDE_APP_BASE_HPP_
 #define INCLUDE_APP_BASE_HPP_
 
-#include "Math.hpp"
 #include "OpenGL/Camera.hpp"
+#include "OpenGL/Cull.hpp"
 #include "TowerDefense/Field.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
@@ -12,7 +12,6 @@
 #include <chrono>
 #include <cstdlib>
 #include <optional>
-#include <ostream>
 #include <string>
 
 #ifdef NOOF
@@ -208,7 +207,6 @@ class App {
 	u32 width         = 0;
 	u32 height        = 0;
 	u64 fps           = 60;
-	u8 cull           = 0;
 	u8 polygonMode    = 0;
 	f64 orbitAngle    = 0;
 	u8 gameSpeed      = 1;
@@ -219,6 +217,8 @@ class App {
 	std::optional<Vec3> selectedView  = std::nullopt;
 	std::optional<u32> selectedEnemyI = std::nullopt;
 	OpenGL::Camera camera;
+
+	OpenGL::Cull cull;
 
 	Clock::time_point lastFrameTime         = Clock::now();
 	TowerDefense::Stats::TimeMs deltaTimeMs = 0;

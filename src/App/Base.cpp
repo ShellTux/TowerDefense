@@ -187,6 +187,7 @@ void App::printStats() const
 	   << field.getCannonsSize() << "/"
 	   << field.getCannonsSize() + field.getRemainingCannons() << std::endl;
 	os << "Camera: " << camera << std::endl;
+	os << "Cull: " << cull << std::endl;
 	os << "---------------------------------" << std::endl;
 	os << std::endl;
 

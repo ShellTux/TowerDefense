@@ -26,6 +26,7 @@ SRC = \
       ./src/Primitives/3D/core.cpp \
       ./src/Primitives/2D/core.cpp \
       ./src/OpenGL/Camera.cpp \
+      ./src/OpenGL/Cull.cpp \
       ./src/OpenGL/Material.cpp \
       ./src/App/Base.cpp \
       ./src/App/App.cpp \

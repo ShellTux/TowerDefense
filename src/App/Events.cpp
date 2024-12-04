@@ -4,7 +4,6 @@
 #include "types.hpp"
 
 #include <GL/gl.h>
-#include <iostream>
 #include <optional>
 
 #ifdef NOOF
@@ -60,24 +59,8 @@ void App::KeyPress(const Key key)
 	} break;
 
 	case Key::KeyC: {
-		cull = (cull + 1) % 4;
-		switch (cull) {
-		case 0: {
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_FRONT);
-		} break;
-		case 1: {
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK);
-		} break;
-		case 2: {
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_FRONT_AND_BACK);
-		} break;
-		case 3: {
-			glDisable(GL_CULL_FACE);
-		} break;
-		}
+		cull += 1;
+		cull.apply();
 	}; break;
 	case Key::KeyT: {
 		polygonMode = (polygonMode + 1) % 2;

@@ -124,6 +124,7 @@ void App::setup()
 	std::cout << "\033[2J\033[H";
 
 	camera.perspective(30, 45, 45);
+	cull.apply();
 
 	glEnable(GL_DEPTH_TEST);
 }
