@@ -13,17 +13,17 @@
 
 void App::KeyPress(const Key key)
 {
-	if (key == Key::KeyP) {
-		if (pause) {
-			lastFrameTime = Clock::now();
-		}
-
-		pause = !pause;
-	}
-
 	switch (key) {
 	case Key::KeyNone:
 		return;
+
+	case Key::KeyP: {
+		pause = !pause;
+
+		if (!pause) {
+			lastFrameTime = Clock::now();
+		}
+	} break;
 
 	case Key::KeyS:
 	case Key::KeyDown: {
@@ -143,7 +143,6 @@ void App::KeyPress(const Key key)
 	case Key::KeyE:
 	case Key::KeyY:
 	case Key::KeyO:
-	case Key::KeyP:
 	case Key::KeyF:
 	case Key::KeyG:
 	case Key::KeyH:
