@@ -20,10 +20,11 @@ namespace TowerDefense {
 
 std::ostream &operator<<(std::ostream &os, const Cannon &cannon)
 {
-	os << "Cannon: " << cannon.gridPosition << ", angle: " << cannon.angle
-	   << ", cooldown: " << static_cast<int>(cannon.cooldownMs)
-	   << ", shotDamage: " << static_cast<int>(cannon.shotDamage) << ", "
-	   << cannon.currentTier << ", " << cannon.currentLevel;
+	os << "Cannon: " << cannon.gridPosition << " ; ";
+	os << "ϑ " << cannon.angle << " ; ";
+	os << "󰚭 " << static_cast<int>(cannon.cooldownMs) << " ; ";
+	os << "⁍ " << static_cast<int>(cannon.shotDamage) << " ; ";
+	os << cannon.currentTier << ", " << cannon.currentLevel;
 	return os;
 }
 

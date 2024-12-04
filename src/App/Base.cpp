@@ -175,18 +175,17 @@ void App::printStats() const
 	std::cout << "\033[H";
 
 	os << "-------Tower Defense Stats-------" << std::endl;
-	os << "\033[5m" << "\033[35m" << "Wave " << field.getWave() << "\033[0m"
+	os << "\033[5m" << "\033[35m" << "🌊 " << field.getWave() << "\033[0m"
 	   << std::endl;
-	os << "Points: " << field.getPoints() << std::endl;
-	os << "Tower Health(%): " << field.getTower().getHealthRatio() * 100
-	   << "%" << std::endl;
-	os << "[X] Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
-	os << "[I] Selected Position: " << field.infoAtSelectedPosition()
-	   << std::endl;
+	os << "󰫢 " << field.getPoints() << std::endl;
+	os << " " << field.getTower().getHealthRatio() * 100 << "%";
+	os << std::endl;
+	os << "[X] 󰓅 " << static_cast<int>(gameSpeed) << std::endl;
+	os << "[I] 󰋇 " << field.infoAtSelectedPosition() << std::endl;
 	os << "(Enemies/Cannons/Cannons Max): " << field.getEnemiesSize() << "/"
 	   << field.getCannonsSize() << "/"
 	   << field.getCannonsSize() + field.getRemainingCannons() << std::endl;
-	os << "[V] Camera: " << camera << std::endl;
+	os << "[V]  " << camera << std::endl;
 	os << "[C] Cull: " << cull << std::endl;
 	os << "[T] PolygonMode: " << polygonMode << std::endl;
 	os << "---------------------------------" << std::endl;

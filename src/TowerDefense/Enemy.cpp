@@ -17,10 +17,10 @@ namespace TowerDefense {
 
 std::ostream &operator<<(std::ostream &os, const Enemy &enemy)
 {
-	os << "Enemy: " << enemy.getPosition()
-	   << ", speed: " << enemy.getSpeedUpMs()
-	   << ", health: " << static_cast<int>(enemy.getHealth())
-	   << ", points: " << static_cast<int>(enemy.getPoints());
+	os << "Enemy: " << enemy.getPosition() << " ; ";
+	os << "󰓅 " << enemy.getSpeedUpMs();
+	os << " " << static_cast<int>(enemy.getHealth());
+	os << "󰫢 " << static_cast<int>(enemy.getPoints());
 	return os;
 }
 
