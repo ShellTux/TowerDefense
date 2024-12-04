@@ -1,9 +1,13 @@
-CXX       = clang++
-CXXFLAGS += -Wall -Wextra -Werror -std=c++17
-CXXFLAGS += -Wno-error=unused-variable
-CXXFLAGS += -Wno-error=unused-but-set-variable
-CXXFLAGS += -DNOOF
-CXXFLAGS += -I$(shell realpath include)
+CC  ?= clang
+CXX ?= clang++
+
+CFLAGS += -Wall -Wextra -Werror
+CFLAGS += -Wno-error=unused-variable
+CFLAGS += -Wno-error=unused-but-set-variable
+CFLAGS += -DNOOF
+CFLAGS += -I$(shell realpath include)
+
+CXXFLAGS += $(CFLAGS) -std=c++17
 
 LDFLAGS = -lm -lGL -lGLU -lglfw
 
@@ -13,8 +17,7 @@ TARGET = td
 SRC = \
       ./src/main.cpp \
       ./src/types.cpp \
-      ./src/stb_image.cpp \
-      ./src/AssetManager.cpp \
+      ./src/stb_image.c \
       ./src/Texture.cpp \
       ./src/Math.cpp \
       ./src/Color.cpp \
