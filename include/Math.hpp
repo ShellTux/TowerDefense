@@ -10,8 +10,8 @@ namespace Math {
 constexpr f64 PId = 3.14159265358979323846;
 constexpr f32 PIf = f32(PId);
 
-f64 radiansToDegrees(const f64 radians);
-f64 degreesToRadians(const f64 degrees);
+f64 R2D(const f64 radians);
+f64 D2R(const f64 degrees);
 
 } // namespace Math
 

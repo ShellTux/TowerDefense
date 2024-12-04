@@ -4,6 +4,7 @@
 #include "types.hpp"
 
 #include <GL/gl.h>
+#include <iostream>
 #include <optional>
 
 #ifdef NOOF
@@ -92,14 +93,10 @@ void App::KeyPress(const Key key)
 
 	} break;
 	case Key::KeyV: {
-		view += 1;
+		camera += 1;
 	} break;
 	case Key::KeyM: {
 		focusMinimap = !focusMinimap;
-	} break;
-	case Key::KeyR: {
-		view.reset();
-		focusMinimap = false;
 	} break;
 	case Key::KeyX: {
 		gameSpeed *= 2;
@@ -110,27 +107,36 @@ void App::KeyPress(const Key key)
 	case Key::KeyL: {
 		lighting = (lighting + 1) % 2;
 	} break;
+	case Key::KeyR: {
+		selectedView   = std::nullopt;
+		selectedEnemyI = std::nullopt;
+		camera.reset();
+	} break;
 	case Key::KeyK: {
 		if (selectedView.has_value()) {
 			selectedView = std::nullopt;
-			break;
+		} else {
+			selectedView
+			    = field.getSelectedPosition() + Vec3(0, 0, .5);
 		}
 
-		selectedView = field.getSelectedPosition() + Vec3(0, 0, .5);
+		if (selectedView.has_value()) {
+			camera.setTarget(selectedView->transpose2D());
+			camera.setRadius(2);
+		} else {
+			camera.setTarget();
+			camera.setRadius();
+		}
 	} break;
 	case Key::KeyJ: {
-		selectedEnemyIndex
-		    = static_cast<i64>(selectedEnemyIndex.value_or(-1)) + 1;
+		selectedEnemyI
+		    = static_cast<i64>(selectedEnemyI.value_or(-1)) + 1;
 	} break;
 	case Key::KeyKPSubtract: {
-		if (view.radius < 30) {
-			view.radius += 1;
-		}
+		camera.zoomIn(-1);
 	} break;
 	case Key::KeyKPAdd: {
-		if (view.radius > 1) {
-			view.radius -= 1;
-		}
+		camera.zoomIn(1);
 	} break;
 
 	case Key::KeyQ:
@@ -235,6 +241,5 @@ void App::KeyRelease(const Key key)
 
 void App::MouseScroll(const f64 xoffset, const f64 yoffset)
 {
-	view.freeViewAzimuthal += xoffset;
-	view.freeViewPolar     += yoffset;
+	camera.orbit(xoffset, yoffset);
 }

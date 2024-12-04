@@ -1,9 +1,8 @@
 #include "App.hpp"
 
 #include "Math.hpp"
-#include "OpenGL/camera.hpp"
+#include "OpenGL/Camera.hpp"
 #include "TowerDefense/Enemy.hpp"
-#include "Vec3.hpp"
 #include "types.hpp"
 
 #include <GL/gl.h>
@@ -12,15 +11,15 @@
 #include <iostream>
 #include <optional>
 
-struct Rect {
-	int x;
-	int y;
-	int w;
-	int h;
-};
-
 void App::drawMinimap()
 {
+	struct Rect {
+		int x;
+		int y;
+		int w;
+		int h;
+	};
+
 	const Rect viewport = focusMinimap
 			? (Rect){
 				.x = static_cast<int>(width * 1/6),
@@ -36,7 +35,7 @@ void App::drawMinimap()
 			}
 			;
 
-	const auto [rows, cols] = field.getMapDimensions();
+	const auto &[rows, cols] = field.getMapDimensions();
 
 	glPushAttrib(glMask);
 	{
@@ -75,40 +74,31 @@ void App::drawField()
 		} break;
 		}
 
+		glViewport(0, 0, i32(width), i32(height));
+
 		glPushMatrix();
 		{
-			glViewport(0, 0, i32(width), i32(height));
+			if (selectedEnemyI.has_value()) {
+				using TowerDefense::Enemy;
 
-			OpenGL::Perspective(30, 45, 45);
+				const usize enemyI = selectedEnemyI.value();
 
-			const auto &[rows, cols] = field.getMapDimensions();
+				const std::optional<Enemy> &enemy
+				    = field.getEnemy(enemyI);
 
-			if (!selectedEnemyIndex.has_value()) {
-				view.lookAt(selectedView,
-				            {.5 * f64(cols), .5 * f64(rows)},
-				            f64(cols + rows) * .5,
-				            orbitAngle,
-				            Math::PId / 6);
-			} else {
-				const std::optional<TowerDefense::Enemy> enemy
-				    = field.getEnemy(
-				        selectedEnemyIndex.value());
-
-				if (!enemy.has_value()
-				    || enemy->getPosition() < 0) {
-					selectedEnemyIndex = std::nullopt;
-					selectedView       = std::nullopt;
-					view.reset();
+				if (enemy.has_value()
+				    && enemy->getPosition() > 0) {
+					camera.setTarget(
+					    enemy->getPathInfo()
+					        .pos.transpose2D());
 				} else {
-					selectedView = enemy->getPathInfo().pos;
-					view.lookAt(
-					    selectedView,
-					    {.5 * f64(cols), .5 * f64(rows)},
-					    f64(cols + rows) * .5,
-					    orbitAngle,
-					    Math::PId / 6);
+					selectedEnemyI = std::nullopt;
+					selectedView   = std::nullopt;
+					camera.reset();
 				}
 			}
+
+			camera.apply();
 
 			field.draw();
 		}
@@ -133,6 +123,8 @@ void App::setup()
 {
 	std::cout << "\033[2J\033[H";
 
+	camera.perspective(30, 45, 45);
+
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -143,6 +135,9 @@ void App::update()
 	orbitAngle += .01;
 	while (orbitAngle >= 2 * Math::PId) {
 		orbitAngle -= 2 * Math::PId;
+	}
+	while (orbitAngle < 0) {
+		orbitAngle += 2 * Math::PId;
 	}
 
 	for (u8 i = 0; i < gameSpeed * static_cast<u8>(!pause); ++i) {
@@ -171,4 +166,7 @@ void App::updateDimensions(const u32 width, const u32 height)
 {
 	this->width  = width;
 	this->height = height;
+
+	camera.setWidthHeight(width, height);
+	camera.perspective(30, 45, 45);
 }

@@ -22,7 +22,7 @@ SRC = \
       ./src/OBJModel.cpp \
       ./src/Primitives/3D/core.cpp \
       ./src/Primitives/2D/core.cpp \
-      ./src/OpenGL/camera.cpp \
+      ./src/OpenGL/Camera.cpp \
       ./src/OpenGL/Material.cpp \
       ./src/App/Base.cpp \
       ./src/App/App.cpp \

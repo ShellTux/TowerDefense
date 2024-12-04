@@ -1,6 +1,4 @@
 #include "App.hpp"
-#include "Math.hpp"
-#include "OpenGL/camera.hpp"
 #include "Texture.hpp"
 #include "TowerDefense/Field.hpp"
 #include "Vec3.hpp"
@@ -11,7 +9,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
-#include <optional>
+#include <sstream>
 #include <string>
 
 #ifdef NOOF
@@ -33,6 +31,12 @@ App::App(const std::string &title,
     : width(width)
     , height(height)
     , windowTitle(title)
+    , camera({f64(fieldCols) * .5, f64(fieldRows) * .5},
+             f64(fieldCols + fieldRows) * .5,
+             width,
+             height,
+             false,
+             true)
     , field(TowerDefense::Field::Generate(fieldRows, fieldCols, fieldWaves))
 {
 	using std::srand, std::time;
@@ -122,8 +126,8 @@ void App::FramebufferCallback(GLFWwindow *window,
 
 	App *app = App::allApps.at(window);
 	assert(app != nullptr);
-	app->width  = width;
-	app->height = height;
+
+	app->updateDimensions(width, height);
 }
 
 void App::KeyCallback(GLFWwindow *window,
@@ -163,270 +167,66 @@ void App::ScrollCallback(GLFWwindow *window,
 
 void App::printStats() const
 {
+	std::ostringstream os;
+	static std::string lines{};
+
+	std::cout << "\033[H" << lines;
+
 	std::cout << "\033[H";
 
-	std::cout << "-------Tower Defense Stats-------" << std::endl;
-	std::cout << "\033[5m" << "\033[35m" << "Wave " << field.getWave()
-	          << "\033[0m" << std::endl;
-	std::cout << "Points: " << field.getPoints() << std::endl;
-	std::cout << "Tower Health(%): "
-	          << field.getTower().getHealthRatio() * 100 << "%"
-	          << std::endl;
-	std::cout << "Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
-	std::cout << "Selected Position: " << field.infoAtSelectedPosition()
-	          << std::endl;
-	std::cout << "(Enemies/Cannons/Cannons Max): " << field.getEnemiesSize()
-	          << "/" << field.getCannonsSize() << "/"
-	          << field.getCannonsSize() + field.getRemainingCannons()
-	          << std::endl;
-	std::cout << "View: " << view << " " << selectedView << std::endl;
-	std::cout << "---------------------------------" << std::endl;
-	std::cout << std::endl;
+	os << "-------Tower Defense Stats-------" << std::endl;
+	os << "\033[5m" << "\033[35m" << "Wave " << field.getWave() << "\033[0m"
+	   << std::endl;
+	os << "Points: " << field.getPoints() << std::endl;
+	os << "Tower Health(%): " << field.getTower().getHealthRatio() * 100
+	   << "%" << std::endl;
+	os << "Game Speed: " << static_cast<int>(gameSpeed) << std::endl;
+	os << "Selected Position: " << field.infoAtSelectedPosition()
+	   << std::endl;
+	os << "(Enemies/Cannons/Cannons Max): " << field.getEnemiesSize() << "/"
+	   << field.getCannonsSize() << "/"
+	   << field.getCannonsSize() + field.getRemainingCannons() << std::endl;
+	os << "Camera: " << camera << std::endl;
+	os << "---------------------------------" << std::endl;
+	os << std::endl;
 
-#define TOWER_DEFENSE_KEYS                                             \
-	"---------------------Tower Defense "                          \
-	"Keys---------------------------\n"                            \
-	"WASD               Move selected position\n"                  \
-	"Up,Left,Down,Right Move selected position\n"                  \
-	"1,2,3              Place Cannon at selected position of "     \
-	"tier A,B,C "                                                  \
-	"(respectively)\n"                                             \
-	"4/U                Upgrade Cannon at selected position\n"     \
-	"I                  Print Info at selected position (debug "   \
-	"mode).\n"                                                     \
-	"C                  Toggle between cull face modes (opengl "   \
-	"debug "                                                       \
-	"mode).\n"                                                     \
-	"T                  Toggle between polygon modes (opengl "     \
-	"debug "                                                       \
-	"mode).\n"                                                     \
-	"L                  Switch between lighting modes.\n"          \
-	"V                  Switch between views\n"                    \
-	"M                  Focus Minimap\n"                           \
-	"P                  Pause Game\n"                              \
-	"R                  Reset view and minimap focus to default\n" \
-	"------------------------------------------------------------" \
-	"------"
+	static const char *const TOWER_DEFENSE_KEYS
+	    = "---------------------Tower Defense "
+	      "Keys---------------------------\n"
+	      "WASD/↑←↓→          Move selected position\n"        
+	      "1,2,3              Place Cannon at selected position of tier "
+	      "A,B,C "
+	      "(respectively)\n"
+	      "4/U                Upgrade Cannon at selected position\n"
+	      "I                  Print Info at selected position (debug "
+	      "mode).\n"
+	      "C                  Toggle between cull face modes (opengl "
+	      "debug "
+	      "mode).\n"
+	      "T                  Toggle between polygon modes (opengl "
+	      "debug "
+	      "mode).\n"
+	      "L                  Switch between lighting modes.\n"
+	      "V                  Switch between views\n"
+	      "M                  Focus Minimap\n"
+	      "P                  Pause Game\n"
+	      "R                  Reset view and minimap focus to default\n"
+	      "------------------------------------------------------------"
+	      "------";
 
-	std::cout << TOWER_DEFENSE_KEYS << std::endl;
-#undef TOWER_DEFENSE_KEYS
-}
+	os << TOWER_DEFENSE_KEYS << std::endl;
 
-App::Look &App::Look::operator+=(const usize i)
-{
-	for (usize j = 0; j < i; ++j) {
-		switch (value) {
-		case Front3rd: {
-			value = Left3rd;
-		} break;
-		case Left3rd: {
-			value = Back3rd;
-		} break;
-		case Back3rd: {
-			value = Right3rd;
-		} break;
-		case Right3rd: {
-			value = Above3rd;
-		} break;
-		case Above3rd: {
-			value = Below3rd;
-		} break;
-		case Below3rd: {
-			value = OrbitHorizontal3rd;
-		} break;
-		case OrbitHorizontal3rd: {
-			value = OrbitVertical3rd;
-		} break;
-		case OrbitVertical3rd: {
-			value = FreeView3rd;
-		} break;
-		case FreeView3rd: {
-			value = FirstView;
-		} break;
-		case FirstView:
-			value = Front3rd;
-			break;
+	if (os.str().size() > lines.size()) {
+		lines = os.str();
+
+		for (char &c : lines) {
+			if (c != '\n') {
+				c = ' ';
+			}
 		}
 	}
 
-	return *this;
-}
-
-void App::Look::lookAt(const std::optional<Vec3> &pos,
-                       const Vec3 orbitCenter,
-                       const f64 orbitRadius,
-                       const f64 azimuthalAngle,
-                       const f64 polarAngle) const
-{
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	static Vec3 camera;
-	static Vec3 target;
-	static Vec3 up = {0, 0, -1};
-
-	if (pos.has_value()) {
-		const Vec3 realPos               = pos->transpose2D();
-		static constexpr f64 targetAngle = 0;
-
-		// NOTE: Target
-		switch (value) {
-		case Front3rd:
-		case Left3rd:
-		case Back3rd:
-		case Right3rd:
-		case Above3rd:
-		case Below3rd:
-		case OrbitHorizontal3rd:
-		case OrbitVertical3rd:
-		case FreeView3rd: {
-			target = realPos;
-		} break;
-		case FirstView: {
-			target = realPos - Vec3(0, 0, -.5)
-			         + Vec3::Polar2D(targetAngle) * 2;
-		} break;
-		}
-
-		// NOTE: Camera
-		switch (value) {
-		case Front3rd: {
-			camera
-			    = realPos
-			      + Vec3::Polar3D(3 * Math::PId / 2, Math::PId / 4)
-			            * radius;
-		} break;
-		case Left3rd: {
-			camera = realPos
-			         + Vec3::Polar3D(Math::PId, Math::PId / 4)
-			               * radius;
-		} break;
-		case Back3rd: {
-			camera = realPos
-			         + Vec3::Polar3D(Math::PId / 2, Math::PId / 4)
-			               * radius;
-		} break;
-		case Right3rd: {
-			camera = realPos
-			         + Vec3::Polar3D(0, Math::PId / 4) * radius;
-		} break;
-		case Above3rd: {
-			camera
-			    = realPos
-			      + Vec3::Polar3D(3 * Math::PId / 2, Math::PId / 4)
-			            * radius;
-		} break;
-		case Below3rd: {
-			camera
-			    = realPos
-			      + Vec3::Polar3D(3 * Math::PId / 2, -Math::PId / 4)
-			            * radius;
-		} break;
-		case OrbitHorizontal3rd: {
-			camera = realPos
-			         + Vec3::Polar3D(azimuthalAngle, Math::PId / 4)
-			               * radius;
-		} break;
-		case OrbitVertical3rd: {
-			camera = realPos
-			         + Vec3::Polar3D(3 * Math::PId / 2, polarAngle)
-			               * radius;
-		} break;
-		case FreeView3rd: {
-			camera
-			    = realPos
-			      + Vec3::Polar3D(freeViewAzimuthal, freeViewPolar)
-			            * radius;
-		} break;
-		case FirstView: {
-			camera = realPos + Vec3::Polar2D(targetAngle);
-		} break;
-		}
-
-		OpenGL::Camera::LookAt(camera, target, up);
-		return;
-	}
-
-	// NOTE: Target
-	switch (value) {
-	case Front3rd:
-	case Left3rd:
-	case Back3rd:
-	case Right3rd:
-	case Above3rd:
-	case Below3rd:
-	case OrbitHorizontal3rd:
-	case OrbitVertical3rd:
-	case FreeView3rd: {
-		target = orbitCenter;
-	} break;
-	case FirstView:
-		break;
-	}
-
-	// NOTE: Camera
-	switch (value) {
-	case Front3rd: {
-		camera
-		    = orbitCenter
-		      + Vec3::Polar3D(Math::PId / 2, polarAngle) * orbitRadius;
-	} break;
-	case Left3rd: {
-		camera = orbitCenter
-		         + Vec3::Polar3D(2 * Math::PId / 2, polarAngle)
-		               * orbitRadius;
-	} break;
-	case Back3rd: {
-		camera = orbitCenter
-		         + Vec3::Polar3D(3 * Math::PId / 2, polarAngle)
-		               * orbitRadius;
-	} break;
-	case Right3rd: {
-		camera
-		    = orbitCenter
-		      + Vec3::Polar3D(2 * Math::PId, polarAngle) * orbitRadius;
-	} break;
-	case Above3rd: {
-		camera = orbitCenter
-		         + Vec3::Polar3D(0, Math::PId / 2) * orbitRadius;
-	} break;
-	case Below3rd: {
-		camera = orbitCenter
-		         + Vec3::Polar3D(0, 3 * Math::PId / 2) * orbitRadius;
-	} break;
-	case OrbitHorizontal3rd: {
-		camera
-		    = orbitCenter
-		      + Vec3::Polar3D(azimuthalAngle, polarAngle) * orbitRadius;
-	} break;
-	case OrbitVertical3rd: {
-		// TODO: Vertical Orbit
-		camera
-		    = orbitCenter
-		      + Vec3::Polar3D(polarAngle, azimuthalAngle) * orbitRadius;
-	} break;
-	case FreeView3rd: {
-		camera
-		    = orbitCenter
-		      + (pos.has_value()
-		             ? Vec3::Polar3D(azimuthalAngle, polarAngle)
-		             : Vec3::Polar3D(freeViewAzimuthal, freeViewPolar))
-		            * orbitRadius;
-	} break;
-	case FirstView: {
-	} break;
-	}
-
-	OpenGL::Camera::LookAt(camera, target, up);
-}
-
-App::Look &App::Look::reset()
-{
-	value             = Front3rd;
-	freeViewAzimuthal = 0;
-	freeViewPolar     = Math::PId / 4;
-
-	return *this;
+	std::cout << os.str();
 }
 
 #ifdef NOOF

@@ -137,7 +137,7 @@ void Cannon::updateAngle(const Enemy &target)
 	const Vec3 delta = target.getPathInfo().pos - gridPosition;
 	const auto &[deltaY, deltaX, _] = delta.getCoordinates();
 
-	angle = Math::radiansToDegrees(std::atan2(deltaY, deltaX));
+	angle = Math::R2D(std::atan2(deltaY, deltaX));
 }
 
 std::optional<Enemy *>
