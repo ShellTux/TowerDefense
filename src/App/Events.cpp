@@ -63,17 +63,8 @@ void App::KeyPress(const Key key)
 		cull.apply();
 	}; break;
 	case Key::KeyT: {
-		polygonMode = (polygonMode + 1) % 2;
-
-		switch (polygonMode) {
-		case 0: {
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		} break;
-		case 1: {
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		} break;
-		}
-
+		polygonMode += 1;
+		polygonMode.apply();
 	} break;
 	case Key::KeyV: {
 		camera += 1;

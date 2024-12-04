@@ -3,6 +3,7 @@
 
 #include "OpenGL/Camera.hpp"
 #include "OpenGL/Cull.hpp"
+#include "OpenGL/PolygonMode.hpp"
 #include "TowerDefense/Field.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
@@ -207,7 +208,6 @@ class App {
 	u32 width         = 0;
 	u32 height        = 0;
 	u64 fps           = 60;
-	u8 polygonMode    = 0;
 	f64 orbitAngle    = 0;
 	u8 gameSpeed      = 1;
 	u8 maxGameSpeed   = 16;
@@ -219,6 +219,8 @@ class App {
 	OpenGL::Camera camera;
 
 	OpenGL::Cull cull;
+
+	OpenGL::PolygonMode polygonMode;
 
 	Clock::time_point lastFrameTime         = Clock::now();
 	TowerDefense::Stats::TimeMs deltaTimeMs = 0;

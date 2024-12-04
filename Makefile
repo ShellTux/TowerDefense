@@ -28,6 +28,7 @@ SRC = \
       ./src/OpenGL/Camera.cpp \
       ./src/OpenGL/Cull.cpp \
       ./src/OpenGL/Material.cpp \
+      ./src/OpenGL/PolygonMode.cpp \
       ./src/App/Base.cpp \
       ./src/App/App.cpp \
       ./src/App/Events.cpp \
