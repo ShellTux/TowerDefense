@@ -31,12 +31,12 @@ std::ostream &operator<<(std::ostream &os, const Cannon &cannon)
 std::ostream &operator<<(std::ostream &os,
                          const std::optional<Cannon> &cannonOpt)
 {
-	if (!cannonOpt.has_value()) {
-		os << "No Cannon";
-		return os;
+	if (cannonOpt.has_value()) {
+		os << cannonOpt.value();
+	} else {
+		os << "Cannon(None)";
 	}
 
-	os << cannonOpt.value();
 	return os;
 }
 

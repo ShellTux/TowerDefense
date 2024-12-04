@@ -8,6 +8,7 @@
 #include "types.hpp"
 
 #include <GL/gl.h>
+#include <optional>
 #include <ostream>
 #include <vector>
 
@@ -55,6 +56,8 @@ class Enemy {
 	~Enemy()                        = default;
 
 	friend std::ostream &operator<<(std::ostream &os, const Enemy &enemy);
+	friend std::ostream &operator<<(std::ostream &os,
+	                                const std::optional<Enemy> &enemy);
 
 	void draw() const;
 	void update(const Stats::TimeMs deltaTimeMs);

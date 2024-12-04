@@ -10,6 +10,8 @@
 #include <GL/gl.h>
 #include <algorithm>
 #include <cstdlib>
+#include <ios>
+#include <optional>
 #include <ostream>
 #include <vector>
 
@@ -17,10 +19,28 @@ namespace TowerDefense {
 
 std::ostream &operator<<(std::ostream &os, const Enemy &enemy)
 {
+	os.precision(2);
+
+	os << std::fixed;
+
 	os << "Enemy: " << enemy.getPosition() << " ; ";
-	os << "󰓅 " << enemy.getSpeedUpMs();
-	os << " " << static_cast<int>(enemy.getHealth());
+	os << "󰓅 " << enemy.getSpeedUpMs() << " ; ";
+	os << " " << static_cast<int>(enemy.getHealth()) << " ; ";
 	os << "󰫢 " << static_cast<int>(enemy.getPoints());
+
+	os << std::defaultfloat;
+
+	return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const std::optional<Enemy> &enemy)
+{
+	if (enemy.has_value()) {
+		os << enemy.value();
+	} else {
+		os << "Enemy(None)";
+	}
+
 	return os;
 }
 

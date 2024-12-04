@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <string>
 
@@ -185,6 +186,14 @@ void App::printStats() const
 	os << "(Enemies/Cannons/Cannons Max): " << field.getEnemiesSize() << "/"
 	   << field.getCannonsSize() << "/"
 	   << field.getCannonsSize() + field.getRemainingCannons() << std::endl;
+
+	os << "Closest enemy: ";
+	auto enemy = field.getEnemy(0);
+	if (enemy.has_value() && enemy->getPosition() < 0) {
+		enemy = std::nullopt;
+	}
+	os << enemy << std::endl;
+
 	os << "[V]  " << camera << std::endl;
 	os << "[C] Cull: " << cull << std::endl;
 	os << "[T] PolygonMode: " << polygonMode << std::endl;

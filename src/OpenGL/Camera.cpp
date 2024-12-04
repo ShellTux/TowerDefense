@@ -82,7 +82,11 @@ Camera &Camera::operator+=(const usize i)
 
 std::ostream &operator<<(std::ostream &os, const Camera &camera)
 {
+	os.precision(2);
+
+	os << std::fixed;
 	os << "󰓾 " << camera.mTarget << " ; ";
+
 	os << "r: " << camera.radius << " (";
 	os << "φ: " << Math::R2D(camera.azimuthalAngle) << ", ";
 	os << "ϑ: " << Math::R2D(camera.polarAngle) << ")" << " ; ";
