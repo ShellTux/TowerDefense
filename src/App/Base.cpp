@@ -13,12 +13,12 @@
 #include <sstream>
 #include <string>
 
+bool texturesNeedReload = false;
+
 #ifdef NOOF
 	#include <GLFW/glfw3.h>
 	#include <chrono>
 	#include <thread>
-
-bool texturesNeedReload = false;
 
 App::WindowMap App::allApps{};
 #endif
