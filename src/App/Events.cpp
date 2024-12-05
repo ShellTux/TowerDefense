@@ -89,15 +89,11 @@ void App::KeyPress(const Key key)
 	case Key::KeyK: {
 		if (selectedView.has_value()) {
 			selectedView = std::nullopt;
-		} else {
-			selectedView
-			    = field.getSelectedPosition() + Vec3(0, 0, .5);
-		}
-
-		if (selectedView.has_value()) {
 			camera.setTarget(selectedView->transpose2D());
 			camera.setRadius(2);
 		} else {
+			selectedView
+			    = field.getSelectedPosition() + Vec3(0, 0, .5);
 			camera.setTarget();
 			camera.setRadius();
 		}
