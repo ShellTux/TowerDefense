@@ -24,7 +24,7 @@ std::ostream &operator<<(std::ostream &os, const Enemy &enemy)
 	os << std::fixed;
 
 	os << "Enemy: " << enemy.getPosition() << " ; ";
-	os << "󰓅 " << enemy.getSpeedUpMs() << " ; ";
+	os << "󰓅 " << enemy.getSpeedUpMs() * 1e3 << " ; ";
 	os << " " << static_cast<int>(enemy.getHealth()) << " ; ";
 	os << "󰫢 " << static_cast<int>(enemy.getPoints());
 
