@@ -73,4 +73,11 @@ void Cull::apply() const
 	}
 }
 
+Cull &Cull::setCullingFace(const enum Culling &cull)
+{
+	culling = cull;
+
+	return *this;
+}
+
 } // namespace OpenGL

@@ -29,6 +29,8 @@ class Cull {
 
 	void apply() const;
 
+	Cull &setCullingFace(const enum Culling &cull);
+
       private:
 	enum Culling culling { Front };
 };

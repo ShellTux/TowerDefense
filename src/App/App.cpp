@@ -2,6 +2,7 @@
 
 #include "Math.hpp"
 #include "OpenGL/Camera.hpp"
+#include "OpenGL/Cull.hpp"
 #include "TowerDefense/Enemy.hpp"
 #include "types.hpp"
 
@@ -122,6 +123,9 @@ void App::drawHUD()
 void App::setup()
 {
 	std::cout << "\033[2J\033[H";
+
+	// HACK: Need to figure why culling is f*cked up
+	cull.setCullingFace(OpenGL::Cull::Disabled);
 
 	camera.perspective(30, 45, 45);
 	cull.apply();
