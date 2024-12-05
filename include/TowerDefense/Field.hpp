@@ -1,6 +1,10 @@
 #ifndef INCLUDE_TOWERDEFENSE_FIELD_HPP_
 #define INCLUDE_TOWERDEFENSE_FIELD_HPP_
 
+#ifndef NOOF
+	#include "ofMain.h"
+#endif
+
 #include "TowerDefense/Cannon.hpp"
 #include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"

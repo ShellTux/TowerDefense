@@ -74,7 +74,9 @@ class Texture {
 
 	void reload() const;
 
+#ifdef NOOF
 	[[nodiscard]] GLuint getRenderId() const;
+#endif
 	[[nodiscard]] std::filesystem::path getPath() const;
 
       private:

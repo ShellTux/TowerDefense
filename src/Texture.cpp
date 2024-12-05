@@ -1,3 +1,7 @@
+#ifndef NOOF
+	#include "ofMain.h"
+#endif
+
 #include "Texture.hpp"
 
 #include "types.hpp"
@@ -18,8 +22,10 @@ operator<<(std::ostream &os,
 {
 	os << "{" << std::endl;
 	for (const auto &[path, texture] : textures) {
-		os << "  - " << texture.getPath() << " ("
-		   << texture.getRenderId() << ")" << std::endl;
+		os << "  - " << texture.getPath();
+#ifdef NOOF
+		os << " (" << texture.getRenderId() << ")" << std::endl;
+#endif
 	}
 	os << "}";
 
@@ -138,14 +144,16 @@ void Texture::reload() const
 
 	Unbind();
 #else
-	image.load(path);
+	// image.load(path);
 #endif
 }
 
+#ifdef NOOF
 GLuint Texture::getRenderId() const
 {
 	return renderId;
 }
+#endif
 
 std::filesystem::path Texture::getPath() const
 {

@@ -17,7 +17,7 @@ TARGET = td
 SRC = \
       ./src/main.cpp \
       ./src/types.cpp \
-      ./src/stb_image.c \
+      ./src/stb_image.cpp \
       ./src/Texture.cpp \
       ./src/Math.cpp \
       ./src/Color.cpp \
