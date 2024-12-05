@@ -29,14 +29,20 @@ operator<<(std::ostream &os,
 Texture::Texture(const std::filesystem::path &path)
     : path(path)
 {
+#ifdef NOOF
 	glGenTextures(1, &renderId);
 
 	reload();
+#else
+	image.load(path);
+#endif
 }
 
 Texture::~Texture()
 {
+#ifdef NOOF
 	glDeleteTextures(1, &renderId);
+#endif
 }
 
 void Texture::UnBind()
@@ -94,8 +100,12 @@ Texture &Texture::Get(const std::filesystem::path &path)
 
 void Texture::Bind(const u8 slot) const
 {
+#ifdef NOOF
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, renderId);
+#else
+	image.bind();
+#endif
 }
 
 void Texture::Unbind() const
@@ -105,6 +115,7 @@ void Texture::Unbind() const
 
 void Texture::reload() const
 {
+#ifdef NOOF
 	struct Image image(path);
 
 	Bind();
@@ -126,6 +137,9 @@ void Texture::reload() const
 	             image.data);
 
 	Unbind();
+#else
+	image.load(path);
+#endif
 }
 
 GLuint Texture::getRenderId() const

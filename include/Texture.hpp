@@ -1,6 +1,10 @@
 #ifndef INCLUDE_INCLUDE_TEXTURE_HPP_
 #define INCLUDE_INCLUDE_TEXTURE_HPP_
 
+#ifndef NOOF
+	#include "ofMain.h"
+#endif
+
 #include "Color.hpp"
 #include "stb_image.h"
 #include "types.hpp"
@@ -76,7 +80,11 @@ class Texture {
       private:
 	Texture(const std::filesystem::path &path);
 
+#ifdef NOOF
 	GLuint renderId{};
+#else
+	ofImage image;
+#endif
 	std::filesystem::path path;
 };
 
