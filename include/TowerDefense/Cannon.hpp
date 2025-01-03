@@ -9,6 +9,7 @@
 #include "types.hpp"
 
 #include <GL/gl.h>
+#include <functional>
 #include <optional>
 #include <ostream>
 #include <vector>
@@ -17,6 +18,8 @@ namespace TowerDefense {
 
 class Cannon {
       public:
+	using EnemyR = std::optional<std::reference_wrapper<Enemy>>;
+
 	Cannon(const Stats::Tier &tier, const Vec3 &gridPosition)
 	    : gridPosition(gridPosition)
 	    , currentTier(tier)
@@ -66,7 +69,7 @@ class Cannon {
 	void updateAngle(const Enemy &target);
 	void updateStats();
 
-	[[nodiscard]] std::optional<Enemy *>
+	[[nodiscard]] EnemyR
 	targetEnemy(const std::vector<Enemy> &enemies) const;
 };
 

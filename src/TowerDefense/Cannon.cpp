@@ -79,12 +79,12 @@ void Cannon::update(const Stats::TimeMs deltaTimeMs,
 {
 	cooldownMs = (deltaTimeMs > cooldownMs) ? 0 : cooldownMs - deltaTimeMs;
 
-	const std::optional<Enemy *> enemy = targetEnemy(enemies);
+	const EnemyR enemy = targetEnemy(enemies);
 	if (!enemy) {
 		return;
 	}
 
-	Enemy &target = *enemy.value();
+	Enemy &target = enemy.value();
 	updateAngle(target);
 	shot(target);
 }
@@ -162,8 +162,7 @@ void Cannon::updateAngle(const Enemy &target)
 	angle = Math::R2D(std::atan2(deltaY, deltaX));
 }
 
-std::optional<Enemy *>
-Cannon::targetEnemy(const std::vector<Enemy> &enemies) const
+Cannon::EnemyR Cannon::targetEnemy(const std::vector<Enemy> &enemies) const
 {
 	Enemy *target = nullptr;
 
@@ -192,7 +191,11 @@ Cannon::targetEnemy(const std::vector<Enemy> &enemies) const
 		target = const_cast<Enemy *>(&enemy);
 	}
 
-	return target == nullptr ? std::nullopt : std::make_optional(target);
+	if (target == nullptr) {
+		return std::nullopt;
+	}
+
+	return *target;
 }
 
 void Cannon::drawRange(const Vec3 &selectedGridPosition) const
