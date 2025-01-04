@@ -25,6 +25,7 @@
 			nativeBuildInputs = with pkgs; [
 				assimp
 				clang
+                                entr
 				freeglut
 				gcc
 				gcc
