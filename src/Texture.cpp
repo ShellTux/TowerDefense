@@ -3,7 +3,6 @@
 #endif
 
 #include "Texture.hpp"
-
 #include "types.hpp"
 
 #include <GL/gl.h>

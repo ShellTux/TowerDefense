@@ -202,7 +202,7 @@ void App::printStats() const
 
 	static const char *const TOWER_DEFENSE_KEYS
 	    = "---------------------Tower Defense Keys-----------------------\n"
-	      "WASD/↑←↓→    Move selected position\n"        
+	      "WASD/↑←↓→    Move selected position\n"
 	      "1,2,3        Place Cannon at selected position of tier A,B,C "
 	      "(respectively)\n"
 	      "4/U          Upgrade Cannon at selected position\n"
