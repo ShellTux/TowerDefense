@@ -39,6 +39,7 @@
 
 .clangd
 .direnv
+.gdb_history
 
 bin
 obj
