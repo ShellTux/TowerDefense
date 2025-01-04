@@ -7,7 +7,10 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <cmath>
+#include <ios>
 #include <ostream>
+#include <sstream>
+#include <string>
 
 namespace OpenGL {
 
@@ -95,6 +98,12 @@ std::ostream &operator<<(std::ostream &os, const Camera &camera)
 	os << "; xmax: " << camera.xmax << ", ymax: " << camera.ymax;
 #endif
 	return os;
+}
+
+std::string Camera::toString() const {
+    std::stringstream string;
+    string << *this;
+    return string.str();
 }
 
 void Camera::apply()

@@ -4,6 +4,8 @@
 
 #include <GL/gl.h>
 #include <ostream>
+#include <sstream>
+#include <string>
 
 namespace OpenGL {
 
@@ -43,6 +45,13 @@ std::ostream &operator<<(std::ostream &os, const PolygonMode &polygonMode)
 	}
 
 	return os;
+}
+
+std::string PolygonMode::toString() const
+{
+	std::stringstream string;
+	string << *this;
+	return string.str();
 }
 
 void PolygonMode::apply() const

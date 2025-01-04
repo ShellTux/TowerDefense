@@ -4,6 +4,8 @@ CXX = clang++
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -Wno-error=unused-variable
 CFLAGS += -Wno-error=unused-but-set-variable
+CFLAGS += -Wno-error=unused-result
+CFLAGS += -ggdb
 CFLAGS += -DNOOF
 CFLAGS += -I$(shell realpath include)
 
@@ -11,7 +13,7 @@ CXXFLAGS += $(CFLAGS) -std=c++17
 
 LDFLAGS = -lm -lGL -lGLU -lglfw
 
-all: td
+HEADERS = $(shell find $(INCLUDE_DIR) -name '*.h')
 
 TARGET = td
 SRC = \
@@ -40,6 +42,10 @@ SRC = \
 OBJ := $(SRC)
 OBJ := $(OBJ:.c=.o)
 OBJ := $(OBJ:.cpp=.o)
+
+all: $(TARGET)
+
+$(OBJ): $(HEADERS)
 
 $(TARGET): $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)

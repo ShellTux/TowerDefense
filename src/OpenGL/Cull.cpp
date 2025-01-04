@@ -4,6 +4,8 @@
 
 #include <GL/gl.h>
 #include <ostream>
+#include <sstream>
+#include <string>
 
 namespace OpenGL {
 
@@ -50,6 +52,12 @@ std::ostream &operator<<(std::ostream &os, const Cull &cull)
 	}
 
 	return os;
+}
+
+std::string Cull::toString() const {
+    std::stringstream string;
+    string << *this;
+    return string.str();
 }
 
 void Cull::apply() const

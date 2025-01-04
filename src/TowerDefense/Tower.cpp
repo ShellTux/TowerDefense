@@ -2,7 +2,9 @@
 
 #include "Color.hpp"
 #include "OBJModel.hpp"
+#include "OpenGL/Material.hpp"
 #include "Primitives/3D/core.hpp"
+#include "Texture.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "Vec3.hpp"
 #include "types.hpp"
@@ -52,12 +54,16 @@ void Tower::draw() const
 	glPushMatrix();
 	glPushAttrib(drawGlMask);
 	{
+		glEnable(GL_TEXTURE_2D);
 		glColor3ubv(Colors::AQUA.data());
+		OpenGL::Material::Apply(OpenGL::Material::CyanPlastic);
 
 		glTranslated(posX, posY, 0);
 		glScalef(.9, .9, 1);
 #if 1
+		Texture::Get("assets/tower.png").Bind();
 		Primitives3D::Unit::Cube();
+		Texture::UnBind();
 #else
 		OBJModel::Get("models/monkey.obj").draw();
 #endif
@@ -78,6 +84,7 @@ void Tower::drawHealth() const
 	glPushAttrib(drawGlMask);
 	{
 		glColor3ubv(Colors::GREEN.data());
+		OpenGL::Material::Apply(OpenGL::Material::Emerald);
 
 		glTranslated(0, 0, .5);
 		glScaled(.8 * getHealthRatio(), .3, .3);

@@ -5,6 +5,8 @@
 #include "types.hpp"
 
 #include <ostream>
+#include <string>
+
 namespace OpenGL {
 class Camera {
       public:
@@ -48,6 +50,8 @@ class Camera {
 	Camera &setTarget(const Vec3 &target);
 	Camera &setWidthHeight(const u32 width, const u32 height);
 	Camera &zoomIn(const f64 radiusDelta);
+
+        [[nodiscard]] std::string toString() const;
 
       private:
 	struct Default {

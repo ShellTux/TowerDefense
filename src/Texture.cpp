@@ -3,9 +3,11 @@
 #endif
 
 #include "Texture.hpp"
+
 #include "types.hpp"
 
 #include <GL/gl.h>
+#include <cassert>
 #include <filesystem>
 #include <iostream>
 #include <unordered_map>
