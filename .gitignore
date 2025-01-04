@@ -37,10 +37,12 @@
 
 # End of https://www.toptal.com/developers/gitignore/api/c++
 
-bin
 .clangd
 .direnv
+
+bin
 obj
+/*.pdf
+perf.data*
 td
 *.zip
-/*.pdf
