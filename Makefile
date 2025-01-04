@@ -61,7 +61,7 @@ run: $(TARGET)
 clean:
 	find . -type f -iname "*.o" -exec rm "{}" \;
 
-ARCHIVE = CG_LEI_2024_PROJETO_META_01_2018280716.zip
+ARCHIVE = CG_LEI_2024_PROJETO_META_02_2018280716.zip
 
 .PHONY: archive
 archive: README.pdf
