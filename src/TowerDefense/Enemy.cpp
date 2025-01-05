@@ -216,6 +216,7 @@ Enemy &Enemy::updatePathAndLookAt()
 
 	const Vec3 direction = Vec3::Polar2D(angle);
 
+#if 0
 	pathInfo = (struct PathInfo){
 	    .start = startPoint,
 	    .pos   = interpolatedPoint,
@@ -225,6 +226,14 @@ Enemy &Enemy::updatePathAndLookAt()
 	    .direction = direction,
 	    .angle     = angle,
 	};
+#else
+	pathInfo.start     = startPoint;
+	pathInfo.pos       = interpolatedPoint;
+	pathInfo.next      = endPoint;
+	pathInfo.ratio     = segmentProgress;
+	pathInfo.direction = direction;
+	pathInfo.angle     = angle;
+#endif
 
 	static constexpr f64 z = .5;
 	static constexpr f64 r = .5;
@@ -235,11 +244,17 @@ Enemy &Enemy::updatePathAndLookAt()
 	const auto &[cY, cX, _cK] = camera.getCoordinates();
 	const auto &[tY, tX, _tK] = target.getCoordinates();
 
+#if 0
 	lookAt = (struct LookAt){
 	    .camera = Vec3(cX, cY, z),
 	    .target = Vec3(tX, tY, z),
 	    .up     = {0, 0, -1},
 	};
+#else
+	lookAt.camera = Vec3(cX, cY, z);
+	lookAt.target = Vec3(tX, tY, z);
+	lookAt.up     = {0, 0, -1};
+#endif
 
 	return *this;
 }

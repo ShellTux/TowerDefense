@@ -25,20 +25,19 @@ void App::drawMinimap()
 		int h;
 	};
 
-	const Rect viewport = focusMinimap
-			? (Rect){
-				.x = static_cast<int>(width * 1/6),
-				.y = static_cast<int>(height * 1/6),
-				.w = static_cast<int>(width * 4/6),
-				.h = static_cast<int>(height * 4/6),
-			}
-			: (Rect){
-				.x = static_cast<int>(width * 5/6),
-				.y = static_cast<int>(height * 5/6),
-				.w = static_cast<int>(width * 1/6),
-				.h = static_cast<int>(height * 1/6),
-			}
-			;
+	Rect rect1{};
+	rect1.x = static_cast<int>(width * 1 / 6);
+	rect1.y = static_cast<int>(height * 1 / 6);
+	rect1.w = static_cast<int>(width * 4 / 6);
+	rect1.h = static_cast<int>(height * 4 / 6);
+
+	Rect rect2{};
+	rect2.x = static_cast<int>(width * 5 / 6);
+	rect2.y = static_cast<int>(height * 5 / 6);
+	rect2.w = static_cast<int>(width * 1 / 6);
+	rect2.h = static_cast<int>(height * 1 / 6);
+
+	const Rect viewport = focusMinimap ? rect1 : rect2;
 
 	const auto &[rows, cols] = field.getMapDimensions();
 

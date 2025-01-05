@@ -15,6 +15,14 @@
 #include <unordered_map>
 #include <vector>
 
+template <> class std::hash<std::filesystem::path> {
+      public:
+	size_t operator()(const fs::path &path) const
+	{
+		return ... a hash of path...;
+	}
+};
+
 class Texture {
       public:
 	struct Image {
@@ -34,7 +42,7 @@ class Texture {
 
 		Image(const std::filesystem::path &path)
 		{
-			data = stbi_load(path.c_str(),
+			data = stbi_load(path.string().c_str(),
 			                 &width,
 			                 &height,
 			                 &channels,
