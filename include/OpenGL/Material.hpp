@@ -4,7 +4,6 @@
 #include "types.hpp"
 
 #include <array>
-#include <unordered_map>
 
 namespace OpenGL {
 

@@ -1,8 +1,6 @@
 #include "types.hpp"
 
 #include <cstdio>
-#include <iostream>
-#include <ostream>
 
 static constexpr u64 width  = 600;
 static constexpr u64 height = 600;
