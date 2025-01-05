@@ -66,7 +66,7 @@ ARCHIVE = CG_LEI_2024_PROJETO_META_02_2018280716.zip
 .PHONY: archive
 archive: README.pdf
 	rm --force $(ARCHIVE)
-	for d in src include ; do (cd "$$d" && zip --recurse-paths ../$(ARCHIVE) . --exclude '**/*.o' --exclude '*.o') ; done
+	for d in src include assets ; do (cd "$$d" && zip --recurse-paths ../$(ARCHIVE) . --exclude '**/*.o' --exclude '*.o') ; done
 
 .PHONY: .clangd
 .clangd:
