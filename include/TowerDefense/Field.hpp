@@ -1,16 +1,16 @@
 #ifndef INCLUDE_TOWERDEFENSE_FIELD_HPP_
 #define INCLUDE_TOWERDEFENSE_FIELD_HPP_
 
-#ifndef NOOF
-	#include "ofMain.h"
-#endif
-
 #include "TowerDefense/Cannon.hpp"
 #include "TowerDefense/Enemy.hpp"
 #include "TowerDefense/Stats.hpp"
 #include "TowerDefense/Tower.hpp"
 #include "Vec3.hpp"
 #include "types.hpp"
+
+#ifndef NOOF
+	#include "ofMain.h"
+#endif
 
 #include <GL/gl.h>
 #include <chrono>

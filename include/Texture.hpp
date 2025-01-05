@@ -1,13 +1,13 @@
 #ifndef INCLUDE_INCLUDE_TEXTURE_HPP_
 #define INCLUDE_INCLUDE_TEXTURE_HPP_
 
-#ifndef NOOF
-	#include "ofMain.h"
-#endif
-
 #include "Color.hpp"
 #include "stb_image.h"
 #include "types.hpp"
+
+#ifndef NOOF
+	#include "ofMain.h"
+#endif
 
 #include <GL/gl.h>
 #include <filesystem>

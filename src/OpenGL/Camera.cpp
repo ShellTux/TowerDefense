@@ -4,6 +4,10 @@
 #include "Vec3.hpp"
 #include "types.hpp"
 
+#ifndef NOOF
+	#include "ofMain.h"
+#endif
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <cmath>
@@ -100,10 +104,11 @@ std::ostream &operator<<(std::ostream &os, const Camera &camera)
 	return os;
 }
 
-std::string Camera::toString() const {
-    std::stringstream string;
-    string << *this;
-    return string.str();
+std::string Camera::toString() const
+{
+	std::stringstream string;
+	string << *this;
+	return string.str();
 }
 
 void Camera::apply()

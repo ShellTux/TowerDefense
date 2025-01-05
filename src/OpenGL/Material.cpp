@@ -1,5 +1,9 @@
 #include "OpenGL/Material.hpp"
 
+#ifndef NOOF
+	#include "ofMain.h"
+#endif
+
 #include <GL/gl.h>
 #include <stdexcept>
 

@@ -7,6 +7,10 @@
 #include "Vec3.hpp"
 #include "types.hpp"
 
+#ifndef NOOF
+	#include "ofMain.h"
+#endif
+
 #include <GL/gl.h>
 #include <algorithm>
 #include <cstdlib>

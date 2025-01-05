@@ -3,6 +3,10 @@
 
 #include "types.hpp"
 
+#ifndef NOOF
+	#include "ofMain.h"
+#endif
+
 #include <GL/gl.h>
 
 namespace Math {
