@@ -17,9 +17,9 @@
 
 template <> class std::hash<std::filesystem::path> {
       public:
-	size_t operator()(const fs::path &path) const
+	size_t operator()(const std::filesystem::path &path) const
 	{
-		return ... a hash of path...;
+		return std::hash<std::string>{}(path.string());
 	}
 };
 
