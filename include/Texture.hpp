@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <vector>
 
+#if 0
 template <> class std::hash<std::filesystem::path> {
       public:
 	size_t operator()(const std::filesystem::path &path) const
@@ -22,6 +23,7 @@ template <> class std::hash<std::filesystem::path> {
 		return std::hash<std::string>{}(path.string());
 	}
 };
+#endif
 
 class Texture {
       public:
