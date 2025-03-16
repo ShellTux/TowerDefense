@@ -37,4 +37,13 @@
 
 # End of https://www.toptal.com/developers/gitignore/api/c++
 
+.clangd
 .direnv
+.gdb_history
+
+bin
+obj
+/*.pdf
+perf.data*
+td
+*.zip

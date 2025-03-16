@@ -37,11 +37,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1729591072,
-        "narHash": "sha256-E1FELK6CgwUpa6FWyDK1Z82TicBCWTJ9mtzPf55V9eU=",
+        "lastModified": 1730171440,
+        "narHash": "sha256-oP1n7ob0qFL8HqgOmIK2Ir7teNzJ5enXsMd3Vgvc+/8=",
         "owner": "ShellTux",
         "repo": "openGGL",
-        "rev": "bef3764c3c12e46cc29a668d0fae6c3aa5ec69aa",
+        "rev": "0bcece85ce7582aaeb27fdf53af863da33d87d8c",
         "type": "github"
       },
       "original": {

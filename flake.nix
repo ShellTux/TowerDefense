@@ -25,16 +25,24 @@
 			nativeBuildInputs = with pkgs; [
 				assimp
 				clang
+                                entr
 				freeglut
 				gcc
 				gcc
+				gdb
+				gf
 				glfw
 				glm
 				libGLU
 				openggl.packages.${system}.openGGL
+				pandoc
+				texlive.combined.scheme-full
+				unzip
+				zip
 			];
 
 			LD_LIBRARY_PATH = libPath + "/run/opengl-driver/lib:/run/opengl-driver-32/lib";
+			MAKEFLAGS = "--file=Makefile";
 		};
 	};
 }

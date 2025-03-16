@@ -1,0 +1,7 @@
+#ifndef INCLUDE_INCLUDE_IMAGE_HPP_
+#define INCLUDE_INCLUDE_IMAGE_HPP_
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+#endif // INCLUDE_INCLUDE_IMAGE_HPP_
